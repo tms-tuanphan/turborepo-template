@@ -8,6 +8,7 @@ import { DesktopNav } from './_components/desktop-nav';
 import { LanguageSwitcher } from './_components/language-switcher';
 import { Logo } from './_components/logo';
 import { MobileNav } from './_components/mobile-nav';
+import { StickyHeader } from './_components/sticky-header';
 
 type Props = {
   locale: Locale;
@@ -16,8 +17,11 @@ type Props = {
 
 export function Header({ locale, messages }: Props) {
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80">
-      <div className="mx-auto flex w-full items-center justify-between gap-6 p-4 sm:px-6 lg:px-20">
+    <StickyHeader
+      className="sticky top-0 z-40 w-full bg-background transition-shadow"
+      scrolledClassName="shadow-sm"
+    >
+      <div className="mx-auto flex h-16 w-full items-center justify-between gap-6 px-4 sm:px-6 lg:px-20">
         <div className="flex items-center gap-10">
           <Logo href={`/${locale}`} />
           <DesktopNav locale={locale} messages={messages} />
@@ -38,6 +42,6 @@ export function Header({ locale, messages }: Props) {
           <MobileNav locale={locale} messages={messages} />
         </div>
       </div>
-    </header>
+    </StickyHeader>
   );
 }

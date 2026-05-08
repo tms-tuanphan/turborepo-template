@@ -30,7 +30,7 @@ export function DesktopNav({ locale, messages }: Props) {
       <NavigationMenuList className="gap-2">
         {navGroups.map((group) => (
           <NavigationMenuItem key={group.id}>
-            <NavigationMenuTrigger className="bg-transparent text-sm font-medium text-foreground/80 hover:bg-accent/60 h-13!">
+            <NavigationMenuTrigger className="h-12 bg-transparent text-sm font-medium text-foreground/80 hover:bg-accent/60">
               {messages.nav[group.labelKey]}
             </NavigationMenuTrigger>
             <NavigationMenuContent>

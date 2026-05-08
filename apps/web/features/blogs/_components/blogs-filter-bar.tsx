@@ -59,7 +59,7 @@ export function BlogsFilterBar({ messages }: Props) {
       >
         <SelectTrigger
           aria-label={messages.blogs.categoryLabel}
-          className="h-12 w-full text-sm"
+          className="h-12! w-full text-sm"
         >
           <SelectValue placeholder={messages.blogs.filterAll} />
         </SelectTrigger>
