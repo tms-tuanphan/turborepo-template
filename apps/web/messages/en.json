@@ -1,0 +1,66 @@
+{
+  "nav": {
+    "about": "About",
+    "services": "Services",
+    "resources": "Resources",
+    "ourWorks": "Our Works",
+    "leadership": "Leadership",
+    "aboutUs": "About Us",
+    "comprehensiveSoftware": "Comprehensive Software Development Solutions",
+    "aiDataScience": "Artificial Intelligence & Data Science",
+    "cloudDevops": "Cloud & DevOps",
+    "adaptiveHiring": "Adaptive Hiring Awwing! (DaaS)",
+    "developmentPortfolio": "Development Portfolio",
+    "demos": "Demos",
+    "webApp": "Web & Application Development",
+    "modernizedSystem": "Modernized Outdated System",
+    "aiData": "AI & Data Science",
+    "uiUxResources": "UI/UX Resources",
+    "modules": "Modules",
+    "documentations": "Documentations",
+    "blog": "Blog",
+    "eventWebinar": "Event / Webinar"
+  },
+  "cta": {
+    "urgentInquiry": "Urgent inquiry",
+    "getInTouch": "Get In Touch"
+  },
+  "floating": {
+    "title": "Consultation available now",
+    "phoneAria": "Call us",
+    "chatAria": "Open chat"
+  },
+  "blogs": {
+    "title": "Blogs",
+    "subtitle": "Insights, stories, and updates from our team and industry experts",
+    "searchPlaceholder": "Search our project",
+    "filterAll": "All",
+    "categoryLabel": "Category",
+    "empty": {
+      "title": "No articles found",
+      "description": "Try adjusting your search or filter to find what you're looking for."
+    },
+    "categories": {
+      "ALL": "All",
+      "IT_PARTNERSHIP": "IT Partnership Insight",
+      "DAAS": "DAAS Insight",
+      "AI": "AI Insight"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "ariaLabel": "Blog pagination"
+    }
+  },
+  "footer": {
+    "address": "11th Floor, 129 Teheran-ro, Gangnam-gu, Seoul (Postal Code: 06133)",
+    "email": "jeon@dxplayground.com",
+    "columns": {
+      "about": "About",
+      "services": "Services",
+      "ourWorks": "Our Works",
+      "resources": "Resources"
+    },
+    "copyright": "\u00a9 dxodx. All rights reserved"
+  }
+}

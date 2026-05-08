@@ -1,4 +1,15 @@
-import { nextJsConfig } from "@repo/eslint-config/next-js";
+import { nextJsConfig } from '@repo/eslint-config/next-js';
 
 /** @type {import("eslint").Linter.Config} */
-export default nextJsConfig;
+export default [
+  {
+    ignores: [
+      '.next/**',
+      'node_modules/**',
+      'public/**',
+      'next-env.d.ts',
+      'components/ui/**',
+    ],
+  },
+  ...nextJsConfig,
+];

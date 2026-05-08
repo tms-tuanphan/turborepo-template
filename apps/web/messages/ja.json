@@ -1,0 +1,66 @@
+{
+  "nav": {
+    "about": "会社概要",
+    "services": "サービス",
+    "resources": "リソース",
+    "ourWorks": "実績",
+    "leadership": "リーダーシップ",
+    "aboutUs": "私たちについて",
+    "comprehensiveSoftware": "総合的なソフトウェア開発ソリューション",
+    "aiDataScience": "人工知能 & データサイエンス",
+    "cloudDevops": "クラウド & DevOps",
+    "adaptiveHiring": "Adaptive Hiring Awwing! (DaaS)",
+    "developmentPortfolio": "開発ポートフォリオ",
+    "demos": "デモ",
+    "webApp": "ウェブ & アプリ開発",
+    "modernizedSystem": "レガシーシステムの近代化",
+    "aiData": "AI & データサイエンス",
+    "uiUxResources": "UI/UX リソース",
+    "modules": "モジュール",
+    "documentations": "ドキュメント",
+    "blog": "ブログ",
+    "eventWebinar": "イベント / ウェビナー"
+  },
+  "cta": {
+    "urgentInquiry": "緊急のお問い合わせ",
+    "getInTouch": "お問い合わせ"
+  },
+  "floating": {
+    "title": "今すぐ相談可能",
+    "phoneAria": "電話で問い合わせ",
+    "chatAria": "チャットを開く"
+  },
+  "blogs": {
+    "title": "ブログ",
+    "subtitle": "チームと業界専門家からの洞察、ストーリー、最新情報",
+    "searchPlaceholder": "プロジェクトを検索",
+    "filterAll": "すべて",
+    "categoryLabel": "カテゴリー",
+    "empty": {
+      "title": "記事が見つかりません",
+      "description": "検索条件やフィルターを調整してお試しください。"
+    },
+    "categories": {
+      "ALL": "すべて",
+      "IT_PARTNERSHIP": "IT パートナーシップ",
+      "DAAS": "DAAS インサイト",
+      "AI": "AI インサイト"
+    },
+    "pagination": {
+      "previous": "前へ",
+      "next": "次へ",
+      "ariaLabel": "ブログのページ送り"
+    }
+  },
+  "footer": {
+    "address": "ソウル特別市江南区テヘラン路129、11階 (郵便番号: 06133)",
+    "email": "jeon@dxplayground.com",
+    "columns": {
+      "about": "会社概要",
+      "services": "サービス",
+      "ourWorks": "実績",
+      "resources": "リソース"
+    },
+    "copyright": "\u00a9 dxodx. All rights reserved"
+  }
+}

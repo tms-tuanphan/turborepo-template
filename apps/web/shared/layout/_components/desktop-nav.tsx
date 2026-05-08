@@ -1,0 +1,59 @@
+import Link from 'next/link';
+
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from '@/components/ui/navigation-menu';
+import { cn } from '@/lib/utils';
+import type { Locale, Messages } from '@/shared/i18n';
+
+import { navGroups } from '../_data/nav';
+
+type Props = {
+  locale: Locale;
+  messages: Messages;
+};
+
+function buildHref(locale: Locale, href: string): string {
+  if (href === '#') return '#';
+  if (href.startsWith('http')) return href;
+  return `/${locale}${href}`;
+}
+
+export function DesktopNav({ locale, messages }: Props) {
+  return (
+    <NavigationMenu viewport={false} className="hidden lg:flex">
+      <NavigationMenuList className="gap-2">
+        {navGroups.map((group) => (
+          <NavigationMenuItem key={group.id}>
+            <NavigationMenuTrigger className="bg-transparent text-sm font-medium text-foreground/80 hover:bg-accent/60 h-13!">
+              {messages.nav[group.labelKey]}
+            </NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid gap-1 p-2">
+                {group.items.map((item) => (
+                  <li key={item.labelKey}>
+                    <NavigationMenuLink asChild>
+                      <Link
+                        href={buildHref(locale, item.href)}
+                        className={cn(
+                          'block rounded-md px-3 py-2 text-sm font-medium leading-snug text-foreground/80 transition-colors hover:bg-accent hover:text-foreground',
+                        )}
+                      >
+                        {messages.nav[item.labelKey]}
+                      </Link>
+                    </NavigationMenuLink>
+                  </li>
+                ))}
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+        ))}
+      </NavigationMenuList>
+    </NavigationMenu>
+  );
+}
