@@ -19,7 +19,7 @@ export function Header({ locale, messages }: Props) {
   return (
     <StickyHeader
       className="sticky top-0 z-40 w-full bg-background transition-shadow"
-      scrolledClassName="shadow-sm"
+      scrolledClassName="shadow-md"
     >
       <div className="mx-auto flex h-16 w-full items-center justify-between gap-6 px-4 sm:px-6 lg:px-20">
         <div className="flex items-center gap-10">
