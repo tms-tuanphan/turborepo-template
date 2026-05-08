@@ -19,17 +19,18 @@
 
 ## 📖 Mục lục tài liệu
 
-| File                                                 | Nội dung                                                |
-| ---------------------------------------------------- | ------------------------------------------------------- |
-| [01-architecture.md](./01-architecture.md)           | Tổng quan kiến trúc 5 tầng + Tech Stack                 |
-| [02-project-structure.md](./02-project-structure.md) | Cấu trúc thư mục chi tiết                               |
-| [03-code-organization.md](./03-code-organization.md) | Nguyên tắc tổ chức code + Import rules                  |
-| [04-feature-module.md](./04-feature-module.md)       | Cấu trúc Feature Module + Quy tắc đặt tên               |
-| [05-code-patterns.md](./05-code-patterns.md)         | Code Patterns + Examples                                |
-| [06-code-quality.md](./06-code-quality.md)           | Lefthook, Commitlint, Knip, ESLint                      |
-| [07-package-cicd.md](./07-package-cicd.md)           | Package.json + CI/CD Workflow                           |
-| [08-examples.md](./08-examples.md)                   | Ví dụ thực tế + Rules cho AI/Cursor                     |
-| [09-monorepo-packages.md](./09-monorepo-packages.md) | Khi nào đưa code vào `packages/*` (focus `packages/ui`) |
+| File                                                         | Nội dung                                                |
+| ------------------------------------------------------------ | ------------------------------------------------------- |
+| [01-architecture.md](./01-architecture.md)                   | Tổng quan kiến trúc 5 tầng + Tech Stack                 |
+| [02-project-structure.md](./02-project-structure.md)         | Cấu trúc thư mục chi tiết                               |
+| [03-code-organization.md](./03-code-organization.md)         | Nguyên tắc tổ chức code + Import rules                  |
+| [04-feature-module.md](./04-feature-module.md)               | Cấu trúc Feature Module + Quy tắc đặt tên               |
+| [05-code-patterns.md](./05-code-patterns.md)                 | Code Patterns + Examples                                |
+| [06-code-quality.md](./06-code-quality.md)                   | Lefthook, Commitlint, Knip, ESLint                      |
+| [07-package-cicd.md](./07-package-cicd.md)                   | Package.json + CI/CD Workflow                           |
+| [08-examples.md](./08-examples.md)                           | Ví dụ thực tế + Rules cho AI/Cursor                     |
+| [09-monorepo-packages.md](./09-monorepo-packages.md)         | Khi nào đưa code vào `packages/*` (focus `packages/ui`) |
+| [10-dependency-management.md](./10-dependency-management.md) | Quy tắc cài dependency (pnpm + Turborepo) + chống trùng |
 
 ---
 

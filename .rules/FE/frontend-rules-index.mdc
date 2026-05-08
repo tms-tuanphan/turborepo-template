@@ -125,6 +125,7 @@ Read in order:
 - `./docs/07-package-cicd.md`
 - `./docs/08-examples.md`
 - `./docs/09-monorepo-packages.md`
+- `./docs/10-dependency-management.md`
 
 ## Skills index (`.rules/FE/skills/`)
 
