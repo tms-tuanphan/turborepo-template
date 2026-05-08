@@ -1,0 +1,104 @@
+---
+description: Chuẩn i18n backend (NestJS) — error messages, validation, response text, locale strategy
+globs: apps/api/**/*.ts,packages/api/**/*.ts,apps/web/**/*.ts,apps/web/**/*.tsx
+alwaysApply: false
+---
+
+# i18n (Backend — NestJS) — coding rules
+
+Mục tiêu: i18n **nhất quán**, **không rò rỉ string nội bộ**, và **dễ mở rộng ngôn ngữ** mà không làm phình service/controller.
+
+Rule này áp dụng cho:
+
+- **Message trả về cho client** (error/validation/success message nếu có)
+- **Định danh message bằng key** thay vì hardcode text rải rác
+- **Chiến lược locale** (default/fallback, lấy locale từ header)
+
+---
+
+## 1. Core principles
+
+### KISS
+
+- Một “nguồn sự thật” cho message keys (enum/const), không rải string literal.
+- Locale resolve theo 1 rule rõ ràng: `Accept-Language` → fallback → default.
+- i18n chủ yếu dùng cho **error/validation**; hạn chế “dịch mọi thứ” nếu chưa cần.
+
+### YAGNI
+
+- Không build hệ thống translation phức tạp (plural rules/custom interpolation engine) nếu chưa có yêu cầu.
+- Không “dịch” field names theo kiểu dynamic nếu frontend đã handle label.
+
+### DRY
+
+- Message keys dùng lại → đặt ở `packages/api` để ổn định contract giữa FE/BE.
+- Mapping error/exception → 1 chỗ (filter/helper) nếu nhiều module dùng chung.
+
+---
+
+## 2. Locale strategy (backend)
+
+- **Nguồn locale**: ưu tiên header `Accept-Language` (hoặc một header riêng của team, ví dụ `x-locale`) — chọn một và dùng nhất quán.
+- **Default locale**: `en` (hoặc locale team chọn), **fallback** khi locale không hỗ trợ.
+- **Không** lấy locale từ body request (dễ bị client gửi lung tung); chỉ dùng header hoặc user profile đã xác thực (nếu có).
+
+---
+
+## 3. Quy ước message keys
+
+- Message trả về cho client nên là **key ổn định**, không phải raw text DB.
+- Key format gợi ý (tuỳ team chọn 1 chuẩn):
+  - `errors.links.notFound`
+  - `errors.auth.invalidCredentials`
+  - `validation.links.slug.invalidFormat`
+- **Không** dùng key theo tiếng Việt/tiếng Anh lẫn lộn; key luôn “machine-friendly”.
+
+Vị trí đặt keys:
+
+- Keys liên quan HTTP contract/DTO: đặt trong `packages/api` (ví dụ `packages/api/src/common/i18n/keys.ts`)
+- Keys chỉ internal logging: có thể đặt ở `apps/api` (nhưng không trả cho client)
+
+---
+
+## 4. i18n cho validation (DTO)
+
+- DTO vẫn validate bằng `class-validator`.
+- Message validation nên dùng **key** thay vì text:
+  - Ví dụ: `@IsNotEmpty({ message: I18nKey.Validation.Links.SlugRequired })`
+- Nếu `class-validator` message không đủ context, dùng pipe/custom validator để:
+  - build message key rõ nghĩa
+  - attach metadata (field, constraint) cho client (nếu team chuẩn)
+
+---
+
+## 5. i18n cho exceptions (service/controller)
+
+- **Không** throw `Error('...')`.
+- Exception message trả về client nên là **key** (hoặc object có `key` + params).
+  - `throw new NotFoundException(I18nKey.Errors.Links.NotFound)`
+- Nếu cần params (vd. min/max), dùng payload dạng:
+  - `{ key: 'validation.common.min', params: { min: 3 } }`
+  - và để filter/serializer chuẩn hoá response.
+
+---
+
+## 6. Response shape (khuyến nghị)
+
+Chuẩn hoá lỗi (gợi ý):
+
+- `code`: key ổn định (i18n key)
+- `message`: có thể trùng `code` (frontend tự dịch), hoặc server translate nếu product yêu cầu
+- `details`: tuỳ chọn (field errors, params, trace id)
+
+Quan trọng:
+
+- **Không** leak stack trace, Prisma error message, SQL constraint name ra client.
+
+---
+
+## 7. Anti-patterns
+
+- Hardcode tiếng Việt/tiếng Anh trực tiếp trong service/controller.
+- Trả raw lỗi Prisma/DB ra client.
+- Dịch “mọi thứ” trong backend làm bùng nổ scope (YAGNI).
+- Locale resolve nhiều nguồn mâu thuẫn (body + header + query) không có ưu tiên rõ.

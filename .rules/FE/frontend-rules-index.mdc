@@ -1,0 +1,140 @@
+---
+alwaysApply: true
+---
+
+# Frontend rules index
+
+Scope: **Turborepo + Next.js (App Router) + TypeScript + ShadcnUI + Tailwind**.
+
+Use this file as the **entrypoint** for all FE guidance. Deep-dive rules live in:
+
+- `./docs/` (architecture, structure, patterns, quality, CI/CD, examples)
+- `./skills/` (task-specific playbooks)
+
+## Monorepo basics (this repo)
+
+- FE runtime app lives in `apps/web`.
+- Shared UI package lives in `packages/ui` and must be imported via `@repo/ui` (avoid cross-package deep imports).
+
+## I18N (mandatory)
+
+- All user-facing strings should be written as **messages in both English and Japanese**.
+- Avoid hardcoding user-facing strings inside components/pages (except true one-off technical labels).
+- If a message catalog does not exist yet, create one alongside the feature and keep it consistent (same keys across languages).
+- Recommended minimal structure (library-agnostic):
+  - `apps/web/messages/en.json`
+  - `apps/web/messages/ja.json`
+  - Keep keys stable and descriptive (e.g. `auth.login.title`, `users.table.empty`).
+- Always keep `<html lang="...">` in sync with the active locale.
+
+## Coding principles (always)
+
+- **KISS**: Keep code simple and readable.
+- **YAGNI**: Implement only what is asked.
+- **DRY**: Extract reusable logic into hooks/components.
+- **SOLID (S & O)**: Single responsibility; open for extension via props.
+
+## Next.js App Router essentials
+
+- Keep `apps/web/app/` for **routing only**. Put business logic in `features/`, cross-feature code in `shared/`, and infrastructure in `core/`.
+- Use `_private-folders` inside `app/` (prefix `_`) for colocated components/libs that must **not** become routes.
+- Prefer route-level boundaries for UX and resilience: `loading.tsx`, `error.tsx`, `not-found.tsx`.
+- Server/Client boundary:
+  - Default to **Server Components**; add `'use client'` only when needed.
+  - Keep server-only code out of client modules (no leaking secrets/env).
+  - For mutations, prefer **Server Actions** (`'use server'`) + revalidate (`revalidatePath`) and handle errors gracefully.
+
+## ShadcnUI & Tailwind
+
+- `apps/web/components/ui/*` are **web-only** shadcn primitives.
+- If a UI primitive must be shared across apps, put it in `packages/ui` and import it from `@repo/ui/*`.
+- `packages/ui` must remain **UI-only** (avoid `next/*` imports and app wiring).
+- Prefer Tailwind utilities over CSS files.
+- Use Radix `asChild` composition pattern.
+- Check for existing shadcn components before creating new ones.
+
+## Import boundaries (must)
+
+Allowed dependency direction:
+
+`APP → FEATURES → SHARED → CORE → COMPONENTS/UI`
+
+- `features/*` must **never** import from other `features/*`.
+- `components/ui/*` must stay UI-only (must not import from `core/shared/features`).
+- When in doubt, follow the 5-layer architecture defined in `./docs/01-architecture.md`.
+
+## Feature modules (public API)
+
+- Each feature must expose a small **public API** via `apps/web/features/<feature>/index.ts`.
+- Do not export internals by default (keep `hooks/`, `stores/`, `utils/` private unless there is a strong reason).
+
+## Defensive programming
+
+- Use `?.` and `??` for nested access.
+- Lists must handle **empty state**.
+- Provide **loading** (skeleton) and **error** (alert) states.
+- Validate with **Zod** for any user input (client forms and server-side entrypoints like server actions / route handlers).
+
+## Clean props
+
+- Destructure in the component signature.
+- Aim for **5–7 props max** (guideline); refactor into a prop object, `children` slots, or subcomponents if more.
+- Boolean props use shorthand (`<Input disabled />`).
+- Default values in destructuring.
+- Prefer `onEmailChange` over `handleChange`.
+
+## AI interaction / code quality
+
+- Split complex UI into subcomponents.
+- Always include accessibility (aria labels, keyboard navigation).
+- Use JSDoc only for non-obvious intent/trade-offs (explain **why**, not **what**).
+
+## Code quality gates (must pass hooks/CI)
+
+- Hooks/CI will run lint/format, typecheck, unused-code scan (Knip), tests, and build. Keep changes small so fixes are easy.
+- No `any` (TypeScript strict), keep exports tidy (Knip may flag unused exports).
+- Prefer running workflows from repo root to leverage Turborepo caching: `pnpm dev`, `pnpm lint`, `pnpm test`, `pnpm build`.
+- Source of truth: `./docs/06-code-quality.md` and `./docs/07-package-cicd.md`.
+
+## Implementation checklist
+
+1. ✅ Import boundaries respected (no cross-layer/circular imports)
+2. ✅ File placed in correct layer (ui/core/shared/features)
+3. ✅ Naming conventions (kebab-case files, PascalCase components)
+4. ✅ Zod validation where user input exists
+5. ✅ Strict typing (no `any`)
+6. ✅ Export via `index.ts` if part of public API (feature public API)
+7. ✅ Loading / error / empty states covered
+8. ✅ Accessibility covered
+9. ✅ If shared UI: exported from `packages/ui` and imported via `@repo/ui/*` (no deep imports)
+10. ✅ Hooks/CI pass (lint, typecheck, Knip, tests, build)
+
+---
+
+## Docs index (`.rules/FE/docs/`)
+
+Read in order:
+
+- `./docs/README.md`
+- `./docs/01-architecture.md`
+- `./docs/02-project-structure.md`
+- `./docs/03-code-organization.md`
+- `./docs/04-feature-module.md`
+- `./docs/05-code-patterns.md`
+- `./docs/06-code-quality.md`
+- `./docs/07-package-cicd.md`
+- `./docs/08-examples.md`
+- `./docs/09-monorepo-packages.md`
+
+## Skills index (`.rules/FE/skills/`)
+
+Use the relevant skill first, then come back to this index:
+
+- **Project architecture**: `./skills/project-architecture/SKILL.md`
+- **Forms (React Hook Form + Zod)**: `./skills/form-patterns/SKILL.md`
+- **Auth (NextAuth/Auth.js, middleware, sessions)**: `./skills/auth-patterns/SKILL.md`
+- **Frontend design (high-quality UI)**: `./skills/frontend-design/SKILL.md`
+- **Theme factory (apply themes to artifacts)**: `./skills/theme-factory/SKILL.md`
+- **Vercel React best practices (performance)**: `./skills/vercel-react-best-practices/SKILL.md`
+- **Web design guidelines (UX/a11y review)**: `./skills/web-design-guidelines/SKILL.md`
+- **Access-control audit helper**: `./skills/skill-adapter/SKILL.md`

@@ -1,0 +1,69 @@
+---
+description: Testing structure cho NestJS (AAA + Factory + typed mocks) trong apps/api
+globs: apps/api/**/*.spec.ts,apps/api/test/**/*.ts
+alwaysApply: false
+---
+
+# NestJS testing structure — AAA + Factory (apps/api)
+
+Mục tiêu: test rõ ràng, không hardcode data, có thể mở rộng coverage ổn định.
+
+---
+
+## 1. Test pyramid (quy ước)
+
+- **Unit**: service/guard/pipe/interceptor (ưu tiên nhiều nhất).
+- **Integration**: module wiring (ít hơn).
+- **E2E**: critical flows.
+
+---
+
+## 2. Factory pattern bắt buộc
+
+- **Không hardcode object literal** cho DTO/entity trong spec.
+- Tạo data bằng factory trong `apps/api/test/factories/**`.
+- Factory phải:
+  - `create(overrides?: Partial<T>)`
+  - `createMany(count: number, overrides?: Partial<T>)`
+  - `createMinimal()`
+  - 2–3 preset methods (vd. `createAdmin`, `createInactive`, `createWithRelations`) phù hợp domain
+  - deep copy (tránh test pollution)
+
+---
+
+## 3. AAA pattern bắt buộc trong mọi test
+
+Mỗi test phải có 3 section comment rõ:
+
+- `// Arrange`
+- `// Act`
+- `// Assert`
+
+Không gộp nhiều hành vi khác nhau trong một test.
+
+---
+
+## 4. Typed mocks (không `any`)
+
+- Mock dependencies bằng object typed + `jest.fn()`; tránh `as any`.
+- Nếu mock repository/service dùng chung, đặt vào `apps/api/test/helpers/**`.
+- Reset mocks:
+
+```ts
+afterEach(() => {
+  jest.clearAllMocks();
+});
+```
+
+---
+
+## 5. File placement
+
+- Unit tests:
+  - `apps/api/src/**/[name].service.spec.ts`
+  - `apps/api/src/**/[name].controller.spec.ts`
+- E2E tests:
+  - `apps/api/test/**/*.e2e-spec.ts`
+- Factories:
+  - `apps/api/test/factories/**/*.factory.ts`
+

@@ -1,0 +1,98 @@
+---
+description: Turborepo + pnpm workspace chuẩn (my-turborepo) — boundaries, dependency, scripts, thêm package
+alwaysApply: true
+---
+
+# Turborepo structure chuẩn — my-turborepo
+
+Mục tiêu: monorepo **dễ mở rộng**, **không trùng lặp logic**, build/test theo dependency graph, và phân ranh giới rõ giữa **runtime apps** và **shared packages**.
+
+## Layout
+
+| Path                         | Package name              | Vai trò                                                                                                                           |
+| ---------------------------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `apps/api`                   | `api`                     | **NestJS runtime app** (bootstrap, module wiring, config runtime, controllers/services). Phụ thuộc `@repo/api`, `@repo/database`. |
+| `apps/web`                   | `web`                     | **Next.js runtime app** (UI + routes). Phụ thuộc `@repo/ui`; có thể dùng types/DTO từ `@repo/api` cho dev/types.                  |
+| `packages/api`               | `@repo/api`               | **Shared API contract** (DTO, response shapes, API-facing entity/view-model types, constants). Build `tsc`. Không chạy độc lập.   |
+| `packages/database`          | `@repo/database`          | **Prisma** — schema, migrate, seed, export Prisma client (`src/client.ts`). Source-of-truth cho DB.                               |
+| `packages/ui`                | `@repo/ui`                | Component React dùng chung cho web.                                                                                               |
+| `packages/eslint-config`     | `@repo/eslint-config`     | Cấu hình ESLint workspace.                                                                                                        |
+| `packages/typescript-config` | `@repo/typescript-config` | `tsconfig` dùng chung.                                                                                                            |
+| `packages/jest-config`       | `@repo/jest-config`       | Jest dùng chung (ví dụ API).                                                                                                      |
+
+Workspace: `pnpm-workspace.yaml` gồm `apps/*` và `packages/*`. Gói nội bộ dùng tiền tố **`@repo/*`** và `workspace:*` trong `package.json`.
+
+---
+
+## Boundaries (quy tắc sống còn)
+
+- **`apps/*` = runtime apps**: nơi chạy thật (Nest/Next), wiring module/DI, config runtime, adapters (HTTP/UI), integration glue.
+- **`packages/*` = shared packages**: contract, DB schema/client, UI components, configs. Không chứa app bootstrap.
+
+Quy tắc đặt code:
+
+- **API contract** (DTO/response/entity “HTTP-facing”) → `packages/api`; `apps/api` chỉ “wire” và sử dụng.
+- **DB schema/migrate/seed/Prisma client** → chỉ `packages/database` (không tạo Prisma schema/client mới trong `apps/api`).
+- **UI tái sử dụng** → `packages/ui`; route/page cụ thể → `apps/web`.
+- **Không duplicate** DTO/types giữa `apps/*` và `packages/*`.
+
+Tham chiếu thêm:
+
+- `backend-structure-nestjs.mdc` (backend boundaries chi tiết)
+- `nestjs-prisma.mdc` (Prisma/DB)
+- `nestjs-testing-structure-factory-aaa.mdc` (testing)
+
+---
+
+## Dependency rules (pnpm + TypeScript)
+
+- Internal deps trong `package.json` dùng `"@repo/xxx": "workspace:*"`.
+- Không import theo đường dẫn “xuyên package” kiểu `../../packages/...`.
+- Không phụ thuộc ngược:
+  - `packages/*` **không** import từ `apps/*`.
+  - `packages/api` **không** phụ thuộc `packages/database` (contract không nên kéo DB).
+
+---
+
+## Quy tắc khi thêm/sửa code
+
+- **Logic Nest domain, entity, DTO dùng chung** → ưu tiên `packages/api` (build library), **wire vào Nest** trong `apps/api`.
+- **Schema DB, migration, Prisma client** → chỉ `packages/database`; app gọi qua `@repo/database` khi đã nối dependency.
+- **UI tái sử dụng** → `packages/ui`; page/route Next → `apps/web`.
+- **Không** nhét business nặng vào `apps/*` nếu đã có chỗ tương ứng trong `packages/*` (tránh trùng lặp).
+
+---
+
+## Lệnh từ root (chuẩn)
+
+Nguyên tắc: chạy qua Turbo để tận dụng cache + dependency graph.
+
+- `pnpm dev` — `turbo run dev` (các app/package có script `dev`).
+- `pnpm build` — build theo dependency graph (`^build`).
+- `pnpm lint` / `pnpm test` — chạy qua Turbo trên các package có task tương ứng.
+- DB: `pnpm db:migrate:dev`, `pnpm db:migrate:deploy`, `pnpm db:push`, `pnpm db:seed` (delegate xuống `@repo/database` / tasks trong `turbo.json`).
+
+Khi sửa nhiều package, nhớ **build/thứ tự phụ thuộc** (ví dụ lib phải build trước app nếu app import dist).
+
+---
+
+## Thêm app/package mới (checklist)
+
+- **Đặt đúng chỗ**:
+  - runtime app → `apps/<name>`
+  - shared lib/config → `packages/<name>`
+- **Package name**:
+  - apps: `"name": "<app-name>"`
+  - packages: `"name": "@repo/<pkg-name>"`
+- **Internal deps**: luôn dùng `workspace:*`
+- **Exports/build**: shared TS lib cần `build` script + output ổn định để apps consume
+- **Turbo**: thêm pipeline/task trong `turbo.json` nếu có script mới (dev/build/test/lint/db…)
+
+---
+
+## Anti-patterns (tránh)
+
+- Copy/paste DTO/types giữa `apps/*` và `packages/*`.
+- Đặt Prisma schema/client trong `apps/api`.
+- Export raw Prisma model ra HTTP contract (contract drift/leak fields) → map sang DTO/entity trong `@repo/api`.
+- Import “deep path” xuyên package như `@repo/api/src/...` nếu chưa có quy ước rõ.

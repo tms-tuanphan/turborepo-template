@@ -1,0 +1,23 @@
+---
+description: Chỉ mục backend — agent phải áp dụng đồng thời các rule BE khác trong .rules/BE (NestJS, Prisma, test, prod)
+globs: apps/api/**/*,packages/api/**/*,packages/database/**/*
+alwaysApply: false
+---
+
+# Backend — chỉ mục rule cho agent
+
+Khi chỉnh sửa hoặc thiết kế code trong `apps/api`, `packages/api`, hoặc `packages/database`, **coi các file sau là bộ quy tắc backend đầy đủ** (cùng thư mục `.rules/BE/`). Cursor không merge tự động từ một file sang file khác — hãy **tuân thủ nội dung từng rule** tương ứng ngữ cảnh công việc.
+
+| Rule file | Áp dụng khi |
+| --- | --- |
+| `monorepo-structure.mdc` | Ranh giới app vs package, dependency `workspace:*`, lệnh turbo/pnpm |
+| `backend-structure-nestjs.mdc` | Cấu trúc module Nest, boundary `apps/api` ↔ `packages/api` ↔ `packages/database` |
+| `nestjs-prisma.mdc` | Schema, migrate, client, cách dùng Prisma trong app |
+| `nestjs-swagger-openapi.mdc` | DTO/decorator Swagger, contract HTTP |
+| `nestjs-testing-structure-factory-aaa.mdc` | Unit/integration/e2e: AAA + factory, typed mocks, test structure |
+| `nestjs-i18n.mdc` | Đa ngôn ngữ / i18n backend |
+| `backend-production-advanced.mdc` | Vận hành production, hardening nâng cao |
+
+**Thứ tự gợi ý khi xung đột:** monorepo boundary → structure Nest → Prisma/DB → contract/Swagger → test → i18n → production.
+
+**Ghi chú:** Nếu một task chỉ đụng một phần (ví dụ chỉ seed DB), vẫn giữ boundary trong `monorepo-structure.mdc` và `nestjs-prisma.mdc`; không tạo Prisma/schema lẻ ngoài `packages/database`.
