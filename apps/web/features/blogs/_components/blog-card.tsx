@@ -31,7 +31,7 @@ export function BlogCard({ post, locale, messages }: Props) {
         href={`/${locale}/resources/blogs/${post.slug}`}
         className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
-        <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted">
+        <div className="relative aspect-video w-full overflow-hidden bg-muted">
           <Image
             src={post.coverImage}
             alt={post.title}

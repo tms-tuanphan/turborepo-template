@@ -17,7 +17,7 @@ export default function BlogsLoading() {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="space-y-3">
-              <Skeleton className="aspect-[16/9] w-full rounded-md" />
+              <Skeleton className="aspect-video w-full rounded-md" />
               <Skeleton className="h-4 w-1/2" />
               <Skeleton className="h-5 w-full" />
               <Skeleton className="h-5 w-3/4" />
