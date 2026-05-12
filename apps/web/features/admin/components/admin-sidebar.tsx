@@ -70,7 +70,7 @@ export function AdminSidebar({
           variant={collapsed ? 'ghost' : 'outline'}
           size="sm"
           className={cn(
-            'w-full gap-2 cursor-pointer bg-primary/05 relative',
+            'w-full gap-2 cursor-pointer bg-transparent border-none shadow-none relative',
             collapsed ? 'justify-center px-0' : 'justify-center',
           )}
           onClick={() => {
