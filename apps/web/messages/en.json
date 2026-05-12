@@ -66,6 +66,28 @@
       "ariaLabel": "Blog pagination"
     }
   },
+  "admin": {
+    "login": {
+      "title": "Admin sign in",
+      "description": "Use the demo credentials from your environment configuration.",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "submit": "Sign in",
+      "submitting": "Signing in…",
+      "errorInvalid": "Please enter a valid email and password.",
+      "errorCredentials": "Invalid email or password."
+    },
+    "blogs": {
+      "pageTitle": "Blog posts",
+      "pageDescription": "Manage and review blog content (demo data).",
+      "columnTitle": "Title",
+      "columnCategory": "Category",
+      "columnPublished": "Published",
+      "columnSlug": "Slug",
+      "emptyTitle": "No blog posts",
+      "emptyDescription": "There are no posts to display yet."
+    }
+  },
   "footer": {
     "addresses": [
       "5th Floor, Lighthouse Building, 1254 Xo Viet Nghe Tinh Street, Hoa Cuong Ward, Da Nang City",

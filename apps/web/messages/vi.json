@@ -66,6 +66,28 @@
       "ariaLabel": "Phân trang blog"
     }
   },
+  "admin": {
+    "login": {
+      "title": "Đăng nhập quản trị",
+      "description": "Dùng tài khoản demo đã cấu hình trong biến môi trường.",
+      "emailLabel": "Email",
+      "passwordLabel": "Mật khẩu",
+      "submit": "Đăng nhập",
+      "submitting": "Đang đăng nhập…",
+      "errorInvalid": "Vui lòng nhập email và mật khẩu hợp lệ.",
+      "errorCredentials": "Email hoặc mật khẩu không đúng."
+    },
+    "blogs": {
+      "pageTitle": "Danh sách bài blog",
+      "pageDescription": "Xem nội dung blog (dữ liệu demo).",
+      "columnTitle": "Tiêu đề",
+      "columnCategory": "Danh mục",
+      "columnPublished": "Ngày đăng",
+      "columnSlug": "Slug",
+      "emptyTitle": "Chưa có bài viết",
+      "emptyDescription": "Hiện không có bài viết nào để hiển thị."
+    }
+  },
   "footer": {
     "addresses": [
       "Tầng 5, Tòa nhà Lighthouse, số 1254 Xô Viết Nghệ Tĩnh, phường Hòa Cường, Thành Phố Đà Nẵng",

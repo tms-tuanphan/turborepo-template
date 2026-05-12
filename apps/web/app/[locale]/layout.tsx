@@ -1,13 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import { Footer, Header } from '@/shared/layout';
-import {
-  defaultLocale,
-  getMessages,
-  isLocale,
-  locales,
-  type Locale,
-} from '@/shared/i18n';
+import { defaultLocale, isLocale, locales, type Locale } from '@/shared/i18n';
 
 import { HtmlLang } from '../_components/html-lang';
 
@@ -29,16 +22,11 @@ export default async function LocaleLayout({
     notFound();
   }
   const locale: Locale = isLocale(rawLocale) ? rawLocale : defaultLocale;
-  const messages = getMessages(locale);
 
   return (
     <>
       <HtmlLang locale={locale} />
-      <div className="flex min-h-svh flex-col">
-        <Header locale={locale} messages={messages} />
-        <main className="flex-1">{children}</main>
-        <Footer locale={locale} messages={messages} />
-      </div>
+      {children}
     </>
   );
 }

@@ -1,6 +1,15 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "globalDependencies": ["**/.env.*local"],
+  "globalEnv": [
+    "AUTH_SECRET",
+    "AUTH_URL",
+    "ADMIN_DEMO_EMAIL",
+    "ADMIN_DEMO_PASSWORD",
+    "NEXTAUTH_SECRET",
+    "NEXTAUTH_URL",
+    "NODE_ENV"
+  ],
   "tasks": {
     "dev": {
       "cache": false,

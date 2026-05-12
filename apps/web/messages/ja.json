@@ -66,6 +66,28 @@
       "ariaLabel": "ブログのページ送り"
     }
   },
+  "admin": {
+    "login": {
+      "title": "管理者ログイン",
+      "description": "環境変数に設定したデモ用の認証情報でサインインしてください。",
+      "emailLabel": "メールアドレス",
+      "passwordLabel": "パスワード",
+      "submit": "サインイン",
+      "submitting": "サインイン中…",
+      "errorInvalid": "有効なメールアドレスとパスワードを入力してください。",
+      "errorCredentials": "メールアドレスまたはパスワードが正しくありません。"
+    },
+    "blogs": {
+      "pageTitle": "ブログ記事",
+      "pageDescription": "ブログコンテンツの確認（デモデータ）",
+      "columnTitle": "タイトル",
+      "columnCategory": "カテゴリー",
+      "columnPublished": "公開日",
+      "columnSlug": "スラッグ",
+      "emptyTitle": "ブログ記事がありません",
+      "emptyDescription": "表示する記事はまだありません。"
+    }
+  },
   "footer": {
     "addresses": [
       "ダナン市ホアクオン坊、ソーヴィエトニャティン通り1254、ライトハウス 5階",
