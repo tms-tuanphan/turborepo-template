@@ -11,17 +11,22 @@ import {
 } from '@/components/ui/pagination';
 import type { Messages } from '@/shared/i18n';
 
-import { useBlogFilters } from '../_hooks/use-blog-filters';
+import { useAdminBlogFilters } from '../_hooks/use-admin-blog-filters';
 import { buildPageRange } from '@/shared/utils/pagination-range';
 
-type Props = {
+type AdminBlogsPaginationProps = {
   totalPages: number;
   currentPage: number;
   messages: Messages;
 };
 
-export function BlogPagination({ totalPages, currentPage, messages }: Props) {
-  const { setPage } = useBlogFilters();
+export function AdminBlogsPagination({
+  totalPages,
+  currentPage,
+  messages,
+}: AdminBlogsPaginationProps) {
+  const { setPage } = useAdminBlogFilters();
+  const m = messages.blogs.pagination;
 
   if (totalPages <= 1) return null;
 
@@ -32,12 +37,12 @@ export function BlogPagination({ totalPages, currentPage, messages }: Props) {
   };
 
   return (
-    <Pagination aria-label={messages.blogs.pagination.ariaLabel}>
+    <Pagination aria-label={m.ariaLabel}>
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
             href="#"
-            aria-label={messages.blogs.pagination.previous}
+            aria-label={m.previous}
             aria-disabled={currentPage === 1}
             data-disabled={currentPage === 1 ? 'true' : undefined}
             className={
@@ -68,7 +73,7 @@ export function BlogPagination({ totalPages, currentPage, messages }: Props) {
         <PaginationItem>
           <PaginationNext
             href="#"
-            aria-label={messages.blogs.pagination.next}
+            aria-label={m.next}
             aria-disabled={currentPage === totalPages}
             data-disabled={currentPage === totalPages ? 'true' : undefined}
             className={

@@ -1,14 +1,34 @@
+import Link from 'next/link';
+
 import type { BlogPost } from '@/shared/types/blog';
-import type { Messages } from '@/shared/i18n';
+import type { Locale, Messages } from '@/shared/i18n';
+
+import { AdminBlogRowActions } from './admin-blog-row-actions';
+import { AdminBlogStatusBadge } from './admin-blog-status-badge';
 
 type AdminBlogsTableProps = {
   blogs: BlogPost[];
   messages: Messages;
+  locale: Locale;
 };
 
-export function AdminBlogsTable({ blogs, messages }: AdminBlogsTableProps) {
+function formatDate(iso: string | null, locale: Locale): string {
+  if (!iso) return '—';
+  const loc = locale === 'ja' ? 'ja-JP' : locale === 'vi' ? 'vi-VN' : 'en-US';
+  return new Intl.DateTimeFormat(loc, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  }).format(new Date(iso));
+}
+
+export function AdminBlogsTable({
+  blogs,
+  messages,
+  locale,
+}: AdminBlogsTableProps) {
   const t = messages.admin.blogs;
-  const categories = messages.blogs.categories;
+  const tc = messages.blogs.categories;
 
   if (blogs.length === 0) {
     return (
@@ -27,37 +47,93 @@ export function AdminBlogsTable({ blogs, messages }: AdminBlogsTableProps) {
   return (
     <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[640px] text-left text-sm">
+        <table className="w-full min-w-[960px] text-left text-sm">
           <thead className="border-b bg-muted/50">
             <tr>
               <th className="px-4 py-3 font-medium" scope="col">
-                {t.columnTitle}
+                {t.columns.title}
               </th>
               <th className="px-4 py-3 font-medium" scope="col">
-                {t.columnCategory}
+                {t.columns.slug}
               </th>
               <th className="px-4 py-3 font-medium" scope="col">
-                {t.columnPublished}
+                {t.columns.author}
               </th>
               <th className="px-4 py-3 font-medium" scope="col">
-                {t.columnSlug}
+                {t.columns.category}
+              </th>
+              <th className="px-4 py-3 font-medium" scope="col">
+                {t.columns.status}
+              </th>
+              <th className="px-4 py-3 font-medium" scope="col">
+                {t.columns.updated}
+              </th>
+              <th className="px-4 py-3 font-medium" scope="col">
+                {t.columns.published}
+              </th>
+              <th className="px-4 py-3 font-medium text-right" scope="col">
+                {t.columns.views}
+              </th>
+              <th className="px-4 py-3 font-medium text-right" scope="col">
+                {t.columns.actions}
               </th>
             </tr>
           </thead>
           <tbody className="divide-y">
             {blogs.map((post) => (
               <tr key={post.id} className="hover:bg-muted/30">
-                <td className="max-w-[280px] px-4 py-3 font-medium">
-                  <span className="line-clamp-2">{post.title}</span>
+                <td className="max-w-[220px] px-4 py-3 font-medium">
+                  <Link
+                    href={`/${locale}/admin/blogs/${post.id}/edit`}
+                    className="line-clamp-2 text-primary underline-offset-4 hover:underline"
+                  >
+                    {post.title}
+                  </Link>
+                </td>
+                <td className="max-w-[140px] px-4 py-3 font-mono text-xs text-muted-foreground">
+                  <span className="line-clamp-2">{post.slug}</span>
                 </td>
                 <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
-                  {categories[post.category]}
+                  {post.author}
                 </td>
                 <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
-                  {post.publishedAt}
+                  {tc[post.category]}
                 </td>
-                <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
-                  {post.slug}
+                <td className="whitespace-nowrap px-4 py-3">
+                  <AdminBlogStatusBadge
+                    status={post.status}
+                    messages={messages}
+                  />
+                </td>
+                <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
+                  <time dateTime={post.updatedAt}>
+                    {formatDate(post.updatedAt, locale)}
+                  </time>
+                </td>
+                <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
+                  {post.publishedAt ? (
+                    <time dateTime={post.publishedAt}>
+                      {formatDate(post.publishedAt, locale)}
+                    </time>
+                  ) : (
+                    '—'
+                  )}
+                </td>
+                <td className="whitespace-nowrap px-4 py-3 text-right tabular-nums text-muted-foreground">
+                  {post.views.toLocaleString(
+                    locale === 'ja'
+                      ? 'ja-JP'
+                      : locale === 'vi'
+                        ? 'vi-VN'
+                        : 'en-US',
+                  )}
+                </td>
+                <td className="px-4 py-3 text-right">
+                  <AdminBlogRowActions
+                    locale={locale}
+                    blogId={post.id}
+                    messages={messages}
+                  />
                 </td>
               </tr>
             ))}

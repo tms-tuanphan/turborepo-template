@@ -1,7 +1,65 @@
-import type { BlogPost } from '../_types';
+import type { BlogPost, BlogStatus } from '@/shared/types/blog';
+
+const demoMarkdown = `# Summary
+
+Demonstration **markdown** for the admin editor.
+
+\`\`\`tsx
+export function Example() {
+  return <main className="p-4" />;
+}
+\`\`\`
+
+| Topic | Note |
+| --- | --- |
+| Markdown | First-class |
+
+> Quote block for callouts-style content.
+`;
+
+type SeedInput = Pick<
+  BlogPost,
+  'id' | 'slug' | 'title' | 'description' | 'category' | 'coverImage'
+> &
+  Partial<
+    Pick<
+      BlogPost,
+      'status' | 'tags' | 'views' | 'author' | 'scheduledAt' | 'publishedAt'
+    >
+  >;
+
+function buildPost(input: SeedInput): BlogPost {
+  const status: BlogStatus = input.status ?? 'PUBLISHED';
+  const publishedDate = input.publishedAt ?? null;
+  const dateIso = publishedDate
+    ? `${publishedDate}T12:00:00.000Z`
+    : new Date().toISOString();
+
+  return {
+    id: input.id,
+    slug: input.slug,
+    title: input.title,
+    description: input.description,
+    content: demoMarkdown,
+    category: input.category,
+    tags: input.tags ?? ['engineering', 'dx'],
+    status,
+    coverImage: input.coverImage,
+    author: input.author ?? 'Demo Author',
+    views: input.views ?? 100 + Number(input.id) * 17,
+    publishedAt: status === 'PUBLISHED' ? publishedDate : null,
+    scheduledAt: input.scheduledAt ?? null,
+    createdAt: dateIso,
+    updatedAt: dateIso,
+    seo: {
+      metaTitle: input.title.slice(0, 70),
+      metaDescription: input.description.slice(0, 160),
+    },
+  };
+}
 
 export const mockBlogs: BlogPost[] = [
-  {
+  buildPost({
     id: '1',
     slug: 'optimise-roi-software-development',
     title:
@@ -11,8 +69,9 @@ export const mockBlogs: BlogPost[] = [
     category: 'IT_PARTNERSHIP',
     coverImage: 'https://picsum.photos/seed/dxodx-1/1200/630',
     publishedAt: '2026-02-26',
-  },
-  {
+    tags: ['roi', 'tco', 'quality'],
+  }),
+  buildPost({
     id: '2',
     slug: 'event-driven-architecture-ecommerce',
     title:
@@ -22,8 +81,9 @@ export const mockBlogs: BlogPost[] = [
     category: 'IT_PARTNERSHIP',
     coverImage: 'https://picsum.photos/seed/dxodx-2/1200/630',
     publishedAt: '2026-02-24',
-  },
-  {
+    tags: ['eda', 'ecommerce', 'architecture'],
+  }),
+  buildPost({
     id: '3',
     slug: 'web-app-saas-build-vs-buy',
     title:
@@ -33,8 +93,9 @@ export const mockBlogs: BlogPost[] = [
     category: 'DAAS',
     coverImage: 'https://picsum.photos/seed/dxodx-3/1200/630',
     publishedAt: '2026-02-23',
-  },
-  {
+    tags: ['saas', 'strategy'],
+  }),
+  buildPost({
     id: '4',
     slug: 'feature-trap-redundant-features',
     title:
@@ -44,8 +105,9 @@ export const mockBlogs: BlogPost[] = [
     category: 'IT_PARTNERSHIP',
     coverImage: 'https://picsum.photos/seed/dxodx-4/1200/630',
     publishedAt: '2026-02-12',
-  },
-  {
+    tags: ['product', 'features'],
+  }),
+  buildPost({
     id: '5',
     slug: 'human-centric-digital-transformation',
     title:
@@ -55,8 +117,9 @@ export const mockBlogs: BlogPost[] = [
     category: 'IT_PARTNERSHIP',
     coverImage: 'https://picsum.photos/seed/dxodx-5/1200/630',
     publishedAt: '2026-02-12',
-  },
-  {
+    tags: ['transformation', 'culture'],
+  }),
+  buildPost({
     id: '6',
     slug: 'database-design-tips-billions-of-rows',
     title:
@@ -66,8 +129,9 @@ export const mockBlogs: BlogPost[] = [
     category: 'IT_PARTNERSHIP',
     coverImage: 'https://picsum.photos/seed/dxodx-6/1200/630',
     publishedAt: '2026-02-04',
-  },
-  {
+    tags: ['database', 'performance'],
+  }),
+  buildPost({
     id: '7',
     slug: 'clean-code-unit-testing-investment',
     title:
@@ -77,8 +141,9 @@ export const mockBlogs: BlogPost[] = [
     category: 'IT_PARTNERSHIP',
     coverImage: 'https://picsum.photos/seed/dxodx-7/1200/630',
     publishedAt: '2026-02-02',
-  },
-  {
+    tags: ['testing', 'clean-code'],
+  }),
+  buildPost({
     id: '8',
     slug: 'mlops-ai-projects-fail',
     title:
@@ -88,8 +153,9 @@ export const mockBlogs: BlogPost[] = [
     category: 'AI',
     coverImage: 'https://picsum.photos/seed/dxodx-8/1200/630',
     publishedAt: '2026-01-29',
-  },
-  {
+    tags: ['mlops', 'ai'],
+  }),
+  buildPost({
     id: '9',
     slug: 'build-vs-buy-strategic-financial',
     title:
@@ -99,8 +165,9 @@ export const mockBlogs: BlogPost[] = [
     category: 'IT_PARTNERSHIP',
     coverImage: 'https://picsum.photos/seed/dxodx-9/1200/630',
     publishedAt: '2026-01-19',
-  },
-  {
+    tags: ['strategy', 'finance'],
+  }),
+  buildPost({
     id: '10',
     slug: 'aws-vs-azure-2026',
     title:
@@ -110,8 +177,9 @@ export const mockBlogs: BlogPost[] = [
     category: 'IT_PARTNERSHIP',
     coverImage: 'https://picsum.photos/seed/dxodx-10/1200/630',
     publishedAt: '2026-01-13',
-  },
-  {
+    tags: ['cloud', 'aws', 'azure'],
+  }),
+  buildPost({
     id: '11',
     slug: 'custom-commerce-vs-saas',
     title:
@@ -121,8 +189,9 @@ export const mockBlogs: BlogPost[] = [
     category: 'DAAS',
     coverImage: 'https://picsum.photos/seed/dxodx-11/1200/630',
     publishedAt: '2026-01-10',
-  },
-  {
+    tags: ['commerce', 'saas'],
+  }),
+  buildPost({
     id: '12',
     slug: 'high-scalability-lms-architecture',
     title: 'How to Build a High-Scalability LMS: An Architectural Deep-Dive',
@@ -131,5 +200,18 @@ export const mockBlogs: BlogPost[] = [
     category: 'IT_PARTNERSHIP',
     coverImage: 'https://picsum.photos/seed/dxodx-12/1200/630',
     publishedAt: '2026-01-08',
-  },
+    tags: ['lms', 'scalability'],
+  }),
+  buildPost({
+    id: '13',
+    slug: 'internal-draft-example',
+    title: 'Internal draft: onboarding checklist',
+    description:
+      'A short internal draft used to demonstrate non-published rows in the admin table.',
+    category: 'IT_PARTNERSHIP',
+    coverImage: 'https://picsum.photos/seed/dxodx-draft/1200/630',
+    publishedAt: null,
+    status: 'DRAFT',
+    views: 0,
+  }),
 ];

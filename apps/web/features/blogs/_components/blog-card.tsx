@@ -13,14 +13,12 @@ type Props = {
 };
 
 function formatDate(date: string, locale: Locale): string {
-  const formatter = new Intl.DateTimeFormat(
-    locale === 'ja' ? 'ja-JP' : 'en-US',
-    {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-    },
-  );
+  const loc = locale === 'ja' ? 'ja-JP' : locale === 'vi' ? 'vi-VN' : 'en-US';
+  const formatter = new Intl.DateTimeFormat(loc, {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  });
   return formatter.format(new Date(date));
 }
 
@@ -42,11 +40,15 @@ export function BlogCard({ post, locale, messages }: Props) {
         </div>
         <CardContent className="space-y-3 px-5 py-5">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span>{formatDate(post.publishedAt, locale)}</span>
-            <span
-              aria-hidden
-              className="size-1 rounded-full bg-muted-foreground/40"
-            />
+            {post.publishedAt ? (
+              <span>{formatDate(post.publishedAt, locale)}</span>
+            ) : null}
+            {post.publishedAt ? (
+              <span
+                aria-hidden
+                className="size-1 rounded-full bg-muted-foreground/40"
+              />
+            ) : null}
             <span>{messages.blogs.categories[post.category]}</span>
           </div>
           <h3 className="line-clamp-2 text-base font-semibold leading-snug text-foreground transition-colors group-hover:text-brand">

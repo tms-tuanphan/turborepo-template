@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Locale, Messages } from '@/shared/i18n';
 
-import { mockBlogs } from '../_data/blogs';
+import { listPublishedBlogs } from '../_data/blogs-store';
 import { filterAndPaginateBlogs } from '../_lib/filter-blogs';
 import type { BlogFilters } from '../_types';
 
@@ -20,7 +20,7 @@ type Props = {
 
 export function BlogsPage({ locale, messages, filters }: Props) {
   const { items, totalPages, currentPage } = filterAndPaginateBlogs(
-    mockBlogs,
+    listPublishedBlogs(),
     filters,
   );
 
