@@ -1,6 +1,6 @@
 'use client';
 
-import { Check } from 'lucide-react';
+import { Check, ChevronDown } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -50,13 +50,17 @@ export function LanguageSwitcher({ locale, messages }: Props) {
         <Button
           variant="ghost"
           size="sm"
-          className="gap-2 text-base! font-medium"
+          className="group gap-2 text-base! font-medium"
           aria-label={messages.language.switcherLabel}
         >
           <span className="text-lg leading-none" aria-hidden>
             {localeFlags[locale]}
           </span>
           <span>{messages.language.option[locale]}</span>
+          <ChevronDown
+            className="size-4 shrink-0 opacity-60 transition-transform duration-200 group-data-[state=open]:rotate-180"
+            aria-hidden
+          />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-44 text-base!">

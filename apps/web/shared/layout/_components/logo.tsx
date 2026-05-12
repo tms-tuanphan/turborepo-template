@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 import { cn } from '@/lib/utils';
@@ -12,15 +13,15 @@ export function Logo({ href, className }: Props) {
     <Link
       href={href}
       aria-label="DXODX home"
-      className={cn(
-        'inline-flex items-baseline gap-0.5 text-4xl font-bold tracking-tight text-foreground',
-        className,
-      )}
+      className={cn('inline-flex items-center', className)}
     >
-      <span>DXODX</span>
-      <span
-        aria-hidden
-        className="ml-0.5 inline-block size-1.5 rounded-full bg-brand"
+      <Image
+        src="/logo.png"
+        alt=""
+        width={201}
+        height={36}
+        className="h-7 w-auto object-contain object-left"
+        priority
       />
     </Link>
   );

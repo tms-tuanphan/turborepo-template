@@ -48,15 +48,15 @@ export function DesktopNav({ locale, messages }: Props) {
               <NavigationMenuTrigger className="bg-transparent text-base! font-medium text-foreground/80 hover:bg-accent/60">
                 {messages.nav[entry.labelKey]}
               </NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid gap-1 p-2">
+              <NavigationMenuContent className="w-max">
+                <ul className="flex min-w-max flex-col gap-1 p-2">
                   {entry.items.map((item) => (
                     <li key={item.labelKey}>
                       <NavigationMenuLink asChild>
                         <Link
                           href={buildHref(locale, item.href)}
                           className={cn(
-                            'block rounded-md px-3 py-2.5 text-base! font-medium leading-snug text-foreground/80 transition-colors hover:bg-accent hover:text-foreground',
+                            'block rounded-md px-3 py-2.5 text-base! font-medium leading-snug whitespace-nowrap text-foreground/80 transition-colors hover:bg-accent hover:text-foreground',
                           )}
                         >
                           {messages.nav[item.labelKey]}
