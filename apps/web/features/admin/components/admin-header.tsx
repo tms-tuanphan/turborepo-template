@@ -15,12 +15,15 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import type { Locale, Messages } from '@/shared/i18n';
+import { Logo } from '@/shared/layout/_components/logo';
 
 type AdminHeaderProps = {
   locale: Locale;
   messages: Messages;
   userEmail: string | null;
   userName: string | null;
+  homeHref: string;
+  logoAria: string;
   mobileNav: React.ReactNode;
 };
 
@@ -29,6 +32,8 @@ export function AdminHeader({
   messages,
   userEmail,
   userName,
+  homeHref,
+  logoAria,
   mobileNav,
 }: AdminHeaderProps) {
   const t = messages.admin.shell;
@@ -62,7 +67,13 @@ export function AdminHeader({
           id="admin-mobile-nav"
         >
           <SheetHeader className="border-b p-4 text-left">
-            <SheetTitle>{t.brand}</SheetTitle>
+            <SheetTitle className="sr-only">{t.navLabel}</SheetTitle>
+            <div className="flex items-center gap-3">
+              <Logo href={homeHref} ariaLabel={logoAria} priority={false} />
+              <span className="text-sm font-semibold tracking-tight">
+                {t.brand}
+              </span>
+            </div>
           </SheetHeader>
           <div className="p-3">{mobileNav}</div>
         </SheetContent>

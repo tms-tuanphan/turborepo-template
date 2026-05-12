@@ -20,10 +20,17 @@ export function AdminShell({
   children,
 }: AdminShellProps) {
   const t = messages.admin.shell;
+  const homeHref = `/${locale}/admin`;
 
   return (
     <div className="flex min-h-svh w-full bg-muted/30">
-      <AdminSidebar brand={t.brand} navLabel={t.navLabel}>
+      <AdminSidebar
+        homeHref={homeHref}
+        logoAria={t.logoAria}
+        navLabel={t.navLabel}
+        collapseLabel={t.collapseSidebar}
+        expandLabel={t.expandSidebar}
+      >
         <AdminNavLinks locale={locale} messages={messages} />
       </AdminSidebar>
       <div className="flex min-h-svh min-w-0 flex-1 flex-col bg-background">
@@ -32,6 +39,8 @@ export function AdminShell({
           messages={messages}
           userEmail={userEmail}
           userName={userName}
+          homeHref={homeHref}
+          logoAria={t.logoAria}
           mobileNav={<AdminNavLinks locale={locale} messages={messages} />}
         />
         <main className="min-h-0 flex-1 overflow-auto p-6">{children}</main>

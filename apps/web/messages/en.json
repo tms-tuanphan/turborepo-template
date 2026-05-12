@@ -80,9 +80,16 @@
     "shell": {
       "brand": "Admin",
       "navLabel": "Main navigation",
+      "logoAria": "Admin home",
       "nav": {
-        "blogs": "Blog posts"
+        "intro": "Introduction",
+        "resources": "Resources",
+        "blog": "Blog",
+        "products": "Products",
+        "aiDriven": "AI Driven Development"
       },
+      "collapseSidebar": "Collapse sidebar",
+      "expandSidebar": "Expand sidebar",
       "searchPlaceholder": "Search…",
       "searchAria": "Search (coming soon)",
       "openMenu": "Open menu",
@@ -91,6 +98,18 @@
       "notificationsDisabled": "No new notifications",
       "signOut": "Sign out",
       "userFallback": "Admin user"
+    },
+    "intro": {
+      "pageTitle": "Introduction",
+      "pageDescription": "Overview of the admin area and quick links to content modules."
+    },
+    "productsPlaceholder": {
+      "pageTitle": "Products",
+      "pageDescription": "Product management will be available here."
+    },
+    "aiDrivenPlaceholder": {
+      "pageTitle": "AI Driven Development",
+      "pageDescription": "Tools and documentation for AI-assisted development will appear here."
     },
     "blogs": {
       "pageTitle": "Blog posts",

@@ -32,8 +32,7 @@ export function AdminLoginForm({ locale, messages }: AdminLoginFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
-  const callbackUrl =
-    searchParams.get('callbackUrl') ?? `/${locale}/admin/blogs`;
+  const callbackUrl = searchParams.get('callbackUrl') ?? `/${locale}/admin`;
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();

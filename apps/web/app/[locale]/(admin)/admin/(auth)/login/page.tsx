@@ -34,7 +34,7 @@ export default async function AdminLoginPage({ params }: { params: Params }) {
   const session = await auth();
 
   if (session) {
-    redirect(`/${locale}/admin/blogs`);
+    redirect(`/${locale}/admin`);
   }
 
   const messages = getMessages(locale);

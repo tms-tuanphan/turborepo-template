@@ -80,9 +80,16 @@
     "shell": {
       "brand": "管理",
       "navLabel": "メインナビゲーション",
+      "logoAria": "管理ホーム",
       "nav": {
-        "blogs": "ブログ記事"
+        "intro": "紹介",
+        "resources": "リソース",
+        "blog": "ブログ",
+        "products": "製品",
+        "aiDriven": "AI Driven Development"
       },
+      "collapseSidebar": "サイドバーを折りたたむ",
+      "expandSidebar": "サイドバーを展開する",
       "searchPlaceholder": "検索…",
       "searchAria": "検索（準備中）",
       "openMenu": "メニューを開く",
@@ -91,6 +98,18 @@
       "notificationsDisabled": "新しい通知はありません",
       "signOut": "サインアウト",
       "userFallback": "管理者"
+    },
+    "intro": {
+      "pageTitle": "紹介",
+      "pageDescription": "管理画面の概要とコンテンツモジュールへのクイックリンクです。"
+    },
+    "productsPlaceholder": {
+      "pageTitle": "製品",
+      "pageDescription": "製品管理はここで利用できるようになります。"
+    },
+    "aiDrivenPlaceholder": {
+      "pageTitle": "AI Driven Development",
+      "pageDescription": "AI支援開発のツールとドキュメントはここに表示されます。"
     },
     "blogs": {
       "pageTitle": "ブログ記事",

@@ -4,13 +4,17 @@ import { getMessages, isLocale } from '@/shared/i18n';
 
 type Params = Promise<{ locale: string }>;
 
-export default async function AdminIntroPage({ params }: { params: Params }) {
+export default async function AdminProductsPage({
+  params,
+}: {
+  params: Params;
+}) {
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) {
     notFound();
   }
   const messages = getMessages(rawLocale);
-  const t = messages.admin.intro;
+  const t = messages.admin.productsPlaceholder;
 
   return (
     <div className="flex flex-col gap-6">
