@@ -67,14 +67,14 @@
     }
   },
   "footer": {
-    "address": "11th Floor, 129 Teheran-ro, Gangnam-gu, Seoul (Postal Code: 06133)",
-    "email": "jeon@dxplayground.com",
-    "columns": {
-      "about": "About",
-      "services": "Services",
-      "ourWorks": "Our Works",
-      "resources": "Resources"
-    },
-    "copyright": "\u00a9 dxodx. All rights reserved"
+    "addresses": [
+      "5th Floor, Lighthouse Building, 1254 Xo Viet Nghe Tinh Street, Hoa Cuong Ward, Da Nang City",
+      "2nd Floor, Au Viet Building, No. 1 Le Duc Tho Street, Tu Liem Ward, Hanoi City"
+    ],
+    "tagline": "Together we ignite and spread happiness in every person",
+    "copyrightLines": [
+      "Copyright ©TOMOSIA 2022",
+      "All right reserved"
+    ]
   }
 }

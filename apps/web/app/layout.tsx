@@ -13,9 +13,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'DXODX',
+  title: 'Tomosia',
   description:
-    'Insights, stories, and updates from our team and industry experts',
+    'Tomosia AI is a company that provides AI solutions for businesses.',
 };
 
 export default function RootLayout({

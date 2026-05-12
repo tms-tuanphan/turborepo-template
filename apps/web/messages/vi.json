@@ -67,14 +67,14 @@
     }
   },
   "footer": {
-    "address": "Tầng 11, 129 Teheran-ro, Gangnam-gu, Seoul (Mã bưu: 06133)",
-    "email": "jeon@dxplayground.com",
-    "columns": {
-      "about": "Giới thiệu",
-      "services": "Dịch vụ",
-      "ourWorks": "Dự án",
-      "resources": "Tài nguyên"
-    },
-    "copyright": "\u00a9 dxodx. All rights reserved"
+    "addresses": [
+      "Tầng 5, Tòa nhà Lighthouse, số 1254 Xô Viết Nghệ Tĩnh, phường Hòa Cường, Thành Phố Đà Nẵng",
+      "Tầng 2, tòa nhà Âu Việt, số 1 Lê Đức Thọ, Phường Từ Liêm, Thành Phố Hà Nội"
+    ],
+    "tagline": "Cùng nhau thắp lên và lan tỏa sự hạnh phúc trong mỗi người",
+    "copyrightLines": [
+      "Copyright ©TOMOSIA 2022",
+      "All right reserved"
+    ]
   }
 }

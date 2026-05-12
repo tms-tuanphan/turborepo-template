@@ -67,14 +67,14 @@
     }
   },
   "footer": {
-    "address": "ソウル特別市江南区テヘラン路129、11階 (郵便番号: 06133)",
-    "email": "jeon@dxplayground.com",
-    "columns": {
-      "about": "会社概要",
-      "services": "サービス",
-      "ourWorks": "実績",
-      "resources": "リソース"
-    },
-    "copyright": "\u00a9 dxodx. All rights reserved"
+    "addresses": [
+      "ダナン市ホアクオン坊、ソーヴィエトニャティン通り1254、ライトハウス 5階",
+      "ハノイ市トゥリエム坊、レドゥックソ通り1、オーヴィエトビル 2階"
+    ],
+    "tagline": "ともに灯し、一人ひとりの中に幸せを広げていく",
+    "copyrightLines": [
+      "Copyright ©TOMOSIA 2022",
+      "All right reserved"
+    ]
   }
 }
