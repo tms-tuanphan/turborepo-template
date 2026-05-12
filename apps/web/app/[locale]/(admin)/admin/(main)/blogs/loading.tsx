@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export default function AdminBlogsLoading() {
   return (
-    <div className="flex flex-1 flex-col gap-6">
+    <div className="flex flex-col gap-6">
       <div className="space-y-2">
         <Skeleton className="h-8 w-56" />
         <Skeleton className="h-4 w-96 max-w-full" />

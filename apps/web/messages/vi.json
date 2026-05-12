@@ -77,6 +77,21 @@
       "errorInvalid": "Vui lòng nhập email và mật khẩu hợp lệ.",
       "errorCredentials": "Email hoặc mật khẩu không đúng."
     },
+    "shell": {
+      "brand": "Quản trị",
+      "navLabel": "Điều hướng chính",
+      "nav": {
+        "blogs": "Bài blog"
+      },
+      "searchPlaceholder": "Tìm kiếm…",
+      "searchAria": "Tìm kiếm (sắp có)",
+      "openMenu": "Mở menu",
+      "closeMenu": "Đóng menu",
+      "notifications": "Thông báo",
+      "notificationsDisabled": "Không có thông báo mới",
+      "signOut": "Đăng xuất",
+      "userFallback": "Quản trị viên"
+    },
     "blogs": {
       "pageTitle": "Danh sách bài blog",
       "pageDescription": "Xem nội dung blog (dữ liệu demo).",

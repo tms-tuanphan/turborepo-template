@@ -77,6 +77,21 @@
       "errorInvalid": "Please enter a valid email and password.",
       "errorCredentials": "Invalid email or password."
     },
+    "shell": {
+      "brand": "Admin",
+      "navLabel": "Main navigation",
+      "nav": {
+        "blogs": "Blog posts"
+      },
+      "searchPlaceholder": "Search…",
+      "searchAria": "Search (coming soon)",
+      "openMenu": "Open menu",
+      "closeMenu": "Close menu",
+      "notifications": "Notifications",
+      "notificationsDisabled": "No new notifications",
+      "signOut": "Sign out",
+      "userFallback": "Admin user"
+    },
     "blogs": {
       "pageTitle": "Blog posts",
       "pageDescription": "Manage and review blog content (demo data).",

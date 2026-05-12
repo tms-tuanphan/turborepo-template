@@ -1,14 +1,8 @@
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 
 import { AdminBlogsTable } from '@/features/admin';
 import { mockBlogs } from '@/features/blogs';
-import { auth } from '@/auth';
-import {
-  defaultLocale,
-  getMessages,
-  isLocale,
-  type Locale,
-} from '@/shared/i18n';
+import { getMessages, isLocale } from '@/shared/i18n';
 
 type Params = Promise<{ locale: string }>;
 
@@ -17,18 +11,12 @@ export default async function AdminBlogsPage({ params }: { params: Params }) {
   if (!isLocale(rawLocale)) {
     notFound();
   }
-  const locale: Locale = isLocale(rawLocale) ? rawLocale : defaultLocale;
-  const session = await auth();
-
-  if (!session) {
-    redirect(`/${locale}/admin/login`);
-  }
-
+  const locale = rawLocale;
   const messages = getMessages(locale);
   const t = messages.admin.blogs;
 
   return (
-    <div className="flex flex-1 flex-col gap-6">
+    <div className="flex flex-col gap-6">
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold tracking-tight">{t.pageTitle}</h1>
         <p className="text-sm text-muted-foreground">{t.pageDescription}</p>
