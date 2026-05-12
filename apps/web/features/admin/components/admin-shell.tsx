@@ -1,8 +1,7 @@
 import type { Locale, Messages } from '@/shared/i18n';
 
-import { AdminHeader } from './admin-header';
 import { AdminNavLinks } from './admin-nav-links';
-import { AdminSidebar } from './admin-sidebar';
+import { AdminShellClient } from './admin-shell-client';
 
 type AdminShellProps = {
   locale: Locale;
@@ -21,30 +20,22 @@ export function AdminShell({
 }: AdminShellProps) {
   const t = messages.admin.shell;
   const homeHref = `/${locale}/admin`;
+  const nav = <AdminNavLinks locale={locale} messages={messages} />;
 
   return (
-    <div className="flex min-h-svh w-full bg-muted/30">
-      <AdminSidebar
-        homeHref={homeHref}
-        logoAria={t.logoAria}
-        navLabel={t.navLabel}
-        collapseLabel={t.collapseSidebar}
-        expandLabel={t.expandSidebar}
-      >
-        <AdminNavLinks locale={locale} messages={messages} />
-      </AdminSidebar>
-      <div className="flex min-h-svh min-w-0 flex-1 flex-col bg-background">
-        <AdminHeader
-          locale={locale}
-          messages={messages}
-          userEmail={userEmail}
-          userName={userName}
-          homeHref={homeHref}
-          logoAria={t.logoAria}
-          mobileNav={<AdminNavLinks locale={locale} messages={messages} />}
-        />
-        <main className="min-h-0 flex-1 overflow-auto p-6">{children}</main>
-      </div>
-    </div>
+    <AdminShellClient
+      locale={locale}
+      messages={messages}
+      userEmail={userEmail}
+      userName={userName}
+      homeHref={homeHref}
+      logoAria={t.logoAria}
+      navLabel={t.navLabel}
+      collapseLabel={t.collapseSidebar}
+      expandLabel={t.expandSidebar}
+      mobileNav={nav}
+    >
+      {children}
+    </AdminShellClient>
   );
 }

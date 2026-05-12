@@ -45,8 +45,8 @@ function NavLinkRow({
         'flex items-center gap-2 rounded-md py-2 text-sm font-medium transition-colors',
         collapsed ? 'justify-center px-0' : 'px-3',
         active
-          ? 'bg-muted text-foreground'
-          : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground',
+          ? 'bg-primary/20 text-foreground'
+          : 'text-muted-foreground hover:bg-primary/20 hover:text-foreground',
       )}
     >
       <Icon className="size-4 shrink-0" aria-hidden />

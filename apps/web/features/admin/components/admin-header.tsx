@@ -1,12 +1,14 @@
 'use client';
 
-import { BellIcon, MenuIcon } from 'lucide-react';
+import {
+  MenuIcon,
+  SquareArrowLeftIcon,
+  SquareArrowRightIcon,
+} from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { signOut } from 'next-auth/react';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Sheet,
   SheetContent,
@@ -14,27 +16,35 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import type { Locale, Messages } from '@/shared/i18n';
+import type { Messages } from '@/shared/i18n';
 import { Logo } from '@/shared/layout/_components/logo';
 
 type AdminHeaderProps = {
-  locale: Locale;
   messages: Messages;
   userEmail: string | null;
   userName: string | null;
   homeHref: string;
   logoAria: string;
   mobileNav: React.ReactNode;
+  sidebarId: string;
+  collapsed: boolean;
+  onToggleCollapsed: () => void;
+  collapseLabel: string;
+  expandLabel: string;
 };
 
 export function AdminHeader({
-  locale,
   messages,
   userEmail,
   userName,
   homeHref,
   logoAria,
   mobileNav,
+  sidebarId,
+  collapsed,
+  onToggleCollapsed,
+  collapseLabel,
+  expandLabel,
 }: AdminHeaderProps) {
   const t = messages.admin.shell;
   const pathname = usePathname();
@@ -46,7 +56,7 @@ export function AdminHeader({
   }, [pathname]);
 
   return (
-    <header className="flex h-16 shrink-0 items-center gap-3 border-b bg-card px-4 md:px-6">
+    <header className="flex h-16 shrink-0 items-center gap-3 border-b bg-card px-4 md:px-6 justify-between">
       <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
         <SheetTrigger asChild>
           <Button
@@ -79,40 +89,29 @@ export function AdminHeader({
         </SheetContent>
       </Sheet>
 
-      <div className="flex min-w-0 flex-1 items-center md:pl-0">
-        <Input
-          type="search"
-          placeholder={t.searchPlaceholder}
-          aria-label={t.searchAria}
-          disabled
-          className="mx-auto max-w-md md:mx-0"
-        />
-      </div>
-
-      <div className="flex shrink-0 items-center gap-1">
+      <div className="flex min-w-0 flex-1 items-center md:pl-0 max-md:hidden">
         <Button
           type="button"
           variant="ghost"
-          size="icon"
-          disabled
-          aria-label={t.notifications}
-          title={t.notificationsDisabled}
+          size="sm"
+          className="text-muted-foreground cursor-pointer"
+          onClick={onToggleCollapsed}
+          aria-expanded={!collapsed}
+          aria-controls={sidebarId}
+          aria-label={collapsed ? expandLabel : collapseLabel}
         >
-          <BellIcon className="size-5" aria-hidden />
+          {collapsed ? (
+            <SquareArrowRightIcon className="size-5 shrink-0" aria-hidden />
+          ) : (
+            <SquareArrowLeftIcon className="size-5 shrink-0" aria-hidden />
+          )}
         </Button>
-        <span className="hidden max-w-[160px] truncate text-sm text-muted-foreground sm:inline">
+      </div>
+
+      <div className="flex shrink-0 items-center gap-1">
+        <span className="max-w-[200px] truncate text-base text-muted-foreground">
           {displayName}
         </span>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            void signOut({ callbackUrl: `/${locale}/admin/login` });
-          }}
-        >
-          {t.signOut}
-        </Button>
       </div>
     </header>
   );
