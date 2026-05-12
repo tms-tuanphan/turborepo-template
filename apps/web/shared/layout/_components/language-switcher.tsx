@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, Globe } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -11,13 +11,21 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { localeLabels, locales, type Locale } from '@/shared/i18n';
+import {
+  localeFlags,
+  locales,
+  type Locale,
+  type Messages,
+} from '@/shared/i18n';
+
+const localeMenuOrder: Locale[] = ['vi', 'en', 'ja'];
 
 type Props = {
   locale: Locale;
+  messages: Messages;
 };
 
-export function LanguageSwitcher({ locale }: Props) {
+export function LanguageSwitcher({ locale, messages }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -42,26 +50,34 @@ export function LanguageSwitcher({ locale }: Props) {
         <Button
           variant="ghost"
           size="sm"
-          className="gap-1.5 font-medium"
-          aria-label="Change language"
+          className="gap-2 text-base! font-medium"
+          aria-label={messages.language.switcherLabel}
         >
-          <Globe className="size-4" />
-          {localeLabels[locale]}
+          <span className="text-lg leading-none" aria-hidden>
+            {localeFlags[locale]}
+          </span>
+          <span>{messages.language.option[locale]}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[8rem]">
-        {locales.map((value) => (
+      <DropdownMenuContent align="end" className="min-w-44 text-base!">
+        {localeMenuOrder.map((value) => (
           <DropdownMenuItem
             key={value}
             onSelect={() => handleSelect(value)}
-            className="justify-between"
+            className="justify-between gap-3 text-base!"
           >
-            <span>{localeLabels[value]}</span>
+            <span className="flex items-center gap-2">
+              <span className="text-lg leading-none" aria-hidden>
+                {localeFlags[value]}
+              </span>
+              <span>{messages.language.option[value]}</span>
+            </span>
             <Check
               className={cn(
-                'size-4',
+                'size-4.5 shrink-0',
                 value === locale ? 'opacity-100' : 'opacity-0',
               )}
+              aria-hidden
             />
           </DropdownMenuItem>
         ))}

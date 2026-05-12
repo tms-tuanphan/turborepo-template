@@ -1,0 +1,80 @@
+{
+  "nav": {
+    "about": "Giới thiệu công ty",
+    "services": "Dịch vụ",
+    "resources": "Tài nguyên",
+    "ourWorks": "Dự án",
+    "leadership": "Lãnh đạo",
+    "aboutUs": "Về chúng tôi",
+    "comprehensiveSoftware": "Giải pháp phát triển phần mềm toàn diện",
+    "aiDataScience": "Trí tuệ nhân tạo & Khoa học dữ liệu",
+    "cloudDevops": "Cloud & DevOps",
+    "adaptiveHiring": "Adaptive Hiring Awwing! (DaaS)",
+    "developmentPortfolio": "Danh mục phát triển",
+    "demos": "Bản demo",
+    "webApp": "Phát triển Web & Ứng dụng",
+    "modernizedSystem": "Hiện đại hóa hệ thống cũ",
+    "aiData": "AI & Khoa học dữ liệu",
+    "uiUxResources": "Tài nguyên UI/UX",
+    "modules": "Mô-đun",
+    "documentations": "Tài liệu",
+    "blog": "Blog",
+    "eventWebinar": "Sự kiện / Webinar",
+    "introduction": "Giới thiệu",
+    "resourceBlogs": "Blog",
+    "resourceProducts": "Sản phẩm",
+    "products": "Sản phẩm",
+    "aiDrivenDevelopment": "AI Driven Development"
+  },
+  "language": {
+    "switcherLabel": "Đổi ngôn ngữ",
+    "menuTitle": "Danh mục",
+    "option": {
+      "en": "English",
+      "ja": "日本語",
+      "vi": "Tiếng Việt"
+    }
+  },
+  "cta": {
+    "contact": "Liên hệ",
+    "getInTouch": "Liên hệ"
+  },
+  "floating": {
+    "title": "Tư vấn đang khả dụng",
+    "phoneAria": "Gọi cho chúng tôi",
+    "chatAria": "Mở chat"
+  },
+  "blogs": {
+    "title": "Blog",
+    "subtitle": "Góc nhìn, câu chuyện và cập nhật từ đội ngũ và chuyên gia ngành",
+    "searchPlaceholder": "Tìm kiếm dự án",
+    "filterAll": "Tất cả",
+    "categoryLabel": "Danh mục",
+    "empty": {
+      "title": "Không tìm thấy bài viết",
+      "description": "Thử điều chỉnh từ khóa hoặc bộ lọc."
+    },
+    "categories": {
+      "ALL": "Tất cả",
+      "IT_PARTNERSHIP": "IT Partnership Insight",
+      "DAAS": "DAAS Insight",
+      "AI": "AI Insight"
+    },
+    "pagination": {
+      "previous": "Trước",
+      "next": "Sau",
+      "ariaLabel": "Phân trang blog"
+    }
+  },
+  "footer": {
+    "address": "Tầng 11, 129 Teheran-ro, Gangnam-gu, Seoul (Mã bưu: 06133)",
+    "email": "jeon@dxplayground.com",
+    "columns": {
+      "about": "Giới thiệu",
+      "services": "Dịch vụ",
+      "ourWorks": "Dự án",
+      "resources": "Tài nguyên"
+    },
+    "copyright": "\u00a9 dxodx. All rights reserved"
+  }
+}

@@ -13,7 +13,7 @@ export function Logo({ href, className }: Props) {
       href={href}
       aria-label="DXODX home"
       className={cn(
-        'inline-flex items-baseline gap-0.5 text-3xl font-bold tracking-tight text-foreground',
+        'inline-flex items-baseline gap-0.5 text-4xl font-bold tracking-tight text-foreground',
         className,
       )}
     >

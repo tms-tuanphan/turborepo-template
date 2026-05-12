@@ -19,10 +19,24 @@
     "modules": "Modules",
     "documentations": "Documentations",
     "blog": "Blog",
-    "eventWebinar": "Event / Webinar"
+    "eventWebinar": "Event / Webinar",
+    "introduction": "Introduction",
+    "resourceBlogs": "Blogs",
+    "resourceProducts": "Products",
+    "products": "Products",
+    "aiDrivenDevelopment": "AI Driven Development"
+  },
+  "language": {
+    "switcherLabel": "Change language",
+    "menuTitle": "Menu",
+    "option": {
+      "en": "English",
+      "ja": "Japanese",
+      "vi": "Vietnamese"
+    }
   },
   "cta": {
-    "urgentInquiry": "Urgent inquiry",
+    "contact": "Contact",
     "getInTouch": "Get In Touch"
   },
   "floating": {

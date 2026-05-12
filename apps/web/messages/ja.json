@@ -19,10 +19,24 @@
     "modules": "モジュール",
     "documentations": "ドキュメント",
     "blog": "ブログ",
-    "eventWebinar": "イベント / ウェビナー"
+    "eventWebinar": "イベント / ウェビナー",
+    "introduction": "紹介",
+    "resourceBlogs": "ブログ",
+    "resourceProducts": "製品",
+    "products": "製品",
+    "aiDrivenDevelopment": "AI Driven Development"
+  },
+  "language": {
+    "switcherLabel": "言語を変更",
+    "menuTitle": "メニュー",
+    "option": {
+      "en": "English",
+      "ja": "日本語",
+      "vi": "Tiếng Việt"
+    }
   },
   "cta": {
-    "urgentInquiry": "緊急のお問い合わせ",
+    "contact": "お問い合わせ",
     "getInTouch": "お問い合わせ"
   },
   "floating": {

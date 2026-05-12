@@ -4,7 +4,7 @@ import { defaultLocale, locales } from '@/shared/i18n';
 
 const PUBLIC_FILE = /\.(.*)$/;
 
-export function proxy(request: NextRequest): NextResponse | undefined {
+export function proxy(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl;
 
   if (
@@ -12,7 +12,7 @@ export function proxy(request: NextRequest): NextResponse | undefined {
     pathname.startsWith('/api') ||
     PUBLIC_FILE.test(pathname)
   ) {
-    return undefined;
+    return NextResponse.next();
   }
 
   const hasLocale = locales.some(
@@ -20,7 +20,7 @@ export function proxy(request: NextRequest): NextResponse | undefined {
   );
 
   if (hasLocale) {
-    return undefined;
+    return NextResponse.next();
   }
 
   const url = request.nextUrl.clone();
