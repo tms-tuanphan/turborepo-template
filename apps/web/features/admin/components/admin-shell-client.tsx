@@ -67,7 +67,7 @@ export function AdminShellClient({
   const collapseActive = hydrated && collapsed;
 
   return (
-    <div className="flex min-h-svh w-full bg-muted/30">
+    <div className="flex h-svh min-h-0 w-full overflow-hidden bg-muted/30">
       <AdminSidebar
         id={SIDEBAR_ID}
         homeHref={homeHref}
@@ -80,7 +80,7 @@ export function AdminShellClient({
         {/** Nav is passed by parent for reuse in desktop + mobile. */}
         {mobileNav}
       </AdminSidebar>
-      <div className="flex min-h-svh min-w-0 flex-1 flex-col bg-background">
+      <div className="flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-background">
         <AdminHeader
           messages={messages}
           userEmail={userEmail}

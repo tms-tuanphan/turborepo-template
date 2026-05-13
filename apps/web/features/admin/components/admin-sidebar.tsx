@@ -37,7 +37,7 @@ export function AdminSidebar({
     <aside
       id={id}
       className={cn(
-        'hidden shrink-0 flex-col bg-primary/05 transition-[width] duration-200 ease-out md:flex',
+        'hidden h-full min-h-0 shrink-0 flex-col overflow-hidden bg-primary/05 transition-[width] duration-200 ease-out md:flex',
         collapsed ? 'w-14' : 'w-60',
       )}
     >
@@ -58,7 +58,7 @@ export function AdminSidebar({
       <AdminSidebarCollapsedProvider value={collapsed}>
         <nav
           id={navId}
-          className="min-h-0 flex-1 overflow-y-auto px-3 py-5"
+          className="min-h-0 flex-1 overflow-hidden px-3 py-5"
           aria-label={navLabel}
         >
           {children}
