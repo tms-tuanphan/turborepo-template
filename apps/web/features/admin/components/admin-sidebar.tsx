@@ -82,7 +82,9 @@ export function AdminSidebar({
             className="size-4 shrink-0 absolute left-3 top-1/2 -translate-y-1/2"
             aria-hidden
           />
-          {!collapsed ? <span className="truncate">{signOutLabel}</span> : null}
+          {!collapsed ? (
+            <span className="truncate text-base">{signOutLabel}</span>
+          ) : null}
         </Button>
       </div>
     </aside>

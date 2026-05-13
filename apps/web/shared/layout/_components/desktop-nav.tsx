@@ -45,7 +45,7 @@ export function DesktopNav({ locale, messages }: Props) {
             </NavigationMenuItem>
           ) : (
             <NavigationMenuItem key={entry.id}>
-              <NavigationMenuTrigger className="bg-transparent text-base! font-medium text-foreground/80 hover:bg-accent/60">
+              <NavigationMenuTrigger className="bg-transparent text-lg! font-medium text-foreground/80 hover:bg-accent/60">
                 {messages.nav[entry.labelKey]}
               </NavigationMenuTrigger>
               <NavigationMenuContent className="w-max">

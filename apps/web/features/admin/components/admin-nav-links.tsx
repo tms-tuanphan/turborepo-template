@@ -49,7 +49,7 @@ function NavLinkRow({
           : 'text-muted-foreground hover:bg-primary/20 hover:text-foreground',
       )}
     >
-      <Icon className="size-4 shrink-0" aria-hidden />
+      <Icon className="size-5 shrink-0" aria-hidden />
       {!collapsed ? <span className="truncate">{label}</span> : null}
     </Link>
   );
@@ -74,7 +74,7 @@ export function AdminNavLinks({ locale, messages }: AdminNavLinksProps) {
   const aiActive = pathname === aiHref || pathname.startsWith(`${aiHref}/`);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       <ul className="flex flex-col gap-0.5">
         <li>
           <NavLinkRow
@@ -89,7 +89,7 @@ export function AdminNavLinks({ locale, messages }: AdminNavLinksProps) {
 
       <section aria-label={t.resources} className="flex flex-col gap-1 pt-4">
         {!collapsed ? (
-          <p className="px-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          <p className="px-3 text-base font-semibold uppercase tracking-wide text-muted-foreground/80 mb-1">
             {t.resources}
           </p>
         ) : null}
