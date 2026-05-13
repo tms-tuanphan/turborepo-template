@@ -137,7 +137,7 @@ export function AdminHeader({
               {t.navLabel}
             </SheetDescription>
             <div className="flex items-center gap-3 justify-center">
-              <Logo href={homeHref} ariaLabel={logoAria} priority={false} />
+              <Logo href={homeHref} ariaLabel={logoAria} />
             </div>
           </SheetHeader>
           <div className="p-3">{mobileNav}</div>

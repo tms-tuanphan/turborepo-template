@@ -24,7 +24,7 @@ export function Footer({ locale, messages }: Props) {
       <div className="mx-auto w-full px-4 py-12 sm:px-6 lg:p-20">
         <div className="grid gap-10 lg:grid-cols-1">
           <div className="space-y-4">
-            <Logo href={`/${locale}`} />
+            <Logo href={`/${locale}`} priority={false} />
 
             <div className="space-y-3">
               <p className="text-sm font-medium leading-relaxed text-foreground md:text-base lg:text-lg">

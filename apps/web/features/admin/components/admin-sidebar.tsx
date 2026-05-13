@@ -50,7 +50,6 @@ export function AdminSidebar({
         <Logo
           href={homeHref}
           ariaLabel={logoAria}
-          priority={false}
           className={cn(collapsed && 'justify-center')}
           imageClassName={cn(collapsed && 'h-6 max-w-[2.5rem]')}
         />
