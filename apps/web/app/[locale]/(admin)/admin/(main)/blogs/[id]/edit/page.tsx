@@ -24,14 +24,6 @@ export default async function AdminBlogEditPage({
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6">
-      <div className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          {messages.admin.blogs.editPageTitle}
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          {messages.admin.blogs.editPageDescription}
-        </p>
-      </div>
       <AdminBlogForm
         mode="edit"
         locale={locale}

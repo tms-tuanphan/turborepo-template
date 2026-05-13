@@ -9,15 +9,11 @@ export default async function AdminIntroPage({ params }: { params: Params }) {
   if (!isLocale(rawLocale)) {
     notFound();
   }
-  const messages = getMessages(rawLocale);
-  const t = messages.admin.intro;
+  getMessages(rawLocale);
 
   return (
     <div className="flex flex-col gap-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight">{t.pageTitle}</h1>
-        <p className="text-sm text-muted-foreground">{t.pageDescription}</p>
-      </header>
+      {/** Page title lives in the admin header. */}
     </div>
   );
 }

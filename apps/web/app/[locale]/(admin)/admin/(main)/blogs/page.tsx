@@ -46,13 +46,7 @@ export default async function AdminBlogsPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight">
-            {t.pageTitle}
-          </h1>
-          <p className="text-sm text-muted-foreground">{t.pageDescription}</p>
-        </div>
+      <div className="flex items-center justify-end">
         <Button type="button" asChild>
           <Link href={`/${locale}/admin/blogs/new`}>{t.actions.create}</Link>
         </Button>

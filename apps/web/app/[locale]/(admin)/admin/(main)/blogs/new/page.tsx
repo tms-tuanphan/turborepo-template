@@ -15,14 +15,6 @@ export default async function AdminBlogNewPage({ params }: { params: Params }) {
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6">
-      <div className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          {messages.admin.blogs.newPageTitle}
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          {messages.admin.blogs.newPageDescription}
-        </p>
-      </div>
       <AdminBlogForm mode="create" locale={locale} messages={messages} />
     </div>
   );
