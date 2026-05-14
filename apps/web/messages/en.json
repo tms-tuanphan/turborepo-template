@@ -97,7 +97,9 @@
       "notifications": "Notifications",
       "notificationsDisabled": "No new notifications",
       "signOut": "Sign out",
-      "userFallback": "Admin user"
+      "userFallback": "Admin user",
+      "switchToLightMode": "Switch to light mode",
+      "switchToDarkMode": "Switch to dark mode"
     },
     "intro": {
       "pageTitle": "Introduction",

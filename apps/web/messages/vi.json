@@ -97,7 +97,9 @@
       "notifications": "Thông báo",
       "notificationsDisabled": "Không có thông báo mới",
       "signOut": "Đăng xuất",
-      "userFallback": "Quản trị viên"
+      "userFallback": "Quản trị viên",
+      "switchToLightMode": "Chuyển sang chế độ sáng",
+      "switchToDarkMode": "Chuyển sang chế độ tối"
     },
     "intro": {
       "pageTitle": "Giới thiệu",

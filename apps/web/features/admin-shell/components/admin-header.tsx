@@ -5,8 +5,11 @@ import {
   ChevronRightIcon,
   SquareArrowLeftIcon,
   SquareArrowRightIcon,
+  MoonIcon,
+  SunIcon,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -85,6 +88,44 @@ function getAdminBreadcrumbItems(
 
   // Unknown admin subsection: keep it conservative.
   return items;
+}
+
+function AdminThemeToggle({ messages }: { messages: Messages }) {
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const t = messages.admin.shell;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <span
+        className="inline-flex size-9 shrink-0 items-center justify-center"
+        aria-hidden
+      />
+    );
+  }
+
+  const isDark = resolvedTheme === 'dark';
+
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="icon"
+      className="size-9 shrink-0 text-foreground"
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      aria-label={isDark ? t.switchToLightMode : t.switchToDarkMode}
+    >
+      {isDark ? (
+        <SunIcon className="size-5" aria-hidden />
+      ) : (
+        <MoonIcon className="size-5" aria-hidden />
+      )}
+    </Button>
+  );
 }
 
 export function AdminHeader({
@@ -172,11 +213,14 @@ export function AdminHeader({
             {breadcrumbItems.map((item, index) => {
               const isLast = index === breadcrumbItems.length - 1;
               return (
-                <li key={`${item.label}-${index}`} className="min-w-0 text-lg">
+                <li
+                  key={`${item.label}-${index}`}
+                  className="min-w-0 text-lg flex items-center gap-1"
+                >
                   {index > 0 ? (
                     <ChevronRightIcon
                       aria-hidden
-                      className="mr-2 mb-1 inline-block size-5 translate-y-px text-muted-foreground/70"
+                      className="inline-block size-5 text-foreground"
                     />
                   ) : null}
                   <span
@@ -201,7 +245,8 @@ export function AdminHeader({
         </div>
       </div>
 
-      <div className="flex shrink-0 items-center gap-1">
+      <div className="flex shrink-0 items-center gap-2">
+        <AdminThemeToggle messages={messages} />
         <span className="max-w-[200px] truncate text-lg text-foreground">
           {displayName}
         </span>

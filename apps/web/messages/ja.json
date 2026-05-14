@@ -97,7 +97,9 @@
       "notifications": "通知",
       "notificationsDisabled": "新しい通知はありません",
       "signOut": "サインアウト",
-      "userFallback": "管理者"
+      "userFallback": "管理者",
+      "switchToLightMode": "ライトモードに切り替え",
+      "switchToDarkMode": "ダークモードに切り替え"
     },
     "intro": {
       "pageTitle": "紹介",
