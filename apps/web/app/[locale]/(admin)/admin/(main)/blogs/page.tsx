@@ -5,7 +5,7 @@ import {
   AdminBlogsFilterBar,
   AdminBlogsPagination,
   AdminBlogsTable,
-} from '@/features/admin';
+} from '@/features/admin-blogs';
 import { listAllBlogs, parseBlogFilters } from '@/features/blogs';
 import { filterAndPaginateBlogs } from '@/shared/utils/blog-filters';
 import { Button } from '@/components/ui/button';

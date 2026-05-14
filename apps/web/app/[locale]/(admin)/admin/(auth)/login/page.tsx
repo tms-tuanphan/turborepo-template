@@ -1,7 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
-import { AdminLoginForm } from '@/features/admin';
+import { AdminLoginForm } from '@/features/admin-auth';
 import { auth } from '@/auth';
 import { Skeleton } from '@/components/ui/skeleton';
 import {

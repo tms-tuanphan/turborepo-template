@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 
-import { AdminShell } from '@/features/admin';
+import { AdminShell } from '@/features/admin-shell';
 import { auth } from '@/auth';
 import { getMessages, isLocale } from '@/shared/i18n';
 

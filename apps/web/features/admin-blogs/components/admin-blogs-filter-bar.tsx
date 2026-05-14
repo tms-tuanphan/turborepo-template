@@ -14,7 +14,7 @@ import {
 import { BLOG_CATEGORIES, BLOG_STATUSES } from '@/shared/types/blog';
 import type { Messages } from '@/shared/i18n';
 
-import { useAdminBlogFilters } from '../_hooks/use-admin-blog-filters';
+import { useAdminBlogFilters } from '../hooks/use-admin-blog-filters';
 
 const SEARCH_DEBOUNCE_MS = 300;
 

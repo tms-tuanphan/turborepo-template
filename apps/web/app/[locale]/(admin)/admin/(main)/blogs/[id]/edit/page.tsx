@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import { AdminBlogForm } from '@/features/admin';
+import { AdminBlogForm } from '@/features/admin-blogs';
 import { getBlogById } from '@/features/blogs';
 import { getMessages, isLocale, type Locale } from '@/shared/i18n';
 

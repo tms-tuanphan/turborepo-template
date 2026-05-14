@@ -4,10 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { auth } from '@/auth';
-import {
-  adminBlogSchema,
-  type AdminBlogInput,
-} from '@/features/admin/validations/blog.schema';
+import { adminBlogSchema, type AdminBlogInput } from '@/features/admin-blogs';
 import {
   createBlogInStore,
   deleteBlogInStore,

@@ -10,9 +10,9 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import type { Messages } from '@/shared/i18n';
-
-import { useAdminBlogFilters } from '../_hooks/use-admin-blog-filters';
 import { buildPageRange } from '@/shared/utils/pagination-range';
+
+import { useAdminBlogFilters } from '../hooks/use-admin-blog-filters';
 
 type AdminBlogsPaginationProps = {
   totalPages: number;
