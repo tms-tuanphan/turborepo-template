@@ -26,35 +26,23 @@ export type BlogFormActionState = {
 
 export const initialBlogFormActionState: BlogFormActionState = { ok: true };
 
+const DESCRIPTION_MAX = 300;
+const META_TITLE_MAX = 70;
+const META_DESCRIPTION_MAX = 160;
+
 function pickString(formData: FormData, key: string): string {
   const v = formData.get(key);
   return typeof v === 'string' ? v : '';
-}
-
-function parseTagsJson(raw: string): string[] {
-  if (!raw.trim()) return [];
-  try {
-    const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return parsed.filter((t): t is string => typeof t === 'string');
-  } catch {
-    return [];
-  }
 }
 
 function formDataToBlogInput(formData: FormData): Record<string, unknown> {
   return {
     title: pickString(formData, 'title'),
     slug: pickString(formData, 'slug'),
-    description: pickString(formData, 'description'),
     content: pickString(formData, 'content'),
     category: pickString(formData, 'category'),
-    tags: parseTagsJson(pickString(formData, 'tags')),
     status: pickString(formData, 'status'),
     coverImage: pickString(formData, 'coverImage'),
-    scheduledAt: pickString(formData, 'scheduledAt'),
-    seoTitle: pickString(formData, 'seoTitle'),
-    seoDescription: pickString(formData, 'seoDescription'),
   };
 }
 
@@ -64,6 +52,35 @@ function resolveAuthor(session: {
   return session.user?.name?.trim() || session.user?.email?.trim() || 'Admin';
 }
 
+/**
+ * Derive a plain-text excerpt from markdown so list/detail pages keep a
+ * meaningful description after the dedicated field was removed from the form.
+ * Picks the first non-heading paragraph and strips markdown syntax.
+ */
+function deriveDescription(markdown: string): string {
+  const paragraph = markdown
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/`[^`]*`/g, ' ')
+    .replace(/!\[[^\]]*]\([^)]*\)/g, ' ')
+    .replace(/\[([^\]]*)]\([^)]*\)/g, '$1')
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .find((block) => block.length > 0 && !/^#{1,6}\s+/.test(block));
+
+  if (!paragraph) return '';
+
+  const plain = paragraph
+    .replace(/^>\s?/gm, '')
+    .replace(/[*_~]+/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (!plain) return '';
+  return plain.length > DESCRIPTION_MAX
+    ? plain.slice(0, DESCRIPTION_MAX).trimEnd()
+    : plain;
+}
+
 function toBlogPayload(
   data: AdminBlogInput,
   ctx: { author: string; existing?: BlogPost },
@@ -71,40 +88,29 @@ function toBlogPayload(
   const existing = ctx.existing;
   const today = new Date().toISOString().slice(0, 10);
 
-  let publishedAt: string | null = null;
-  if (data.status === 'PUBLISHED') {
-    publishedAt = existing?.publishedAt ?? today;
-  } else if (data.status === 'ARCHIVED') {
-    publishedAt = existing?.publishedAt ?? null;
-  }
+  const description = deriveDescription(data.content);
 
-  const scheduledAt =
-    data.status === 'SCHEDULED' && data.scheduledAt
-      ? new Date(data.scheduledAt).toISOString()
-      : null;
+  const publishedAt =
+    data.status === 'PUBLISHED' ? (existing?.publishedAt ?? today) : null;
 
   const seo = {
-    metaTitle:
-      data.seoTitle.length > 0 ? data.seoTitle : data.title.slice(0, 70),
-    metaDescription:
-      data.seoDescription.length > 0
-        ? data.seoDescription
-        : data.description.slice(0, 160),
+    metaTitle: data.title.slice(0, META_TITLE_MAX),
+    metaDescription: description.slice(0, META_DESCRIPTION_MAX),
   };
 
   return {
     slug: data.slug,
     title: data.title,
-    description: data.description,
+    description,
     content: data.content,
     category: data.category,
-    tags: data.tags,
+    tags: existing?.tags ?? [],
     status: data.status,
     coverImage: data.coverImage,
     author: ctx.author,
     views: existing?.views ?? 0,
     publishedAt,
-    scheduledAt,
+    scheduledAt: null,
     seo,
   };
 }

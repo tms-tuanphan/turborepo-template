@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type SyntheticEvent } from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -9,19 +9,29 @@ import '@uiw/react-md-editor/markdown-editor.css';
 
 type PreviewMode = 'edit' | 'preview' | 'live';
 
+export type AdminBlogEditorSelection = {
+  start: number;
+  end: number;
+  text: string;
+};
+
 type AdminBlogMarkdownEditorProps = {
   value: string;
   onChange: (value: string) => void;
   labels: { write: string; preview: string; split: string };
   loadingLabel: string;
+  onSelectionChange?: (selection: AdminBlogEditorSelection) => void;
   'aria-label'?: string;
 };
+
+const EDITOR_HEIGHT = 500;
 
 export function AdminBlogMarkdownEditor({
   value,
   onChange,
   labels,
   loadingLabel,
+  onSelectionChange,
   'aria-label': ariaLabel,
 }: AdminBlogMarkdownEditorProps) {
   const [preview, setPreview] = useState<PreviewMode>('edit');
@@ -31,13 +41,25 @@ export function AdminBlogMarkdownEditor({
       dynamic(() => import('@uiw/react-md-editor'), {
         ssr: false,
         loading: () => (
-          <div className="flex min-h-[420px] items-center justify-center rounded-md border bg-muted/30 text-sm text-muted-foreground">
+          <div className="flex min-h-[500px] items-center justify-center rounded-md border bg-muted/30 text-sm text-muted-foreground">
             {loadingLabel}
           </div>
         ),
       }),
     [loadingLabel],
   );
+
+  function handleSelect(event: SyntheticEvent<HTMLTextAreaElement>) {
+    if (!onSelectionChange) return;
+    const target = event.currentTarget;
+    const start = target.selectionStart ?? 0;
+    const end = target.selectionEnd ?? 0;
+    onSelectionChange({
+      start,
+      end,
+      text: target.value.slice(start, end),
+    });
+  }
 
   return (
     <div
@@ -78,8 +100,12 @@ export function AdminBlogMarkdownEditor({
         value={value}
         onChange={(v) => onChange(v ?? '')}
         preview={preview}
-        height={420}
+        height={EDITOR_HEIGHT}
         visibleDragbar={false}
+        textareaProps={{
+          onSelect: handleSelect,
+          'aria-label': ariaLabel,
+        }}
       />
     </div>
   );
