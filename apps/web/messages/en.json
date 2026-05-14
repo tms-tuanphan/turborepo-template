@@ -158,21 +158,52 @@
         "categoryLabel": "Category"
       },
       "form": {
+        "backToBlogs": "Back to blogs",
         "titleLabel": "Title",
+        "titlePlaceholder": "Add a compelling title for your article…",
         "slugLabel": "Slug",
         "slugHint": "Lowercase letters, numbers, and hyphens only.",
         "contentLabel": "Markdown",
+        "editorChromeTitle": "Content",
+        "viewModeTriggerAria": "Editor view mode",
         "editorWrite": "Write",
         "editorPreview": "Preview",
         "editorSplit": "Split",
         "editorLoading": "Loading editor…",
         "categoryLabel": "Category",
-        "featuredImageLabel": "Cover image URL",
-        "featuredImageHint": "Paste a public image URL.",
+        "featuredImageLabel": "Cover image",
+        "featuredImageHint": "JPEG, PNG, WebP, or GIF. Maximum size 2 MB.",
+        "featuredImageUploadPrompt": "Drag and drop an image here, or click to choose.",
+        "featuredImageChooseFile": "Choose image",
+        "featuredImageReplace": "Replace image",
+        "featuredImageRemove": "Remove image",
+        "featuredImageInvalidType": "Please use a JPEG, PNG, WebP, or GIF file.",
+        "featuredImageTooLarge": "Image must be 2 MB or smaller.",
         "saving": "Saving…",
         "saved": "Saved.",
+        "tabs": {
+          "publish": "Publish settings",
+          "seo": "SEO settings"
+        },
+        "sidebar": {
+          "cardTitle": "Publish and SEO",
+          "statusLabel": "Status",
+          "statusLabels": {
+            "DRAFT": "Draft",
+            "REVIEWING": "Reviewing",
+            "SCHEDULED": "Scheduled",
+            "PUBLISHED": "Published",
+            "ARCHIVED": "Archived"
+          }
+        },
+        "seoPreview": {
+          "hint": "Preview only. These values are generated from your title and content when you save.",
+          "metaTitleLabel": "SEO title",
+          "metaDescriptionLabel": "SEO description"
+        },
         "stats": {
           "words": "Words",
+          "characters": "Characters",
           "readingTime": "Reading",
           "headings": "Headings",
           "minutes": "min"
@@ -194,7 +225,9 @@
           "commandDialogDescription": "Type a prompt and AI will append the result below your cursor.",
           "commandPlaceholder": "e.g. Add a section about pricing trade-offs",
           "commandSubmit": "Generate",
-          "commandShortcutHint": "Press Ctrl+K to open from anywhere in the form"
+          "commandShortcutHint": "Press Ctrl+K to open from anywhere in the form",
+          "fabAriaLabel": "Open AI tools",
+          "commandMenuLabel": "Custom prompt…"
         },
         "errors": {
           "generic": "Something went wrong.",

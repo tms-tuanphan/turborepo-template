@@ -1,11 +1,28 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useMemo, useState, type SyntheticEvent } from 'react';
-
-import { cn } from '@/lib/utils';
+import { ChevronDownIcon } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { useEffect, useMemo, useState, type SyntheticEvent } from 'react';
 
 import '@uiw/react-md-editor/markdown-editor.css';
+
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
+import { AdminBlogStats } from './admin-blog-stats';
 
 type PreviewMode = 'edit' | 'preview' | 'live';
 
@@ -15,33 +32,58 @@ export type AdminBlogEditorSelection = {
   text: string;
 };
 
+type EditorModeLabels = { write: string; preview: string; split: string };
+
 type AdminBlogMarkdownEditorProps = {
   value: string;
   onChange: (value: string) => void;
-  labels: { write: string; preview: string; split: string };
+  labels: EditorModeLabels;
   loadingLabel: string;
-  onSelectionChange?: (selection: AdminBlogEditorSelection) => void;
+  chromeTitle: string;
+  viewModeTriggerAria: string;
+  stats: {
+    wordsLabel: string;
+    charactersLabel: string;
+    readingTimeLabel: string;
+    headingsLabel: string;
+    minutesLabel: string;
+  };
+  onSelectionChange?: (selection: AdminBlogEditorSelection | null) => void;
   'aria-label'?: string;
 };
 
-const EDITOR_HEIGHT = 500;
+const EDITOR_HEIGHT = 480;
 
 export function AdminBlogMarkdownEditor({
   value,
   onChange,
   labels,
   loadingLabel,
+  chromeTitle,
+  viewModeTriggerAria,
+  stats,
   onSelectionChange,
   'aria-label': ariaLabel,
 }: AdminBlogMarkdownEditorProps) {
   const [preview, setPreview] = useState<PreviewMode>('edit');
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const colorMode =
+    mounted && resolvedTheme === 'dark'
+      ? ('dark' as const)
+      : ('light' as const);
 
   const MDEditor = useMemo(
     () =>
       dynamic(() => import('@uiw/react-md-editor'), {
         ssr: false,
         loading: () => (
-          <div className="flex min-h-[500px] items-center justify-center rounded-md border bg-muted/30 text-sm text-muted-foreground">
+          <div className="flex min-h-[480px] items-center justify-center rounded-md border bg-muted/30 text-sm text-muted-foreground">
             {loadingLabel}
           </div>
         ),
@@ -61,52 +103,61 @@ export function AdminBlogMarkdownEditor({
     });
   }
 
+  const modeLabel =
+    preview === 'edit'
+      ? labels.write
+      : preview === 'preview'
+        ? labels.preview
+        : labels.split;
+
   return (
-    <div
-      data-color-mode="light"
-      className="flex flex-col gap-2"
-      aria-label={ariaLabel}
-    >
-      <div
-        role="tablist"
-        aria-label={ariaLabel}
-        className="inline-flex w-fit gap-0.5 rounded-md border bg-muted/40 p-0.5"
-      >
-        {(
-          [
-            ['edit', labels.write] as const,
-            ['preview', labels.preview] as const,
-            ['live', labels.split] as const,
-          ] as const
-        ).map(([mode, label]) => (
-          <button
-            key={mode}
-            type="button"
-            role="tab"
-            aria-selected={preview === mode}
-            className={cn(
-              'rounded px-3 py-1.5 text-xs font-medium transition-colors',
-              preview === mode
-                ? 'bg-background text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground',
-            )}
-            onClick={() => setPreview(mode)}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-      <MDEditor
-        value={value}
-        onChange={(v) => onChange(v ?? '')}
-        preview={preview}
-        height={EDITOR_HEIGHT}
-        visibleDragbar={false}
-        textareaProps={{
-          onSelect: handleSelect,
-          'aria-label': ariaLabel,
-        }}
-      />
-    </div>
+    <Card className="gap-0 overflow-hidden py-0 shadow-sm">
+      <CardHeader className="flex flex-row items-center justify-between gap-3 border-b px-4 py-3 sm:px-6">
+        <CardTitle className="text-base font-semibold">{chromeTitle}</CardTitle>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="gap-1.5 font-normal"
+              aria-label={viewModeTriggerAria}
+            >
+              {modeLabel}
+              <ChevronDownIcon className="size-4 opacity-70" aria-hidden />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="min-w-[10rem]">
+            <DropdownMenuItem onClick={() => setPreview('edit')}>
+              {labels.write}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setPreview('preview')}>
+              {labels.preview}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setPreview('live')}>
+              {labels.split}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </CardHeader>
+      <CardContent className="space-y-0 px-0 pb-0">
+        <div data-color-mode={colorMode} className="flex flex-col">
+          <MDEditor
+            value={value}
+            onChange={(v) => onChange(v ?? '')}
+            preview={preview}
+            height={EDITOR_HEIGHT}
+            visibleDragbar={false}
+            textareaProps={{
+              onSelect: handleSelect,
+              'aria-label': ariaLabel,
+            }}
+          />
+        </div>
+      </CardContent>
+      <CardFooter className="flex flex-wrap items-center justify-between gap-3 border-t bg-muted/20 px-4 py-3 sm:px-6">
+        <AdminBlogStats content={value} {...stats} />
+      </CardFooter>
+    </Card>
   );
 }

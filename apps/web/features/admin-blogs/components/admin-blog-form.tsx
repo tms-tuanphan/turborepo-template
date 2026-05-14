@@ -1,6 +1,11 @@
 'use client';
 
-import Image from 'next/image';
+import {
+  ArrowLeftIcon,
+  CheckIcon,
+  FileTextIcon,
+  SendHorizontalIcon,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useActionState, useEffect, useRef, useState } from 'react';
 
@@ -12,24 +17,16 @@ import {
 } from '@/app/[locale]/(admin)/admin/(main)/blogs/_actions/blog-actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { BLOG_CATEGORIES } from '@/shared/types/blog';
 import type { BlogPost } from '@/shared/types/blog';
 import type { Locale, Messages } from '@/shared/i18n';
 import { slugify } from '@/shared/utils/slugify';
 
 import { AdminBlogAiToolbar } from './admin-blog-ai-toolbar';
+import { AdminBlogEditorSidebar } from './admin-blog-editor-sidebar';
 import {
   AdminBlogMarkdownEditor,
   type AdminBlogEditorSelection,
 } from './admin-blog-markdown-editor';
-import { AdminBlogStats } from './admin-blog-stats';
 
 function firstFieldError(
   fieldErrors: BlogFormActionState['fieldErrors'],
@@ -55,6 +52,7 @@ export function AdminBlogForm({
   const t = messages.admin.blogs.form;
   const tc = messages.blogs.categories;
   const tActions = messages.admin.blogs.actions;
+  const tb = messages.admin.blogs;
 
   const actionFn = mode === 'create' ? createBlogAction : updateBlogAction;
   const [state, action, pending] = useActionState(
@@ -114,8 +112,12 @@ export function AdminBlogForm({
 
   const listHref = `/${locale}/admin/blogs`;
 
+  const heroTitle = mode === 'create' ? tb.newPageTitle : tb.editPageTitle;
+
+  const statusDisplayKey = initial?.status ?? 'DRAFT';
+
   return (
-    <form action={action} className="flex flex-col gap-6">
+    <form action={action} className="flex min-h-0 flex-1 flex-col">
       <input type="hidden" name="locale" value={locale} />
       {mode === 'edit' && initial ? (
         <input type="hidden" name="id" value={initial.id} />
@@ -130,186 +132,165 @@ export function AdminBlogForm({
         className="sr-only"
       />
 
-      <div className="flex items-center justify-between gap-3">
-        <Button type="button" variant="ghost" size="sm" asChild>
-          <Link href={listHref}>{tActions.cancel}</Link>
-        </Button>
-        {savedFlash ? (
+      <div className="mx-auto flex w-full items-center gap-3 px-4 py-3 sm:px-6">
+        <div className="flex gap-4 items-center">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            className="shrink-0"
+            aria-label={t.backToBlogs}
+            asChild
+          >
+            <Link href={listHref}>
+              <ArrowLeftIcon className="size-4" aria-hidden />
+              <span className="sr-only">{t.backToBlogs}</span>
+            </Link>
+          </Button>
+          <div
+            className="flex size-12 shrink-0 items-center justify-center rounded-xl border bg-card text-primary shadow-sm"
+            aria-hidden
+          >
+            <FileTextIcon className="size-6" />
+          </div>
+
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+            {heroTitle}
+          </h1>
+        </div>
+        {mode === 'edit' && savedFlash ? (
           <p
-            className="text-sm text-emerald-600 dark:text-emerald-400"
+            className="inline-flex min-w-0 items-center gap-1.5 text-sm text-emerald-600 dark:text-emerald-400"
             role="status"
           >
+            <CheckIcon className="size-4 shrink-0" aria-hidden />
             {t.saved}
           </p>
         ) : null}
+        <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
+          <Button
+            type="submit"
+            name="status"
+            value="DRAFT"
+            variant="secondary"
+            size="sm"
+            disabled={pending}
+          >
+            {pending ? t.saving : tActions.saveDraft}
+          </Button>
+          <Button
+            type="submit"
+            name="status"
+            value="PUBLISHED"
+            size="sm"
+            disabled={pending}
+            className="gap-1.5"
+          >
+            {pending ? (
+              t.saving
+            ) : (
+              <>
+                <SendHorizontalIcon className="size-4" aria-hidden />
+                {tActions.publishNow}
+              </>
+            )}
+          </Button>
+        </div>
       </div>
 
-      {formErrorText ? (
-        <p className="text-sm text-destructive" role="alert">
-          {formErrorText}
-        </p>
-      ) : null}
+      <div className="mx-auto grid w-full flex-1 grid-cols-1 gap-6 px-4 py-6 sm:gap-8 sm:px-6 lg:grid-cols-[minmax(0,1fr)_min(100%,380px)] lg:items-start">
+        <div className="flex min-w-0 flex-col gap-6">
+          {formErrorText ? (
+            <p className="text-sm text-destructive" role="alert">
+              {formErrorText}
+            </p>
+          ) : null}
 
-      <div className="space-y-2">
-        <label htmlFor="blog-title" className="text-sm font-medium">
-          {t.titleLabel}
-        </label>
-        <Input
-          id="blog-title"
-          name="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          onBlur={onTitleBlur}
-          aria-invalid={Boolean(firstFieldError(state.fieldErrors, 'title'))}
-          aria-describedby={
-            firstFieldError(state.fieldErrors, 'title')
-              ? 'err-title'
-              : undefined
-          }
-        />
-        {firstFieldError(state.fieldErrors, 'title') ? (
-          <p id="err-title" className="text-sm text-destructive" role="alert">
-            {firstFieldError(state.fieldErrors, 'title')}
-          </p>
-        ) : null}
-      </div>
-
-      <div className="space-y-2">
-        <label htmlFor="blog-slug" className="text-sm font-medium">
-          {t.slugLabel}
-        </label>
-        <Input
-          id="blog-slug"
-          name="slug"
-          value={slug}
-          onChange={(e) => onSlugChange(e.target.value)}
-          className="font-mono text-sm"
-          aria-invalid={Boolean(firstFieldError(state.fieldErrors, 'slug'))}
-          aria-describedby={
-            firstFieldError(state.fieldErrors, 'slug')
-              ? 'err-slug'
-              : 'slug-hint'
-          }
-        />
-        <p id="slug-hint" className="text-xs text-muted-foreground">
-          {t.slugHint}
-        </p>
-        {firstFieldError(state.fieldErrors, 'slug') ? (
-          <p id="err-slug" className="text-sm text-destructive" role="alert">
-            {firstFieldError(state.fieldErrors, 'slug')}
-          </p>
-        ) : null}
-      </div>
-
-      <div className="space-y-2">
-        <span className="text-sm font-medium">{t.categoryLabel}</span>
-        <Select
-          value={category}
-          onValueChange={(v) => setCategory(v as typeof category)}
-        >
-          <SelectTrigger aria-label={t.categoryLabel}>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {BLOG_CATEGORIES.map((c) => (
-              <SelectItem key={c} value={c}>
-                {tc[c]}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="space-y-2">
-        <label htmlFor="blog-cover" className="text-sm font-medium">
-          {t.featuredImageLabel}
-        </label>
-        <Input
-          id="blog-cover"
-          name="coverImage"
-          value={coverImage}
-          onChange={(e) => setCoverImage(e.target.value)}
-          placeholder="https://"
-          aria-invalid={Boolean(
-            firstFieldError(state.fieldErrors, 'coverImage'),
-          )}
-          aria-describedby="cover-hint"
-        />
-        <p id="cover-hint" className="text-xs text-muted-foreground">
-          {t.featuredImageHint}
-        </p>
-        {firstFieldError(state.fieldErrors, 'coverImage') ? (
-          <p className="text-sm text-destructive" role="alert">
-            {firstFieldError(state.fieldErrors, 'coverImage')}
-          </p>
-        ) : null}
-        {coverImage ? (
-          <div className="relative aspect-video w-full max-h-56 overflow-hidden rounded-md border">
-            <Image
-              src={coverImage}
-              alt=""
-              fill
-              className="object-cover"
-              sizes="(min-width: 1024px) 768px, 100vw"
-              unoptimized
+          <div className="space-y-2">
+            <label htmlFor="blog-title" className="sr-only">
+              {t.titleLabel}
+            </label>
+            <Input
+              id="blog-title"
+              name="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              onBlur={onTitleBlur}
+              placeholder={t.titlePlaceholder}
+              aria-invalid={Boolean(
+                firstFieldError(state.fieldErrors, 'title'),
+              )}
+              aria-describedby={
+                firstFieldError(state.fieldErrors, 'title')
+                  ? 'err-title'
+                  : undefined
+              }
+              className="h-auto py-2 text-2xl font-semibold placeholder:text-muted-foreground/60 sm:text-3xl"
             />
+            {firstFieldError(state.fieldErrors, 'title') ? (
+              <p
+                id="err-title"
+                className="text-sm text-destructive"
+                role="alert"
+              >
+                {firstFieldError(state.fieldErrors, 'title')}
+              </p>
+            ) : null}
           </div>
-        ) : null}
-      </div>
 
-      <div className="space-y-2">
-        <span className="text-sm font-medium">{t.contentLabel}</span>
-        <AdminBlogAiToolbar
+          <div className="relative">
+            <AdminBlogMarkdownEditor
+              value={content}
+              onChange={setContent}
+              loadingLabel={t.editorLoading}
+              chromeTitle={t.editorChromeTitle}
+              viewModeTriggerAria={t.viewModeTriggerAria}
+              labels={{
+                write: t.editorWrite,
+                preview: t.editorPreview,
+                split: t.editorSplit,
+              }}
+              stats={{
+                wordsLabel: t.stats.words,
+                charactersLabel: t.stats.characters,
+                readingTimeLabel: t.stats.readingTime,
+                headingsLabel: t.stats.headings,
+                minutesLabel: t.stats.minutes,
+              }}
+              onSelectionChange={setSelection}
+              aria-label={t.contentLabel}
+            />
+            <AdminBlogAiToolbar
+              title={title}
+              content={content}
+              selection={selection}
+              onContentChange={setContent}
+              labels={t.ai}
+            />
+            {firstFieldError(state.fieldErrors, 'content') ? (
+              <p className="mt-2 text-sm text-destructive" role="alert">
+                {firstFieldError(state.fieldErrors, 'content')}
+              </p>
+            ) : null}
+          </div>
+        </div>
+
+        <AdminBlogEditorSidebar
+          messages={t}
+          categoryMessages={tc}
+          category={category}
+          onCategoryChange={setCategory}
+          coverImage={coverImage}
+          onCoverImageChange={setCoverImage}
+          slug={slug}
+          onSlugChange={onSlugChange}
           title={title}
           content={content}
-          selection={selection}
-          onContentChange={setContent}
-          labels={t.ai}
+          statusLabel={t.sidebar.statusLabel}
+          statusDisplayKey={statusDisplayKey}
+          slugError={firstFieldError(state.fieldErrors, 'slug')}
+          coverError={firstFieldError(state.fieldErrors, 'coverImage')}
         />
-        <AdminBlogMarkdownEditor
-          value={content}
-          onChange={setContent}
-          loadingLabel={t.editorLoading}
-          labels={{
-            write: t.editorWrite,
-            preview: t.editorPreview,
-            split: t.editorSplit,
-          }}
-          onSelectionChange={setSelection}
-          aria-label={t.contentLabel}
-        />
-        <AdminBlogStats
-          content={content}
-          wordsLabel={t.stats.words}
-          readingTimeLabel={t.stats.readingTime}
-          headingsLabel={t.stats.headings}
-          minutesLabel={t.stats.minutes}
-        />
-        {firstFieldError(state.fieldErrors, 'content') ? (
-          <p className="text-sm text-destructive" role="alert">
-            {firstFieldError(state.fieldErrors, 'content')}
-          </p>
-        ) : null}
-      </div>
-
-      <div className="flex flex-wrap items-center justify-end gap-2 border-t pt-4">
-        <Button
-          type="submit"
-          name="status"
-          value="DRAFT"
-          variant="secondary"
-          disabled={pending}
-        >
-          {pending ? t.saving : tActions.saveDraft}
-        </Button>
-        <Button
-          type="submit"
-          name="status"
-          value="PUBLISHED"
-          disabled={pending}
-        >
-          {pending ? t.saving : tActions.publishNow}
-        </Button>
       </div>
     </form>
   );

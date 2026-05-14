@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 
 import { auth } from '@/auth';
 import { adminBlogSchema, type AdminBlogInput } from '@/features/admin-blogs';
+import { deriveStoredSeo } from '@/features/admin-blogs/lib/blog-meta';
 import {
   createBlogInStore,
   deleteBlogInStore,
@@ -22,10 +23,6 @@ export type BlogFormActionState = {
 };
 
 export const initialBlogFormActionState: BlogFormActionState = { ok: true };
-
-const DESCRIPTION_MAX = 300;
-const META_TITLE_MAX = 70;
-const META_DESCRIPTION_MAX = 160;
 
 function pickString(formData: FormData, key: string): string {
   const v = formData.get(key);
@@ -49,35 +46,6 @@ function resolveAuthor(session: {
   return session.user?.name?.trim() || session.user?.email?.trim() || 'Admin';
 }
 
-/**
- * Derive a plain-text excerpt from markdown so list/detail pages keep a
- * meaningful description after the dedicated field was removed from the form.
- * Picks the first non-heading paragraph and strips markdown syntax.
- */
-function deriveDescription(markdown: string): string {
-  const paragraph = markdown
-    .replace(/```[\s\S]*?```/g, ' ')
-    .replace(/`[^`]*`/g, ' ')
-    .replace(/!\[[^\]]*]\([^)]*\)/g, ' ')
-    .replace(/\[([^\]]*)]\([^)]*\)/g, '$1')
-    .split(/\n{2,}/)
-    .map((block) => block.trim())
-    .find((block) => block.length > 0 && !/^#{1,6}\s+/.test(block));
-
-  if (!paragraph) return '';
-
-  const plain = paragraph
-    .replace(/^>\s?/gm, '')
-    .replace(/[*_~]+/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-
-  if (!plain) return '';
-  return plain.length > DESCRIPTION_MAX
-    ? plain.slice(0, DESCRIPTION_MAX).trimEnd()
-    : plain;
-}
-
 function toBlogPayload(
   data: AdminBlogInput,
   ctx: { author: string; existing?: BlogPost },
@@ -85,15 +53,15 @@ function toBlogPayload(
   const existing = ctx.existing;
   const today = new Date().toISOString().slice(0, 10);
 
-  const description = deriveDescription(data.content);
+  const { description, metaTitle, metaDescription } = deriveStoredSeo(
+    data.title,
+    data.content,
+  );
 
   const publishedAt =
     data.status === 'PUBLISHED' ? (existing?.publishedAt ?? today) : null;
 
-  const seo = {
-    metaTitle: data.title.slice(0, META_TITLE_MAX),
-    metaDescription: description.slice(0, META_DESCRIPTION_MAX),
-  };
+  const seo = { metaTitle, metaDescription };
 
   return {
     slug: data.slug,

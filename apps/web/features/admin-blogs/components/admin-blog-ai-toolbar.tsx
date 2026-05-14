@@ -1,6 +1,6 @@
 'use client';
 
-import { Loader2Icon } from 'lucide-react';
+import { Loader2Icon, SparklesIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 import type { AdminBlogEditorSelection } from './admin-blog-markdown-editor';
 
@@ -33,6 +41,8 @@ type ToolbarLabels = {
   commandPlaceholder: string;
   commandSubmit: string;
   commandShortcutHint: string;
+  fabAriaLabel: string;
+  commandMenuLabel: string;
 };
 
 type AdminBlogAiToolbarProps = {
@@ -68,10 +78,6 @@ async function callAi(
   return (data as { result: string }).result;
 }
 
-/**
- * Insert `insertion` at [start, end] inside `content`, replacing any selection.
- * Falls back to appending when bounds are out of range.
- */
 function spliceContent(
   content: string,
   insertion: string,
@@ -204,54 +210,64 @@ export function AdminBlogAiToolbar({
     setSummary(null);
   }
 
+  const menuDisabled = busy !== null;
+
   return (
-    <div className="flex flex-col gap-1.5">
-      <div className="flex flex-wrap items-center gap-2">
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={runOutline}
-          disabled={busy !== null}
-          aria-busy={busy === 'outline'}
-        >
-          {busy === 'outline' ? (
-            <Loader2Icon className="animate-spin" aria-hidden />
-          ) : null}
-          {busy === 'outline' ? labels.loading : labels.outline}
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={runRewrite}
-          disabled={busy !== null}
-          aria-busy={busy === 'rewrite'}
-        >
-          {busy === 'rewrite' ? (
-            <Loader2Icon className="animate-spin" aria-hidden />
-          ) : null}
-          {busy === 'rewrite' ? labels.loading : labels.rewrite}
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={runSummarize}
-          disabled={busy !== null}
-          aria-busy={busy === 'summarize'}
-        >
-          {busy === 'summarize' ? (
-            <Loader2Icon className="animate-spin" aria-hidden />
-          ) : null}
-          {busy === 'summarize' ? labels.loading : labels.summarize}
-        </Button>
-        <span className="ml-auto text-xs text-muted-foreground">
-          {labels.commandShortcutHint}
-        </span>
-      </div>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild disabled={menuDisabled}>
+          <Button
+            type="button"
+            size="icon-lg"
+            className="absolute right-4 bottom-4 z-20 size-12 rounded-full shadow-lg"
+            aria-label={labels.fabAriaLabel}
+            aria-busy={menuDisabled}
+          >
+            {busy !== null ? (
+              <Loader2Icon className="size-5 animate-spin" aria-hidden />
+            ) : (
+              <SparklesIcon className="size-5" aria-hidden />
+            )}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent side="left" align="end" className="w-56">
+          <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+            {labels.commandShortcutHint}
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            disabled={menuDisabled}
+            onClick={() => void runOutline()}
+          >
+            {labels.outline}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            disabled={menuDisabled}
+            onClick={() => void runRewrite()}
+          >
+            {labels.rewrite}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            disabled={menuDisabled}
+            onClick={() => void runSummarize()}
+          >
+            {labels.summarize}
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            disabled={menuDisabled}
+            onClick={() => setCommandOpen(true)}
+          >
+            {labels.commandMenuLabel}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
       {message ? (
-        <p className="text-xs text-destructive" role="status">
+        <p
+          className="pointer-events-none absolute right-4 bottom-[4.5rem] z-20 max-w-[min(18rem,calc(100%-2rem))] rounded-md border border-destructive/30 bg-background/95 px-3 py-2 text-xs text-destructive shadow-md"
+          role="status"
+        >
           {message}
         </p>
       ) : null}
@@ -338,6 +354,6 @@ export function AdminBlogAiToolbar({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }

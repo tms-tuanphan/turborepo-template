@@ -14,7 +14,7 @@ export default async function AdminBlogNewPage({ params }: { params: Params }) {
   const messages = getMessages(locale);
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-6">
+    <div className="flex flex-1 flex-col">
       <AdminBlogForm mode="create" locale={locale} messages={messages} />
     </div>
   );

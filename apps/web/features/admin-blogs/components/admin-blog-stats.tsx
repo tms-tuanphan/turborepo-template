@@ -3,12 +3,13 @@
 type AdminBlogStatsProps = {
   content: string;
   wordsLabel: string;
+  charactersLabel: string;
   readingTimeLabel: string;
   headingsLabel: string;
   minutesLabel: string;
 };
 
-function countWords(markdown: string): number {
+function stripPlain(markdown: string): string {
   const plain = markdown
     .replace(/```[\s\S]*?```/g, ' ')
     .replace(/`[^`]*`/g, ' ')
@@ -17,8 +18,17 @@ function countWords(markdown: string): number {
     .replace(/[#>*_\-\n\r]+/g, ' ')
     .trim();
 
+  return plain.replace(/\s+/g, ' ').trim();
+}
+
+function countWords(markdown: string): number {
+  const plain = stripPlain(markdown);
   if (!plain) return 0;
   return plain.split(/\s+/).filter(Boolean).length;
+}
+
+function countCharacters(markdown: string): number {
+  return stripPlain(markdown).length;
 }
 
 function countHeadings(markdown: string): number {
@@ -31,11 +41,13 @@ const WORDS_PER_MINUTE = 200;
 export function AdminBlogStats({
   content,
   wordsLabel,
+  charactersLabel,
   readingTimeLabel,
   headingsLabel,
   minutesLabel,
 }: AdminBlogStatsProps) {
   const words = countWords(content);
+  const characters = countCharacters(content);
   const headings = countHeadings(content);
   const minutes = Math.max(1, Math.round(words / WORDS_PER_MINUTE));
 
@@ -44,6 +56,10 @@ export function AdminBlogStats({
       <div className="flex items-center gap-1.5">
         <dt className="font-medium text-foreground/70">{wordsLabel}</dt>
         <dd>{words.toLocaleString()}</dd>
+      </div>
+      <div className="flex items-center gap-1.5">
+        <dt className="font-medium text-foreground/70">{charactersLabel}</dt>
+        <dd>{characters.toLocaleString()}</dd>
       </div>
       <div className="flex items-center gap-1.5">
         <dt className="font-medium text-foreground/70">{readingTimeLabel}</dt>

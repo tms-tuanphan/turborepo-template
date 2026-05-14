@@ -23,7 +23,7 @@ export default async function AdminBlogEditPage({
   }
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-6">
+    <div className="flex min-h-[calc(100vh-4rem)] flex-1 flex-col">
       <AdminBlogForm
         mode="edit"
         locale={locale}

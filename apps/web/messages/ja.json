@@ -158,21 +158,52 @@
         "categoryLabel": "カテゴリー"
       },
       "form": {
+        "backToBlogs": "記事一覧に戻る",
         "titleLabel": "タイトル",
+        "titlePlaceholder": "記事の魅力的なタイトルを入力…",
         "slugLabel": "スラッグ",
         "slugHint": "小文字・数字・ハイフンのみ。",
         "contentLabel": "Markdown",
+        "editorChromeTitle": "本文",
+        "viewModeTriggerAria": "エディタの表示モード",
         "editorWrite": "編集",
         "editorPreview": "プレビュー",
         "editorSplit": "分割",
         "editorLoading": "エディタを読み込み中…",
         "categoryLabel": "カテゴリー",
-        "featuredImageLabel": "カバー画像のURL",
-        "featuredImageHint": "公開画像のURLを貼り付けてください。",
+        "featuredImageLabel": "カバー画像",
+        "featuredImageHint": "JPEG / PNG / WebP / GIF。最大 2 MB。",
+        "featuredImageUploadPrompt": "画像をドラッグ＆ドロップするか、クリックして選択。",
+        "featuredImageChooseFile": "画像を選択",
+        "featuredImageReplace": "画像を差し替え",
+        "featuredImageRemove": "画像を削除",
+        "featuredImageInvalidType": "JPEG、PNG、WebP、GIF のいずれかを使用してください。",
+        "featuredImageTooLarge": "画像は 2 MB 以下にしてください。",
         "saving": "保存中…",
         "saved": "保存しました。",
+        "tabs": {
+          "publish": "公開設定",
+          "seo": "SEO設定"
+        },
+        "sidebar": {
+          "cardTitle": "公開とSEO",
+          "statusLabel": "ステータス",
+          "statusLabels": {
+            "DRAFT": "下書き",
+            "REVIEWING": "レビュー中",
+            "SCHEDULED": "予約済み",
+            "PUBLISHED": "公開中",
+            "ARCHIVED": "アーカイブ"
+          }
+        },
+        "seoPreview": {
+          "hint": "プレビューのみです。保存時にタイトルと本文から自動生成されます。",
+          "metaTitleLabel": "SEOタイトル",
+          "metaDescriptionLabel": "SEOディスクリプション"
+        },
         "stats": {
           "words": "単語数",
+          "characters": "文字数",
           "readingTime": "読了時間",
           "headings": "見出し",
           "minutes": "分"
@@ -194,7 +225,9 @@
           "commandDialogDescription": "指示を入力すると、AIがカーソル位置に結果を追記します。",
           "commandPlaceholder": "例: 料金プランの比較セクションを追加",
           "commandSubmit": "生成",
-          "commandShortcutHint": "Ctrl+K でフォーム内のどこからでも開けます"
+          "commandShortcutHint": "Ctrl+K でフォーム内のどこからでも開けます",
+          "fabAriaLabel": "AIツールを開く",
+          "commandMenuLabel": "カスタムプロンプト…"
         },
         "errors": {
           "generic": "問題が発生しました。",

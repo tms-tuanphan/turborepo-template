@@ -158,21 +158,52 @@
         "categoryLabel": "Danh mục"
       },
       "form": {
+        "backToBlogs": "Về danh sách bài viết",
         "titleLabel": "Tiêu đề",
+        "titlePlaceholder": "Thêm tiêu đề hấp dẫn cho bài viết…",
         "slugLabel": "Slug",
         "slugHint": "Chữ thường, số và dấu gạch ngang.",
         "contentLabel": "Markdown",
+        "editorChromeTitle": "Nội dung",
+        "viewModeTriggerAria": "Chế độ hiển thị editor",
         "editorWrite": "Soạn",
         "editorPreview": "Xem trước",
         "editorSplit": "Chia đôi",
         "editorLoading": "Đang tải trình soạn…",
         "categoryLabel": "Danh mục",
-        "featuredImageLabel": "URL ảnh bìa",
-        "featuredImageHint": "Dán URL ảnh công khai.",
+        "featuredImageLabel": "Ảnh bìa",
+        "featuredImageHint": "JPEG, PNG, WebP hoặc GIF. Tối đa 2 MB.",
+        "featuredImageUploadPrompt": "Kéo thả ảnh vào đây hoặc bấm để chọn.",
+        "featuredImageChooseFile": "Chọn ảnh",
+        "featuredImageReplace": "Thay ảnh",
+        "featuredImageRemove": "Xóa ảnh",
+        "featuredImageInvalidType": "Chỉ dùng file JPEG, PNG, WebP hoặc GIF.",
+        "featuredImageTooLarge": "Ảnh phải nhỏ hơn hoặc bằng 2 MB.",
         "saving": "Đang lưu…",
         "saved": "Đã lưu.",
+        "tabs": {
+          "publish": "Cài đặt xuất bản",
+          "seo": "Cài đặt SEO"
+        },
+        "sidebar": {
+          "cardTitle": "Xuất bản và SEO",
+          "statusLabel": "Trạng thái",
+          "statusLabels": {
+            "DRAFT": "Bản nháp",
+            "REVIEWING": "Đang duyệt",
+            "SCHEDULED": "Đã lên lịch",
+            "PUBLISHED": "Đã xuất bản",
+            "ARCHIVED": "Đã lưu trữ"
+          }
+        },
+        "seoPreview": {
+          "hint": "Chỉ xem trước. Các giá trị được tạo từ tiêu đề và nội dung khi bạn lưu.",
+          "metaTitleLabel": "Tiêu đề SEO",
+          "metaDescriptionLabel": "Mô tả SEO"
+        },
         "stats": {
           "words": "Số từ",
+          "characters": "Số ký tự",
           "readingTime": "Thời gian đọc",
           "headings": "Tiêu đề",
           "minutes": "phút"
@@ -194,7 +225,9 @@
           "commandDialogDescription": "Nhập yêu cầu, AI sẽ chèn kết quả ngay sau vị trí con trỏ.",
           "commandPlaceholder": "Ví dụ: Thêm đoạn so sánh các gói giá",
           "commandSubmit": "Sinh nội dung",
-          "commandShortcutHint": "Nhấn Ctrl+K để mở từ bất kỳ đâu trong form"
+          "commandShortcutHint": "Nhấn Ctrl+K để mở từ bất kỳ đâu trong form",
+          "fabAriaLabel": "Mở công cụ AI",
+          "commandMenuLabel": "Lời nhắc tùy chỉnh…"
         },
         "errors": {
           "generic": "Đã xảy ra lỗi.",
