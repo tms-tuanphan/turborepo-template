@@ -1,5 +1,6 @@
 'use client';
 
+import type { MDXEditorMethods } from '@mdxeditor/editor';
 import { Loader2Icon, SparklesIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -20,8 +21,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-
-import type { AdminBlogEditorSelection } from './admin-blog-markdown-editor';
 
 type ToolbarLabels = {
   outline: string;
@@ -48,7 +47,7 @@ type ToolbarLabels = {
 type AdminBlogAiToolbarProps = {
   title: string;
   content: string;
-  selection: AdminBlogEditorSelection | null;
+  editorRef: React.RefObject<MDXEditorMethods | null>;
   onContentChange: (next: string) => void;
   labels: ToolbarLabels;
 };
@@ -78,22 +77,22 @@ async function callAi(
   return (data as { result: string }).result;
 }
 
-function spliceContent(
-  content: string,
-  insertion: string,
-  start: number,
-  end: number,
-): string {
-  if (start < 0 || end < start || end > content.length) {
-    return content + (content.endsWith('\n') ? '' : '\n\n') + insertion;
-  }
-  return content.slice(0, start) + insertion + content.slice(end);
+function replaceFirstMarkdownOccurrence(
+  markdown: string,
+  search: string,
+  replacement: string,
+): string | null {
+  const idx = markdown.indexOf(search);
+  if (idx === -1) return null;
+  return (
+    markdown.slice(0, idx) + replacement + markdown.slice(idx + search.length)
+  );
 }
 
 export function AdminBlogAiToolbar({
   title,
   content,
-  selection,
+  editorRef,
   onContentChange,
   labels,
 }: AdminBlogAiToolbarProps) {
@@ -128,22 +127,35 @@ export function AdminBlogAiToolbar({
   }, [content, flash, labels, onContentChange, title]);
 
   const runRewrite = useCallback(async () => {
-    if (!selection || selection.text.trim().length === 0) {
+    const ed = editorRef.current;
+    const selectionMd = ed?.getSelectionMarkdown().trim() ?? '';
+    if (!ed || selectionMd.length === 0) {
       flash(labels.missingSelection);
       return;
     }
     setBusy('rewrite');
     try {
-      const result = await callAi('rewrite', { selection: selection.text });
-      onContentChange(
-        spliceContent(content, result, selection.start, selection.end),
+      const result = await callAi('rewrite', { selection: selectionMd });
+      const current = ed.getMarkdown();
+      const replaced = replaceFirstMarkdownOccurrence(
+        current,
+        selectionMd,
+        result,
       );
+      if (replaced !== null) {
+        ed.setMarkdown(replaced);
+        onContentChange(replaced);
+      } else {
+        ed.focus();
+        ed.insertMarkdown(result);
+        onContentChange(ed.getMarkdown());
+      }
     } catch {
       flash(labels.errorGeneric);
     } finally {
       setBusy(null);
     }
-  }, [content, flash, labels, onContentChange, selection]);
+  }, [editorRef, flash, labels, onContentChange]);
 
   const runSummarize = useCallback(async () => {
     if (!content.trim()) {
@@ -165,22 +177,36 @@ export function AdminBlogAiToolbar({
     async (prompt: string) => {
       const trimmed = prompt.trim();
       if (!trimmed) return;
+      const ed = editorRef.current;
+      if (!ed) {
+        flash(labels.errorGeneric);
+        return;
+      }
       setBusy('command');
       try {
-        const result = await callAi('command', {
+        const aiResult = await callAi('command', {
           prompt: trimmed,
           context: title.trim(),
         });
-        const start = selection?.start ?? content.length;
-        const end = selection?.end ?? content.length;
-        onContentChange(
-          spliceContent(
-            content,
-            (content.length > 0 ? '\n\n' : '') + result,
-            start,
-            end,
-          ),
-        );
+        const prefix = content.trim().length > 0 ? '\n\n' : '';
+        const selectionMd = ed.getSelectionMarkdown().trim();
+        ed.focus();
+        if (selectionMd.length > 0) {
+          const current = ed.getMarkdown();
+          const replaced = replaceFirstMarkdownOccurrence(
+            current,
+            selectionMd,
+            prefix + aiResult,
+          );
+          if (replaced !== null) {
+            ed.setMarkdown(replaced);
+          } else {
+            ed.insertMarkdown(prefix + aiResult);
+          }
+        } else {
+          ed.insertMarkdown(prefix + aiResult);
+        }
+        onContentChange(ed.getMarkdown());
         setCommandOpen(false);
         setCommandPrompt('');
       } catch {
@@ -189,7 +215,7 @@ export function AdminBlogAiToolbar({
         setBusy(null);
       }
     },
-    [content, flash, labels, onContentChange, selection, title],
+    [content, editorRef, flash, labels, onContentChange, title],
   );
 
   useEffect(() => {
@@ -219,7 +245,7 @@ export function AdminBlogAiToolbar({
           <Button
             type="button"
             size="icon-lg"
-            className="absolute right-4 bottom-4 z-20 size-12 rounded-full shadow-lg"
+            className="absolute right-4 bottom-4 z-30 size-12 rounded-full bg-primary text-primary-foreground shadow-md hover:bg-primary/90 sm:right-5 sm:bottom-5"
             aria-label={labels.fabAriaLabel}
             aria-busy={menuDisabled}
           >
@@ -265,7 +291,7 @@ export function AdminBlogAiToolbar({
 
       {message ? (
         <p
-          className="pointer-events-none absolute right-4 bottom-[4.5rem] z-20 max-w-[min(18rem,calc(100%-2rem))] rounded-md border border-destructive/30 bg-background/95 px-3 py-2 text-xs text-destructive shadow-md"
+          className="pointer-events-none absolute right-4 bottom-16 z-30 max-w-[min(18rem,calc(100%-2rem))] rounded-md border border-destructive/30 bg-background/95 px-3 py-2 text-xs text-destructive shadow-md sm:right-5"
           role="status"
         >
           {message}

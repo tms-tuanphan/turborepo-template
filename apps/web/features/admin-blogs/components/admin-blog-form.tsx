@@ -9,6 +9,8 @@ import {
 import Link from 'next/link';
 import { useActionState, useEffect, useRef, useState } from 'react';
 
+import type { MDXEditorMethods } from '@mdxeditor/editor';
+
 import {
   createBlogAction,
   initialBlogFormActionState,
@@ -16,17 +18,13 @@ import {
   type BlogFormActionState,
 } from '@/app/[locale]/(admin)/admin/(main)/blogs/_actions/blog-actions';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import type { BlogPost } from '@/shared/types/blog';
 import type { Locale, Messages } from '@/shared/i18n';
 import { slugify } from '@/shared/utils/slugify';
 
 import { AdminBlogAiToolbar } from './admin-blog-ai-toolbar';
 import { AdminBlogEditorSidebar } from './admin-blog-editor-sidebar';
-import {
-  AdminBlogMarkdownEditor,
-  type AdminBlogEditorSelection,
-} from './admin-blog-markdown-editor';
+import { AdminBlogMarkdownEditor } from './admin-blog-markdown-editor';
 
 function firstFieldError(
   fieldErrors: BlogFormActionState['fieldErrors'],
@@ -62,14 +60,12 @@ export function AdminBlogForm({
 
   const [title, setTitle] = useState(initial?.title ?? '');
   const [slug, setSlug] = useState(initial?.slug ?? '');
-  const [content, setContent] = useState(initial?.content ?? '# \n\n');
+  const [content, setContent] = useState(initial?.content ?? '');
   const [category, setCategory] = useState(
     initial?.category ?? 'IT_PARTNERSHIP',
   );
   const [coverImage, setCoverImage] = useState(initial?.coverImage ?? '');
-  const [selection, setSelection] = useState<AdminBlogEditorSelection | null>(
-    null,
-  );
+  const editorRef = useRef<MDXEditorMethods | null>(null);
 
   const slugTouched = useRef(Boolean(initial?.slug));
   const skipFirstSaved = useRef(true);
@@ -206,50 +202,20 @@ export function AdminBlogForm({
             </p>
           ) : null}
 
-          <div className="space-y-2">
-            <label htmlFor="blog-title" className="sr-only">
-              {t.titleLabel}
-            </label>
-            <Input
-              id="blog-title"
-              name="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              onBlur={onTitleBlur}
-              placeholder={t.titlePlaceholder}
-              aria-invalid={Boolean(
-                firstFieldError(state.fieldErrors, 'title'),
-              )}
-              aria-describedby={
-                firstFieldError(state.fieldErrors, 'title')
-                  ? 'err-title'
-                  : undefined
-              }
-              className="h-auto py-2 text-2xl font-semibold placeholder:text-muted-foreground/60 sm:text-3xl"
-            />
-            {firstFieldError(state.fieldErrors, 'title') ? (
-              <p
-                id="err-title"
-                className="text-sm text-destructive"
-                role="alert"
-              >
-                {firstFieldError(state.fieldErrors, 'title')}
-              </p>
-            ) : null}
-          </div>
-
           <div className="relative">
             <AdminBlogMarkdownEditor
+              editorRef={editorRef}
+              title={title}
+              onTitleChange={setTitle}
+              onTitleBlur={onTitleBlur}
+              titleLabel={t.titleLabel}
+              titlePlaceholder={t.titlePlaceholder}
+              titleInputId="blog-title"
+              titleError={firstFieldError(state.fieldErrors, 'title')}
+              titleErrorId="err-title"
               value={content}
               onChange={setContent}
               loadingLabel={t.editorLoading}
-              chromeTitle={t.editorChromeTitle}
-              viewModeTriggerAria={t.viewModeTriggerAria}
-              labels={{
-                write: t.editorWrite,
-                preview: t.editorPreview,
-                split: t.editorSplit,
-              }}
               stats={{
                 wordsLabel: t.stats.words,
                 charactersLabel: t.stats.characters,
@@ -257,16 +223,34 @@ export function AdminBlogForm({
                 headingsLabel: t.stats.headings,
                 minutesLabel: t.stats.minutes,
               }}
-              onSelectionChange={setSelection}
+              editorLabels={{
+                titleLabel: t.titleLabel,
+                titlePlaceholder: t.titlePlaceholder,
+                contentAriaLabel: t.contentLabel,
+                emptyTitle: t.editorSurface.emptyTitle,
+                emptyHint: t.editorSurface.emptyHint,
+                quickHeading: t.editorSurface.quickHeading,
+                quickCode: t.editorSurface.quickCode,
+                quickImage: t.editorSurface.quickImage,
+                quickQuote: t.editorSurface.quickQuote,
+                quickTable: t.editorSurface.quickTable,
+                slashTip: t.editorSurface.slashTip,
+                toolbarBlockquote: t.editorSurface.toolbarBlockquote,
+                formatMarkdown: t.editorSurface.formatMarkdown,
+                fullscreenEnter: t.editorSurface.fullscreenEnter,
+                fullscreenExit: t.editorSurface.fullscreenExit,
+              }}
+              contentPlaceholder={t.editorSurface.contentPlaceholder}
               aria-label={t.contentLabel}
-            />
-            <AdminBlogAiToolbar
-              title={title}
-              content={content}
-              selection={selection}
-              onContentChange={setContent}
-              labels={t.ai}
-            />
+            >
+              <AdminBlogAiToolbar
+                title={title}
+                content={content}
+                editorRef={editorRef}
+                onContentChange={setContent}
+                labels={t.ai}
+              />
+            </AdminBlogMarkdownEditor>
             {firstFieldError(state.fieldErrors, 'content') ? (
               <p className="mt-2 text-sm text-destructive" role="alert">
                 {firstFieldError(state.fieldErrors, 'content')}

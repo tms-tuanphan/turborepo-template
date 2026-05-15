@@ -38,6 +38,14 @@ function countHeadings(markdown: string): number {
 
 const WORDS_PER_MINUTE = 200;
 
+function StatDot() {
+  return (
+    <span aria-hidden className="select-none px-1.5 text-muted-foreground/45">
+      ·
+    </span>
+  );
+}
+
 export function AdminBlogStats({
   content,
   wordsLabel,
@@ -52,25 +60,23 @@ export function AdminBlogStats({
   const minutes = Math.max(1, Math.round(words / WORDS_PER_MINUTE));
 
   return (
-    <dl className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-muted-foreground">
-      <div className="flex items-center gap-1.5">
-        <dt className="font-medium text-foreground/70">{wordsLabel}</dt>
-        <dd>{words.toLocaleString()}</dd>
-      </div>
-      <div className="flex items-center gap-1.5">
-        <dt className="font-medium text-foreground/70">{charactersLabel}</dt>
-        <dd>{characters.toLocaleString()}</dd>
-      </div>
-      <div className="flex items-center gap-1.5">
-        <dt className="font-medium text-foreground/70">{readingTimeLabel}</dt>
-        <dd>
-          {minutes} {minutesLabel}
-        </dd>
-      </div>
-      <div className="flex items-center gap-1.5">
-        <dt className="font-medium text-foreground/70">{headingsLabel}</dt>
-        <dd>{headings}</dd>
-      </div>
-    </dl>
+    <p className="flex flex-wrap items-center gap-x-0 text-xs text-muted-foreground">
+      <span className="tabular-nums text-foreground/85">
+        {words.toLocaleString()}
+      </span>
+      <span className="ps-1">{wordsLabel}</span>
+      <StatDot />
+      <span className="tabular-nums text-foreground/85">
+        {characters.toLocaleString()}
+      </span>
+      <span className="ps-1">{charactersLabel}</span>
+      <StatDot />
+      <span>{readingTimeLabel}</span>
+      <span className="ps-1 tabular-nums text-foreground/85">{minutes}</span>
+      <span className="ps-1">{minutesLabel}</span>
+      <StatDot />
+      <span>{headingsLabel}</span>
+      <span className="ps-1 tabular-nums text-foreground/85">{headings}</span>
+    </p>
   );
 }

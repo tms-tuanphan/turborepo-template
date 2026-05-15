@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: ['@mdxeditor/editor'],
   allowedDevOrigins: ['http://localhost:3000'],
   images: {
     remotePatterns: [
