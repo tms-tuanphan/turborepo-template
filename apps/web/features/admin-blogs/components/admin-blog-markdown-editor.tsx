@@ -91,7 +91,7 @@ export function AdminBlogMarkdownEditor({
       dynamic(() => import('./admin-blog-mdx-editor-loaded'), {
         ssr: false,
         loading: () => (
-          <div className="flex min-h-[min(32rem,55vh)] items-center justify-center text-sm text-muted-foreground">
+          <div className="flex min-h-[min(17rem,55vh)] items-center justify-center text-sm text-muted-foreground">
             {loadingLabel}
           </div>
         ),
@@ -128,7 +128,7 @@ export function AdminBlogMarkdownEditor({
         excerptLabel={excerptLabel}
         excerptPlaceholder={excerptPlaceholder}
       />
-      <div className="relative min-h-[min(32rem,55vh)] flex-1">
+      <div className="relative min-h-[min(17rem,55vh)] flex-1">
         <MdxLazy
           editorRef={editorRef}
           markdown={value}
@@ -137,7 +137,7 @@ export function AdminBlogMarkdownEditor({
           isFullscreen={isFullscreen}
           onToggleFullscreen={toggleFullscreen}
           placeholder={contentPlaceholder}
-          contentEditableClassName="border-0 bg-transparent px-4 pb-4 pt-2 sm:px-6"
+          contentEditableClassName="border-0 bg-transparent px-4 sm:px-6"
           toolbarExtra={toolbarExtra}
         />
       </div>

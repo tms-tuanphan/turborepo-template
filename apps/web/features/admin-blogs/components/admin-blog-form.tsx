@@ -245,10 +245,7 @@ export function AdminBlogForm({
     >
       <AdminBlogEditorHeader
         listHref={listHref}
-        breadcrumbRoot={t.header.breadcrumbRoot}
-        breadcrumbCurrent={
-          mode === 'create' ? t.header.breadcrumbNew : t.header.breadcrumbEdit
-        }
+        backLabel={t.backToBlogs}
         status={displayStatus}
         statusLabel={statusLabel}
         saved={mode === 'edit' && savedFlash}

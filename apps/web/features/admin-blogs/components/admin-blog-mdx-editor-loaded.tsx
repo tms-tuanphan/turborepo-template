@@ -91,7 +91,7 @@ export default function AdminBlogMdxEditorLoaded({
 
   const editorClassName = useMemo(
     () =>
-      'prose prose-neutral max-w-none dark:prose-invert min-h-[min(32rem,55vh)] text-[17px] leading-[1.75] prose-pre:rounded-xl prose-pre:bg-muted/50',
+      'prose prose-neutral max-w-none dark:prose-invert min-h-[min(17rem,55vh)] text-[17px] leading-[1.75] prose-pre:rounded-xl prose-pre:bg-muted/50',
     [],
   );
 

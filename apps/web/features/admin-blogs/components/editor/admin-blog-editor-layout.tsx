@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -60,6 +61,9 @@ export function AdminBlogEditorLayout({
                 >
                   <SheetHeader>
                     <SheetTitle>{settingsLabel}</SheetTitle>
+                    <SheetDescription className="sr-only">
+                      {settingsLabel}
+                    </SheetDescription>
                   </SheetHeader>
                   <div className="mt-4 pb-8">{sidebar}</div>
                 </SheetContent>
