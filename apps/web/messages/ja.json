@@ -161,6 +161,20 @@
         "backToBlogs": "記事一覧に戻る",
         "titleLabel": "タイトル",
         "titlePlaceholder": "記事の魅力的なタイトルを入力…",
+        "excerptLabel": "短い説明（抜粋）",
+        "excerptPlaceholder": "一覧やSNS用の短い要約を入力…",
+        "excerptHint": "任意。ブログカードや検索スニペットに表示されます。",
+        "tagsLabel": "タグ",
+        "tagsPlaceholder": "タグを入力して Enter",
+        "tagsHint": "Enter またはカンマで区切ります。",
+        "scheduleLabel": "公開スケジュール",
+        "scheduleNow": "今すぐ公開",
+        "scheduleLater": "予約公開",
+        "scheduleDateLabel": "公開日時",
+        "previewButton": "記事をプレビュー",
+        "slugCopied": "スラッグをコピーしました。",
+        "slugCopy": "スラッグをコピー",
+        "seoScore": "SEO",
         "slugLabel": "スラッグ",
         "slugHint": "小文字・数字・ハイフンのみ。",
         "contentLabel": "Markdown",
@@ -198,6 +212,7 @@
         "sidebar": {
           "cardTitle": "公開とSEO",
           "statusLabel": "ステータス",
+          "statusChangeLabel": "ステータスを変更",
           "statusLabels": {
             "DRAFT": "下書き",
             "REVIEWING": "レビュー中",
@@ -209,7 +224,11 @@
         "seoPreview": {
           "hint": "プレビューのみです。保存時にタイトルと本文から自動生成されます。",
           "metaTitleLabel": "SEOタイトル",
-          "metaDescriptionLabel": "SEOディスクリプション"
+          "metaDescriptionLabel": "SEOディスクリプション",
+          "keywordLabel": "主要キーワード",
+          "keywordHint": "検索最適化のターゲットフレーズ。",
+          "googlePreviewTitle": "Googleプレビュー",
+          "socialPreviewTitle": "SNSプレビュー"
         },
         "stats": {
           "words": "単語数",
@@ -219,8 +238,10 @@
           "minutes": "分"
         },
         "ai": {
+          "continueWriting": "AIで続きを書く",
+          "seoOptimize": "SEO最適化",
           "outline": "✨ 構成を作成",
-          "rewrite": "✍️ 選択を書き直す",
+          "rewrite": "書き直し",
           "summarize": "📝 記事を要約",
           "loading": "処理中…",
           "missingTitle": "まずタイトルを入力してください。",

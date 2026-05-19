@@ -161,6 +161,20 @@
         "backToBlogs": "Back to blogs",
         "titleLabel": "Title",
         "titlePlaceholder": "Add a compelling title for your article…",
+        "excerptLabel": "Short description (Excerpt)",
+        "excerptPlaceholder": "Write a short summary for listings and social previews…",
+        "excerptHint": "Optional. Shown on blog cards and search snippets.",
+        "tagsLabel": "Tags",
+        "tagsPlaceholder": "Type a tag and press Enter",
+        "tagsHint": "Separate tags with Enter or comma.",
+        "scheduleLabel": "Publishing schedule",
+        "scheduleNow": "Publish now",
+        "scheduleLater": "Schedule for later",
+        "scheduleDateLabel": "Scheduled date and time",
+        "previewButton": "Preview article",
+        "slugCopied": "Slug copied to clipboard.",
+        "slugCopy": "Copy slug",
+        "seoScore": "SEO",
         "slugLabel": "Slug",
         "slugHint": "Lowercase letters, numbers, and hyphens only.",
         "contentLabel": "Markdown",
@@ -198,6 +212,7 @@
         "sidebar": {
           "cardTitle": "Publish and SEO",
           "statusLabel": "Status",
+          "statusChangeLabel": "Change status",
           "statusLabels": {
             "DRAFT": "Draft",
             "REVIEWING": "Reviewing",
@@ -209,7 +224,11 @@
         "seoPreview": {
           "hint": "Preview only. These values are generated from your title and content when you save.",
           "metaTitleLabel": "SEO title",
-          "metaDescriptionLabel": "SEO description"
+          "metaDescriptionLabel": "SEO description",
+          "keywordLabel": "Primary keyword",
+          "keywordHint": "Target phrase for search optimization.",
+          "googlePreviewTitle": "Google preview",
+          "socialPreviewTitle": "Social preview"
         },
         "stats": {
           "words": "Words",
@@ -219,8 +238,10 @@
           "minutes": "min"
         },
         "ai": {
+          "continueWriting": "AI continue writing",
+          "seoOptimize": "SEO optimize",
           "outline": "✨ Generate outline",
-          "rewrite": "✍️ Rewrite selection",
+          "rewrite": "Rewrite",
           "summarize": "📝 Summarize article",
           "loading": "Working…",
           "missingTitle": "Please enter a title first.",

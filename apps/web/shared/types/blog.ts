@@ -15,6 +15,7 @@ export type BlogStatus = (typeof BLOG_STATUSES)[number];
 export type BlogSeo = {
   metaTitle: string;
   metaDescription: string;
+  primaryKeyword?: string;
 };
 
 export type BlogPost = {

@@ -161,6 +161,20 @@
         "backToBlogs": "Về danh sách bài viết",
         "titleLabel": "Tiêu đề",
         "titlePlaceholder": "Thêm tiêu đề hấp dẫn cho bài viết…",
+        "excerptLabel": "Mô tả ngắn (Excerpt)",
+        "excerptPlaceholder": "Viết mô tả ngắn cho danh sách và mạng xã hội…",
+        "excerptHint": "Tùy chọn. Hiển thị trên thẻ bài viết và đoạn tìm kiếm.",
+        "tagsLabel": "Tags",
+        "tagsPlaceholder": "Nhập tag và nhấn Enter",
+        "tagsHint": "Phân tách tag bằng Enter hoặc dấu phẩy.",
+        "scheduleLabel": "Lịch xuất bản",
+        "scheduleNow": "Xuất bản ngay",
+        "scheduleLater": "Đặt lịch xuất bản",
+        "scheduleDateLabel": "Ngày và giờ xuất bản",
+        "previewButton": "Xem trước bài viết",
+        "slugCopied": "Đã sao chép slug.",
+        "slugCopy": "Sao chép slug",
+        "seoScore": "SEO",
         "slugLabel": "Slug",
         "slugHint": "Chữ thường, số và dấu gạch ngang.",
         "contentLabel": "Markdown",
@@ -192,12 +206,13 @@
         "saving": "Đang lưu…",
         "saved": "Đã lưu.",
         "tabs": {
-          "publish": "Cài đặt xuất bản",
-          "seo": "Cài đặt SEO"
+          "publish": "Xuất bản",
+          "seo": "SEO"
         },
         "sidebar": {
-          "cardTitle": "Xuất bản và SEO",
+          "cardTitle": "Xuất bản",
           "statusLabel": "Trạng thái",
+          "statusChangeLabel": "Đổi trạng thái",
           "statusLabels": {
             "DRAFT": "Bản nháp",
             "REVIEWING": "Đang duyệt",
@@ -209,7 +224,11 @@
         "seoPreview": {
           "hint": "Chỉ xem trước. Các giá trị được tạo từ tiêu đề và nội dung khi bạn lưu.",
           "metaTitleLabel": "Tiêu đề SEO",
-          "metaDescriptionLabel": "Mô tả SEO"
+          "metaDescriptionLabel": "Mô tả SEO",
+          "keywordLabel": "Từ khóa chính",
+          "keywordHint": "Cụm từ mục tiêu cho tối ưu tìm kiếm.",
+          "googlePreviewTitle": "Xem trước Google",
+          "socialPreviewTitle": "Xem trước mạng xã hội"
         },
         "stats": {
           "words": "Số từ",
@@ -219,8 +238,10 @@
           "minutes": "phút"
         },
         "ai": {
+          "continueWriting": "AI viết tiếp",
+          "seoOptimize": "SEO optimize",
           "outline": "✨ Tạo dàn ý",
-          "rewrite": "✍️ Viết lại đoạn chọn",
+          "rewrite": "Rewrite",
           "summarize": "📝 Tóm tắt bài",
           "loading": "Đang xử lý…",
           "missingTitle": "Hãy nhập tiêu đề trước.",

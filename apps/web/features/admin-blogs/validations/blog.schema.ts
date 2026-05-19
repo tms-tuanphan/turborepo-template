@@ -1,8 +1,15 @@
 import { z } from 'zod';
 
-import { BLOG_CATEGORIES } from '@/shared/types/blog';
+import { BLOG_CATEGORIES, BLOG_STATUSES } from '@/shared/types/blog';
 
 export const ADMIN_BLOG_STATUSES = ['DRAFT', 'PUBLISHED'] as const;
+export const ADMIN_BLOG_WORKFLOW_STATUSES = [
+  'DRAFT',
+  'REVIEWING',
+  'SCHEDULED',
+  'PUBLISHED',
+  'ARCHIVED',
+] as const;
 
 export type AdminBlogStatus = (typeof ADMIN_BLOG_STATUSES)[number];
 
@@ -33,6 +40,14 @@ function isValidCoverImage(value: string): boolean {
   }
 }
 
+function parseTags(raw: string): string[] {
+  return raw
+    .split(/[,;]/)
+    .map((t) => t.trim())
+    .filter(Boolean)
+    .slice(0, 20);
+}
+
 export const adminBlogSchema = z.object({
   title: z.string().trim().min(1).max(200),
   slug: z
@@ -42,11 +57,19 @@ export const adminBlogSchema = z.object({
     .max(120)
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   content: z.string().min(1),
+  excerpt: z.string().trim().max(200).optional().default(''),
+  tags: z
+    .string()
+    .optional()
+    .default('')
+    .transform((v) => parseTags(v)),
   category: z.enum(BLOG_CATEGORIES),
-  status: z.enum(ADMIN_BLOG_STATUSES),
+  status: z.enum(BLOG_STATUSES),
   coverImage: z
     .string()
     .refine(isValidCoverImage, { message: 'Invalid cover image' }),
+  scheduledAt: z.string().optional().default(''),
+  primaryKeyword: z.string().trim().max(60).optional().default(''),
 });
 
 export type AdminBlogInput = z.infer<typeof adminBlogSchema>;

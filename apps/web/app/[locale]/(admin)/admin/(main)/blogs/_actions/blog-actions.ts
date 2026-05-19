@@ -34,9 +34,13 @@ function formDataToBlogInput(formData: FormData): Record<string, unknown> {
     title: pickString(formData, 'title'),
     slug: pickString(formData, 'slug'),
     content: pickString(formData, 'content'),
+    excerpt: pickString(formData, 'excerpt'),
+    tags: pickString(formData, 'tags'),
     category: pickString(formData, 'category'),
     status: pickString(formData, 'status'),
     coverImage: pickString(formData, 'coverImage'),
+    scheduledAt: pickString(formData, 'scheduledAt'),
+    primaryKeyword: pickString(formData, 'primaryKeyword'),
   };
 }
 
@@ -53,15 +57,34 @@ function toBlogPayload(
   const existing = ctx.existing;
   const today = new Date().toISOString().slice(0, 10);
 
-  const { description, metaTitle, metaDescription } = deriveStoredSeo(
-    data.title,
-    data.content,
-  );
+  const {
+    description: derivedDescription,
+    metaTitle,
+    metaDescription,
+  } = deriveStoredSeo(data.title, data.content);
+
+  const description =
+    data.excerpt.trim().length > 0 ? data.excerpt.trim() : derivedDescription;
 
   const publishedAt =
     data.status === 'PUBLISHED' ? (existing?.publishedAt ?? today) : null;
 
-  const seo = { metaTitle, metaDescription };
+  const scheduledAtRaw = data.scheduledAt.trim();
+  const scheduledAt =
+    data.status === 'SCHEDULED' && scheduledAtRaw.length > 0
+      ? new Date(scheduledAtRaw).toISOString()
+      : null;
+
+  const seo = {
+    metaTitle,
+    metaDescription:
+      data.excerpt.trim().length > 0
+        ? data.excerpt.trim().slice(0, 160)
+        : metaDescription,
+    ...(data.primaryKeyword.trim().length > 0
+      ? { primaryKeyword: data.primaryKeyword.trim() }
+      : {}),
+  };
 
   return {
     slug: data.slug,
@@ -69,13 +92,13 @@ function toBlogPayload(
     description,
     content: data.content,
     category: data.category,
-    tags: existing?.tags ?? [],
+    tags: data.tags.length > 0 ? data.tags : (existing?.tags ?? []),
     status: data.status,
     coverImage: data.coverImage,
     author: ctx.author,
     views: existing?.views ?? 0,
     publishedAt,
-    scheduledAt: null,
+    scheduledAt,
     seo,
   };
 }

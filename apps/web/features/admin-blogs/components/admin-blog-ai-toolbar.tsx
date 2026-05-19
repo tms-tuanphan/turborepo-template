@@ -23,6 +23,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 type ToolbarLabels = {
+  continueWriting: string;
+  seoOptimize: string;
   outline: string;
   rewrite: string;
   summarize: string;
@@ -50,9 +52,16 @@ type AdminBlogAiToolbarProps = {
   editorRef: React.RefObject<MDXEditorMethods | null>;
   onContentChange: (next: string) => void;
   labels: ToolbarLabels;
+  variant?: 'fab' | 'inline';
 };
 
-type ActionKey = 'outline' | 'rewrite' | 'summarize' | 'command';
+type ActionKey =
+  | 'outline'
+  | 'rewrite'
+  | 'summarize'
+  | 'command'
+  | 'continue'
+  | 'seo';
 
 async function callAi(
   path: string,
@@ -89,12 +98,40 @@ function replaceFirstMarkdownOccurrence(
   );
 }
 
+function insertAtCursor(
+  ed: MDXEditorMethods,
+  content: string,
+  aiResult: string,
+  onContentChange: (next: string) => void,
+) {
+  const prefix = content.trim().length > 0 ? '\n\n' : '';
+  const selectionMd = ed.getSelectionMarkdown().trim();
+  ed.focus();
+  if (selectionMd.length > 0) {
+    const current = ed.getMarkdown();
+    const replaced = replaceFirstMarkdownOccurrence(
+      current,
+      selectionMd,
+      prefix + aiResult,
+    );
+    if (replaced !== null) {
+      ed.setMarkdown(replaced);
+    } else {
+      ed.insertMarkdown(prefix + aiResult);
+    }
+  } else {
+    ed.insertMarkdown(prefix + aiResult);
+  }
+  onContentChange(ed.getMarkdown());
+}
+
 export function AdminBlogAiToolbar({
   title,
   content,
   editorRef,
   onContentChange,
   labels,
+  variant = 'inline',
 }: AdminBlogAiToolbarProps) {
   const [busy, setBusy] = useState<ActionKey | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -188,25 +225,7 @@ export function AdminBlogAiToolbar({
           prompt: trimmed,
           context: title.trim(),
         });
-        const prefix = content.trim().length > 0 ? '\n\n' : '';
-        const selectionMd = ed.getSelectionMarkdown().trim();
-        ed.focus();
-        if (selectionMd.length > 0) {
-          const current = ed.getMarkdown();
-          const replaced = replaceFirstMarkdownOccurrence(
-            current,
-            selectionMd,
-            prefix + aiResult,
-          );
-          if (replaced !== null) {
-            ed.setMarkdown(replaced);
-          } else {
-            ed.insertMarkdown(prefix + aiResult);
-          }
-        } else {
-          ed.insertMarkdown(prefix + aiResult);
-        }
-        onContentChange(ed.getMarkdown());
+        insertAtCursor(ed, content, aiResult, onContentChange);
         setCommandOpen(false);
         setCommandPrompt('');
       } catch {
@@ -217,6 +236,56 @@ export function AdminBlogAiToolbar({
     },
     [content, editorRef, flash, labels, onContentChange, title],
   );
+
+  const runContinueWriting = useCallback(async () => {
+    if (!content.trim() && !title.trim()) {
+      flash(labels.missingContent);
+      return;
+    }
+    const ed = editorRef.current;
+    if (!ed) {
+      flash(labels.errorGeneric);
+      return;
+    }
+    setBusy('continue');
+    try {
+      const aiResult = await callAi('command', {
+        prompt:
+          'Continue writing this blog article naturally from where it left off. Match tone and language.',
+        context: `${title.trim()}\n\n${content.slice(-4000)}`,
+      });
+      insertAtCursor(ed, content, aiResult, onContentChange);
+    } catch {
+      flash(labels.errorGeneric);
+    } finally {
+      setBusy(null);
+    }
+  }, [content, editorRef, flash, labels, onContentChange, title]);
+
+  const runSeoOptimize = useCallback(async () => {
+    if (!content.trim()) {
+      flash(labels.missingContent);
+      return;
+    }
+    const ed = editorRef.current;
+    if (!ed) {
+      flash(labels.errorGeneric);
+      return;
+    }
+    setBusy('seo');
+    try {
+      const aiResult = await callAi('command', {
+        prompt:
+          'Improve this article for SEO: strengthen headings, add keyword-friendly phrasing, and suggest a short meta description block at the top as a comment.',
+        context: `${title.trim()}\n\n${content.slice(0, 8000)}`,
+      });
+      insertAtCursor(ed, content, aiResult, onContentChange);
+    } catch {
+      flash(labels.errorGeneric);
+    } finally {
+      setBusy(null);
+    }
+  }, [content, editorRef, flash, labels, onContentChange, title]);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -238,62 +307,137 @@ export function AdminBlogAiToolbar({
 
   const menuDisabled = busy !== null;
 
+  const inlineButtons = (
+    <div
+      className="flex flex-wrap items-center gap-1.5 border-t border-border/60 px-2 py-2 sm:px-4"
+      role="group"
+      aria-label={labels.fabAriaLabel}
+    >
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        className="h-8 gap-1.5 border-primary/30 bg-primary/5 text-primary hover:bg-primary/10"
+        disabled={menuDisabled}
+        onClick={() => void runContinueWriting()}
+        aria-busy={busy === 'continue'}
+      >
+        {busy === 'continue' ? (
+          <Loader2Icon className="size-3.5 animate-spin" aria-hidden />
+        ) : (
+          <SparklesIcon className="size-3.5" aria-hidden />
+        )}
+        {labels.continueWriting}
+      </Button>
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        className="h-8 border-primary/30 bg-primary/5 text-primary hover:bg-primary/10"
+        disabled={menuDisabled}
+        onClick={() => void runRewrite()}
+        aria-busy={busy === 'rewrite'}
+      >
+        {busy === 'rewrite' ? (
+          <Loader2Icon className="size-3.5 animate-spin" aria-hidden />
+        ) : null}
+        {labels.rewrite}
+      </Button>
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        className="h-8 border-primary/30 bg-primary/5 text-primary hover:bg-primary/10"
+        disabled={menuDisabled}
+        onClick={() => void runSeoOptimize()}
+        aria-busy={busy === 'seo'}
+      >
+        {busy === 'seo' ? (
+          <Loader2Icon className="size-3.5 animate-spin" aria-hidden />
+        ) : null}
+        {labels.seoOptimize}
+      </Button>
+    </div>
+  );
+
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild disabled={menuDisabled}>
-          <Button
-            type="button"
-            size="icon-lg"
-            className="absolute right-4 bottom-4 z-30 size-12 rounded-full bg-primary text-primary-foreground shadow-md hover:bg-primary/90 sm:right-5 sm:bottom-5"
-            aria-label={labels.fabAriaLabel}
-            aria-busy={menuDisabled}
-          >
-            {busy !== null ? (
-              <Loader2Icon className="size-5 animate-spin" aria-hidden />
-            ) : (
-              <SparklesIcon className="size-5" aria-hidden />
-            )}
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent side="left" align="end" className="w-56">
-          <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
-            {labels.commandShortcutHint}
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            disabled={menuDisabled}
-            onClick={() => void runOutline()}
-          >
-            {labels.outline}
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            disabled={menuDisabled}
-            onClick={() => void runRewrite()}
-          >
-            {labels.rewrite}
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            disabled={menuDisabled}
-            onClick={() => void runSummarize()}
-          >
-            {labels.summarize}
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            disabled={menuDisabled}
-            onClick={() => setCommandOpen(true)}
-          >
-            {labels.commandMenuLabel}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      {variant === 'inline' ? (
+        inlineButtons
+      ) : (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild disabled={menuDisabled}>
+            <Button
+              type="button"
+              size="icon-lg"
+              className="absolute right-4 bottom-4 z-30 size-12 rounded-full bg-primary text-primary-foreground shadow-md hover:bg-primary/90 sm:right-5 sm:bottom-5"
+              aria-label={labels.fabAriaLabel}
+              aria-busy={menuDisabled}
+            >
+              {busy !== null ? (
+                <Loader2Icon className="size-5 animate-spin" aria-hidden />
+              ) : (
+                <SparklesIcon className="size-5" aria-hidden />
+              )}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="left" align="end" className="w-56">
+            <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+              {labels.commandShortcutHint}
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              disabled={menuDisabled}
+              onClick={() => void runContinueWriting()}
+            >
+              {labels.continueWriting}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              disabled={menuDisabled}
+              onClick={() => void runOutline()}
+            >
+              {labels.outline}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              disabled={menuDisabled}
+              onClick={() => void runRewrite()}
+            >
+              {labels.rewrite}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              disabled={menuDisabled}
+              onClick={() => void runSeoOptimize()}
+            >
+              {labels.seoOptimize}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              disabled={menuDisabled}
+              onClick={() => void runSummarize()}
+            >
+              {labels.summarize}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              disabled={menuDisabled}
+              onClick={() => setCommandOpen(true)}
+            >
+              {labels.commandMenuLabel}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
 
-      {message ? (
+      {message && variant === 'fab' ? (
         <p
           className="pointer-events-none absolute right-4 bottom-16 z-30 max-w-[min(18rem,calc(100%-2rem))] rounded-md border border-destructive/30 bg-background/95 px-3 py-2 text-xs text-destructive shadow-md sm:right-5"
           role="status"
         >
+          {message}
+        </p>
+      ) : null}
+
+      {message && variant === 'inline' ? (
+        <p className="sr-only" role="status">
           {message}
         </p>
       ) : null}

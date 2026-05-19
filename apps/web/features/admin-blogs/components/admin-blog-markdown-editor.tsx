@@ -22,6 +22,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  EXCERPT_MAX_LENGTH,
+  computeSeoScore,
+} from '@/features/admin-blogs/lib/blog-seo-score';
+import { cn } from '@/lib/utils';
 
 import type { AdminBlogMdxEditorLoadedLabels } from './admin-blog-mdx-editor-loaded';
 import { AdminBlogStats } from './admin-blog-stats';
@@ -44,16 +49,22 @@ type StatsLabels = {
 };
 
 type AdminBlogMarkdownEditorProps = {
-  children?: React.ReactNode;
+  toolbarExtra?: React.ReactNode;
   editorRef: React.RefObject<MDXEditorMethods | null>;
   title: string;
   onTitleChange: (value: string) => void;
   onTitleBlur: () => void;
   titleLabel: string;
   titlePlaceholder: string;
+  excerptLabel: string;
+  excerptPlaceholder: string;
   titleInputId: string;
   titleError?: string;
   titleErrorId?: string;
+  excerpt: string;
+  onExcerptChange: (value: string) => void;
+  keyword: string;
+  seoScoreLabel: string;
   value: string;
   onChange: (value: string) => void;
   loadingLabel: string;
@@ -64,16 +75,22 @@ type AdminBlogMarkdownEditorProps = {
 };
 
 export function AdminBlogMarkdownEditor({
-  children,
+  toolbarExtra,
   editorRef,
   title,
   onTitleChange,
   onTitleBlur,
   titleLabel,
   titlePlaceholder,
+  excerptLabel,
+  excerptPlaceholder,
   titleInputId,
   titleError,
   titleErrorId,
+  excerpt,
+  onExcerptChange,
+  keyword,
+  seoScoreLabel,
   value,
   onChange,
   loadingLabel,
@@ -103,6 +120,17 @@ export function AdminBlogMarkdownEditor({
 
   const showEmptyOverlay = isEditorSurfaceEmpty(value);
 
+  const seoScore = useMemo(
+    () =>
+      computeSeoScore({
+        title,
+        content: value,
+        excerpt,
+        keyword,
+      }),
+    [title, value, excerpt, keyword],
+  );
+
   const insertFromEmpty = useCallback(
     (snippet: string) => {
       const ed = editorRef.current;
@@ -118,9 +146,18 @@ export function AdminBlogMarkdownEditor({
       ...editorLabels,
       titleLabel,
       titlePlaceholder,
+      excerptLabel,
+      excerptPlaceholder,
       contentAriaLabel: ariaLabel ?? editorLabels.contentAriaLabel,
     }),
-    [editorLabels, titleLabel, titlePlaceholder, ariaLabel],
+    [
+      editorLabels,
+      titleLabel,
+      titlePlaceholder,
+      excerptLabel,
+      excerptPlaceholder,
+      ariaLabel,
+    ],
   );
 
   const cardClass = isFullscreen
@@ -147,23 +184,19 @@ export function AdminBlogMarkdownEditor({
             onToggleFullscreen={toggleFullscreen}
             placeholder={contentPlaceholder}
             contentEditableClassName="border-0 bg-transparent px-4 pb-4 pt-2 sm:px-6"
+            excerpt={excerpt}
+            onExcerptChange={onExcerptChange}
+            excerptMax={EXCERPT_MAX_LENGTH}
+            toolbarExtra={toolbarExtra}
           />
           {showEmptyOverlay ? (
             <div
-              className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center gap-5 bg-background/75 px-6 text-center backdrop-blur-[2px]"
+              className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center gap-5 bg-background/75 px-6 pt-48 text-center backdrop-blur-[2px] sm:pt-56"
               aria-hidden
             >
               <div className="relative">
                 <SparklesIcon
                   className="absolute -left-8 -top-3 size-4 text-primary/50"
-                  aria-hidden
-                />
-                <SparklesIcon
-                  className="absolute -right-6 top-1 size-3 text-primary/40"
-                  aria-hidden
-                />
-                <SparklesIcon
-                  className="absolute -bottom-2 -left-5 size-3 text-primary/35"
                   aria-hidden
                 />
                 <div className="rounded-2xl bg-primary/15 p-4 text-primary shadow-sm ring-1 ring-primary/20">
@@ -183,22 +216,16 @@ export function AdminBlogMarkdownEditor({
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="gap-2 rounded-md border-border bg-background shadow-sm"
+                  className="gap-2"
                   onClick={() => insertFromEmpty('\n\n## ')}
                 >
-                  <span
-                    className="flex h-6 min-w-6 items-center justify-center rounded border border-current px-1 font-mono text-xs font-semibold leading-none"
-                    aria-hidden
-                  >
-                    H
-                  </span>
                   {editorLabels.quickHeading}
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="gap-2 rounded-md border-border bg-background font-mono text-xs shadow-sm"
+                  className="gap-2"
                   onClick={() => insertFromEmpty('\n\n```plaintext\n\n```\n')}
                 >
                   <Code2Icon className="size-4" aria-hidden />
@@ -208,7 +235,7 @@ export function AdminBlogMarkdownEditor({
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="gap-2 rounded-md border-border bg-background shadow-sm"
+                  className="gap-2"
                   onClick={() => insertFromEmpty('\n\n![]()\n')}
                 >
                   <ImageIcon className="size-4" aria-hidden />
@@ -218,7 +245,7 @@ export function AdminBlogMarkdownEditor({
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="gap-2 rounded-md border-border bg-background shadow-sm"
+                  className="gap-2"
                   onClick={() => insertFromEmpty('\n\n> \n')}
                 >
                   <MessageSquareQuoteIcon className="size-4" aria-hidden />
@@ -228,7 +255,7 @@ export function AdminBlogMarkdownEditor({
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="gap-2 rounded-md border-border bg-background shadow-sm"
+                  className="gap-2"
                   onClick={() =>
                     insertFromEmpty(
                       '\n\n| Col1 | Col2 |\n| --- | --- |\n|  |  |\n',
@@ -245,11 +272,25 @@ export function AdminBlogMarkdownEditor({
               </p>
             </div>
           ) : null}
-          {children}
         </div>
       </CardContent>
       <CardFooter className="flex flex-wrap items-center justify-between gap-3 border-t border-border/80 bg-muted/15 px-4 py-2.5 sm:px-6">
-        <AdminBlogStats content={value} {...stats} />
+        <div className="flex min-w-0 flex-wrap items-center gap-3">
+          <AdminBlogStats content={value} {...stats} />
+          <span
+            className={cn(
+              'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium tabular-nums',
+              seoScore >= 70
+                ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
+                : seoScore >= 40
+                  ? 'border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-400'
+                  : 'border-muted-foreground/30 bg-muted text-muted-foreground',
+            )}
+          >
+            <span className="size-1.5 rounded-full bg-current" aria-hidden />
+            {seoScoreLabel} {seoScore}/100
+          </span>
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button

@@ -44,6 +44,8 @@ import { Input } from '@/components/ui/input';
 export type AdminBlogMdxEditorLoadedLabels = {
   titleLabel: string;
   titlePlaceholder: string;
+  excerptLabel: string;
+  excerptPlaceholder: string;
   contentAriaLabel: string;
   emptyTitle: string;
   emptyHint: string;
@@ -75,6 +77,10 @@ type AdminBlogMdxEditorLoadedProps = {
   onToggleFullscreen: () => void;
   placeholder: string;
   contentEditableClassName?: string;
+  excerpt: string;
+  onExcerptChange: (value: string) => void;
+  excerptMax: number;
+  toolbarExtra?: React.ReactNode;
 };
 
 const CODE_LANGUAGES: Record<string, string> = {
@@ -100,6 +106,10 @@ function ToolbarContents({
   titleInvalid,
   titleError,
   titleErrorId,
+  excerpt,
+  onExcerptChange,
+  excerptMax,
+  toolbarExtra,
 }: Pick<
   AdminBlogMdxEditorLoadedProps,
   | 'editorRef'
@@ -113,6 +123,10 @@ function ToolbarContents({
   | 'titleInvalid'
   | 'titleError'
   | 'titleErrorId'
+  | 'excerpt'
+  | 'onExcerptChange'
+  | 'excerptMax'
+  | 'toolbarExtra'
 >) {
   function insertBlockquote() {
     const ed = editorRef.current;
@@ -137,7 +151,7 @@ function ToolbarContents({
             placeholder={labels.titlePlaceholder}
             aria-invalid={titleInvalid}
             aria-describedby={titleError ? titleErrorId : undefined}
-            className="h-10 border-0 bg-transparent px-3 text-base font-medium shadow-none placeholder:text-muted-foreground/70 focus-visible:ring-0"
+            className="h-12 border-0 bg-transparent px-3 text-lg font-semibold shadow-none placeholder:text-muted-foreground/70 focus-visible:ring-0 sm:text-xl"
           />
         </div>
         {titleError ? (
@@ -149,6 +163,24 @@ function ToolbarContents({
             {titleError}
           </p>
         ) : null}
+        <div className="mt-3 space-y-1">
+          <label htmlFor="blog-excerpt" className="sr-only">
+            {labels.excerptLabel}
+          </label>
+          <textarea
+            id="blog-excerpt"
+            value={excerpt}
+            onChange={(e) =>
+              onExcerptChange(e.target.value.slice(0, excerptMax))
+            }
+            placeholder={labels.excerptPlaceholder}
+            rows={3}
+            className="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring w-full resize-none rounded-lg border px-3 py-2 text-sm leading-relaxed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+          />
+          <p className="text-end text-xs tabular-nums text-muted-foreground">
+            {excerpt.length}/{excerptMax}
+          </p>
+        </div>
       </div>
       <div className="flex flex-wrap items-center gap-1 border-b border-border px-2 py-1.5 sm:px-4">
         <Toolbar.Root className="flex min-h-10 min-w-0 flex-1 flex-wrap items-center gap-0.5 border-0 bg-transparent p-0 text-muted-foreground [&_button]:text-muted-foreground [&_button:hover]:text-foreground">
@@ -206,6 +238,7 @@ function ToolbarContents({
           )}
         </Button>
       </div>
+      {toolbarExtra}
     </div>
   );
 }
@@ -226,6 +259,10 @@ export default function AdminBlogMdxEditorLoaded({
   onToggleFullscreen,
   placeholder,
   contentEditableClassName,
+  excerpt,
+  onExcerptChange,
+  excerptMax,
+  toolbarExtra,
 }: AdminBlogMdxEditorLoadedProps) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -286,6 +323,10 @@ export default function AdminBlogMdxEditorLoaded({
             titleInvalid={titleInvalid}
             titleError={titleError}
             titleErrorId={titleErrorId}
+            excerpt={excerpt}
+            onExcerptChange={onExcerptChange}
+            excerptMax={excerptMax}
+            toolbarExtra={toolbarExtra}
           />
         ),
       }),
@@ -302,6 +343,10 @@ export default function AdminBlogMdxEditorLoaded({
       titleInvalid,
       titleError,
       titleErrorId,
+      excerpt,
+      onExcerptChange,
+      excerptMax,
+      toolbarExtra,
     ],
   );
 
