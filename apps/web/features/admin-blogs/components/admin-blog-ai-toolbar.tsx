@@ -316,11 +316,11 @@ export function AdminBlogAiToolbar({
   const menuDisabled = busy !== null;
 
   const aiButtonClass =
-    'h-8 gap-1.5 border-violet-500/20 bg-violet-500/5 text-violet-700 hover:bg-violet-500/10 dark:text-violet-300';
+    'h-8 gap-1.5 rounded-full border-violet-500/20 bg-violet-500/5 px-3 text-violet-700 hover:bg-violet-500/10 dark:text-violet-300';
 
   const compactButtons = (
     <div
-      className="flex flex-wrap items-center gap-1.5 border-t border-violet-500/15 bg-violet-500/5 px-2 py-2 sm:px-4"
+      className="flex flex-wrap items-center gap-2 border-t border-violet-500/15 bg-violet-500/5 px-3 py-2.5 sm:px-4"
       role="group"
       aria-label={labels.fabAriaLabel}
     >

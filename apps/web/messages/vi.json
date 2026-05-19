@@ -222,6 +222,7 @@
         "categoryLabel": "Danh mục",
         "featuredImageLabel": "Ảnh bìa",
         "featuredImageHint": "JPEG, PNG, WebP hoặc GIF. Tối đa 2 MB.",
+        "featuredImageSpec": "Định dạng: JPG, PNG, WEBP. Kích thước đề xuất: 1200×630px (tỷ lệ 16:9).",
         "featuredImageUploadPrompt": "Kéo thả ảnh vào đây hoặc bấm để chọn.",
         "featuredImageChooseFile": "Chọn ảnh",
         "featuredImageReplace": "Thay ảnh",

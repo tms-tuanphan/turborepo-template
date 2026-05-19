@@ -43,7 +43,7 @@ export function AdminBlogEditorHeader({
   return (
     <div
       className={cn(
-        'flex h-12 shrink-0 items-center gap-3 border-b border-border/60 px-4 sm:px-6',
+        'flex h-12 shrink-0 items-center gap-3 px-4 sm:px-6',
         className,
       )}
     >

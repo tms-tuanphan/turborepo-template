@@ -64,15 +64,15 @@ export function AdminBlogEditorEmptyState({
 
   return (
     <div
-      className={cn('border-t border-border/40 px-4 py-4 sm:px-6', className)}
+      className={cn('border-t border-primary/15 px-5 py-5 sm:px-6', className)}
     >
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2.5">
         {chips.map(({ key, label, icon: Icon, action }) => (
           <button
             key={key}
             type="button"
             onClick={action}
-            className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-border/60 bg-background/80 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-border hover:bg-muted/40 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-background px-3.5 py-2 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2"
           >
             <Icon className="size-3.5 shrink-0 opacity-70" aria-hidden />
             {label}

@@ -22,6 +22,7 @@ type AdminBlogCoverSectionProps = {
   featuredImageInvalidType: string;
   featuredImageTooLarge: string;
   coverError?: string;
+  showLabel?: boolean;
 };
 
 export function AdminBlogCoverSection({
@@ -35,6 +36,7 @@ export function AdminBlogCoverSection({
   featuredImageInvalidType,
   featuredImageTooLarge,
   coverError,
+  showLabel = true,
 }: AdminBlogCoverSectionProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [clientCoverError, setClientCoverError] = useState<string | null>(null);
@@ -90,14 +92,20 @@ export function AdminBlogCoverSection({
     if (fileInputRef.current) fileInputRef.current.value = '';
   }
 
+  function openFilePicker() {
+    fileInputRef.current?.click();
+  }
+
   return (
     <section className="space-y-2">
-      <span className="text-sm font-medium" id="cover-label-sidebar">
-        {featuredImageLabel}
-      </span>
+      {showLabel ? (
+        <span className="text-sm font-medium" id="cover-label-sidebar">
+          {featuredImageLabel}
+        </span>
+      ) : null}
       {coverImage ? (
         <div className="space-y-2">
-          <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-border/40 bg-muted">
+          <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-primary/20 bg-muted">
             <Image
               src={coverImage}
               alt=""
@@ -113,7 +121,7 @@ export function AdminBlogCoverSection({
               variant="outline"
               size="sm"
               className="flex-1"
-              onClick={() => fileInputRef.current?.click()}
+              onClick={openFilePicker}
             >
               {featuredImageReplace}
             </Button>
@@ -130,11 +138,21 @@ export function AdminBlogCoverSection({
         </div>
       ) : (
         <div
+          role="button"
+          tabIndex={0}
           className={cn(
-            'rounded-2xl border border-dashed border-border/60 bg-muted/20 p-6 transition-colors',
-            isDragging && 'border-primary bg-muted/40',
-            !isDragging && 'hover:bg-muted/30',
+            'cursor-pointer rounded-xl border-2 border-dashed border-primary/30 bg-muted/10 p-8 transition-colors',
+            isDragging && 'border-primary bg-primary/5',
+            !isDragging &&
+              'hover:border-primary/50 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2',
           )}
+          onClick={openFilePicker}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              openFilePicker();
+            }
+          }}
           onDragEnter={(e) => {
             onDragOver(e);
             setIsDragging(true);
@@ -144,18 +162,18 @@ export function AdminBlogCoverSection({
           onDrop={onDrop}
         >
           <div className="flex flex-col items-center gap-3 text-center">
-            <ImagePlusIcon
-              className="size-10 text-muted-foreground"
-              aria-hidden
-            />
+            <ImagePlusIcon className="size-12 text-primary/60" aria-hidden />
             <p className="text-sm text-foreground">
               {featuredImageUploadPrompt}
             </p>
             <Button
               type="button"
-              variant="secondary"
               size="sm"
-              onClick={() => fileInputRef.current?.click()}
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
+              onClick={(e) => {
+                e.stopPropagation();
+                openFilePicker();
+              }}
             >
               {featuredImageChooseFile}
             </Button>
@@ -169,7 +187,8 @@ export function AdminBlogCoverSection({
         accept={ACCEPT_INPUT}
         className="sr-only"
         onChange={onFileInputChange}
-        aria-labelledby="cover-label-sidebar"
+        aria-labelledby={showLabel ? 'cover-label-sidebar' : undefined}
+        aria-label={showLabel ? undefined : featuredImageLabel}
       />
       {coverMessage ? (
         <p className="text-sm text-destructive" role="alert">

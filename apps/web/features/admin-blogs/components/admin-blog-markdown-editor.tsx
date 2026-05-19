@@ -6,6 +6,7 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { cn } from '@/lib/utils';
 
+import { editorPanelClass } from './editor/editor-panel-styles';
 import type { AdminBlogMdxEditorLoadedLabels } from './admin-blog-mdx-editor-loaded';
 import { AdminBlogEditorEmptyState } from './editor/admin-blog-editor-empty-state';
 import { AdminBlogEditorTitleBlock } from './editor/admin-blog-editor-title-block';
@@ -91,7 +92,7 @@ export function AdminBlogMarkdownEditor({
       dynamic(() => import('./admin-blog-mdx-editor-loaded'), {
         ssr: false,
         loading: () => (
-          <div className="flex min-h-[min(17rem,55vh)] items-center justify-center text-sm text-muted-foreground">
+          <div className="flex min-h-[min(20rem,55vh)] items-center justify-center text-sm text-muted-foreground">
             {loadingLabel}
           </div>
         ),
@@ -107,7 +108,7 @@ export function AdminBlogMarkdownEditor({
 
   const surfaceClass = isFullscreen
     ? 'fixed inset-0 z-50 flex flex-col overflow-hidden rounded-none bg-background'
-    : 'flex flex-col overflow-hidden rounded-2xl bg-muted/15 dark:bg-muted/10';
+    : cn(editorPanelClass, 'flex flex-col overflow-hidden');
 
   return (
     <section
@@ -128,7 +129,7 @@ export function AdminBlogMarkdownEditor({
         excerptLabel={excerptLabel}
         excerptPlaceholder={excerptPlaceholder}
       />
-      <div className="relative min-h-[min(17rem,55vh)] flex-1">
+      <div className="relative min-h-[min(20rem,55vh)] flex-1">
         <MdxLazy
           editorRef={editorRef}
           markdown={value}
@@ -137,7 +138,7 @@ export function AdminBlogMarkdownEditor({
           isFullscreen={isFullscreen}
           onToggleFullscreen={toggleFullscreen}
           placeholder={contentPlaceholder}
-          contentEditableClassName="border-0 bg-transparent px-4 sm:px-6"
+          contentEditableClassName="border-0 bg-transparent px-5 sm:px-6"
           toolbarExtra={toolbarExtra}
         />
       </div>
@@ -156,7 +157,7 @@ export function AdminBlogMarkdownEditor({
       ) : null}
       <footer
         className={cn(
-          'flex flex-wrap items-center justify-between gap-2 border-t border-border/40 px-4 py-2 text-xs text-muted-foreground sm:px-6',
+          'flex flex-wrap items-center justify-between gap-2 border-t border-primary/15 px-5 py-2.5 text-xs text-muted-foreground sm:px-6',
           isFullscreen && 'bg-background',
         )}
       >

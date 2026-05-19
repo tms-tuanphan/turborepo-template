@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 import { BLOG_CATEGORIES, type BlogCategory } from '@/shared/types/blog';
 import type { Messages } from '@/shared/i18n';
 
@@ -14,6 +15,7 @@ import {
   ADMIN_BLOG_STATUSES,
   type AdminBlogStatus,
 } from '../../validations/blog.schema';
+import { editorPanelClass } from '../editor/editor-panel-styles';
 import { AdminBlogCoverSection } from './admin-blog-cover-section';
 
 type BlogFormMessages = Messages['admin']['blogs']['form'];
@@ -33,18 +35,15 @@ type AdminBlogSidebarProps = {
   coverError?: string;
 };
 
-function SidebarSection({
-  title,
+function SidebarCard({
   children,
+  className,
 }: {
-  title: string;
   children: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <div className="rounded-xl bg-card/50 p-4">
-      <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-        {title}
-      </h3>
+    <div className={cn(editorPanelClass, 'space-y-3 p-4', className)}>
       {children}
     </div>
   );
@@ -66,66 +65,63 @@ export function AdminBlogSidebar({
   const t = messages;
 
   return (
-    <div className="space-y-6 xl:sticky xl:top-14">
-      <SidebarSection title={t.sections.publish}>
-        <div className="space-y-2">
-          <span className="text-sm font-medium">{t.sidebar.statusLabel}</span>
-          <Select
-            value={status}
-            onValueChange={(v) => onStatusChange(v as AdminBlogStatus)}
+    <div className="space-y-4 xl:sticky xl:top-14">
+      <SidebarCard>
+        <span className="text-sm font-medium">{t.sidebar.statusLabel}</span>
+        <Select
+          value={status}
+          onValueChange={(v) => onStatusChange(v as AdminBlogStatus)}
+        >
+          <SelectTrigger
+            aria-label={t.sidebar.statusChangeLabel}
+            aria-invalid={Boolean(statusError)}
           >
-            <SelectTrigger
-              aria-label={t.sidebar.statusChangeLabel}
-              aria-invalid={Boolean(statusError)}
-            >
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {ADMIN_BLOG_STATUSES.map((s) => (
-                <SelectItem key={s} value={s}>
-                  {t.sidebar.statusLabels[s]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {statusError ? (
-            <p className="text-sm text-destructive" role="alert">
-              {statusError}
-            </p>
-          ) : null}
-        </div>
-      </SidebarSection>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {ADMIN_BLOG_STATUSES.map((s) => (
+              <SelectItem key={s} value={s}>
+                {t.sidebar.statusLabels[s]}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {statusError ? (
+          <p className="text-sm text-destructive" role="alert">
+            {statusError}
+          </p>
+        ) : null}
+      </SidebarCard>
 
-      <SidebarSection title={t.sections.metadata}>
-        <div className="space-y-2">
-          <span className="text-sm font-medium">{t.categoryLabel}</span>
-          <Select
-            value={category}
-            onValueChange={(v) => onCategoryChange(v as BlogCategory)}
+      <SidebarCard>
+        <span className="text-sm font-medium">{t.categoryLabel}</span>
+        <Select
+          value={category}
+          onValueChange={(v) => onCategoryChange(v as BlogCategory)}
+        >
+          <SelectTrigger
+            aria-label={t.categoryLabel}
+            aria-invalid={Boolean(categoryError)}
           >
-            <SelectTrigger
-              aria-label={t.categoryLabel}
-              aria-invalid={Boolean(categoryError)}
-            >
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {BLOG_CATEGORIES.map((c) => (
-                <SelectItem key={c} value={c}>
-                  {categoryMessages[c]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {categoryError ? (
-            <p className="text-sm text-destructive" role="alert">
-              {categoryError}
-            </p>
-          ) : null}
-        </div>
-      </SidebarSection>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {BLOG_CATEGORIES.map((c) => (
+              <SelectItem key={c} value={c}>
+                {categoryMessages[c]}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {categoryError ? (
+          <p className="text-sm text-destructive" role="alert">
+            {categoryError}
+          </p>
+        ) : null}
+      </SidebarCard>
 
-      <SidebarSection title={t.sections.cover}>
+      <SidebarCard>
+        <span className="text-sm font-medium">{t.featuredImageLabel}</span>
         <AdminBlogCoverSection
           coverImage={coverImage}
           onCoverImageChange={onCoverImageChange}
@@ -137,8 +133,9 @@ export function AdminBlogSidebar({
           featuredImageInvalidType={t.featuredImageInvalidType}
           featuredImageTooLarge={t.featuredImageTooLarge}
           coverError={coverError}
+          showLabel={false}
         />
-      </SidebarSection>
+      </SidebarCard>
     </div>
   );
 }

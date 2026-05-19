@@ -59,18 +59,18 @@ export function AdminBlogEditorToolbar({
   return (
     <div
       className={cn(
-        'sticky top-12 z-20 border-b border-border/40 bg-background/90 backdrop-blur supports-backdrop-filter:bg-background/75',
+        'sticky top-12 z-20 border-b border-primary/15 bg-background/90 backdrop-blur supports-backdrop-filter:bg-background/75',
         className,
       )}
     >
       <div
-        className="-mx-1 overflow-x-auto px-2 py-1.5 sm:px-4 [&::-webkit-scrollbar]:hidden"
+        className="-mx-1 overflow-x-auto px-3 py-2 sm:px-4 [&::-webkit-scrollbar]:hidden"
         style={{ scrollbarWidth: 'none' }}
       >
         <Toolbar.Root
           role="toolbar"
           aria-label={toolbarAriaLabel}
-          className="flex min-h-10 min-w-max flex-nowrap items-center gap-0.5 text-muted-foreground [&_button]:size-8 [&_button]:rounded-lg [&_button]:text-muted-foreground [&_button:hover]:bg-muted/80 [&_button:hover]:text-foreground"
+          className="flex min-h-10 min-w-max flex-nowrap items-center gap-1.5 text-muted-foreground [&_button]:size-8 [&_button]:rounded-lg [&_button]:text-muted-foreground [&_button:hover]:bg-muted/80 [&_button:hover]:text-foreground"
         >
           <ConditionalContents
             options={[
@@ -82,11 +82,11 @@ export function AdminBlogEditorToolbar({
                 fallback: () => (
                   <>
                     <BlockTypeSelect />
-                    <Toolbar.Separator className="mx-1 h-5 w-px shrink-0 bg-border/80" />
+                    <Toolbar.Separator className="mx-1 h-5 w-px shrink-0 bg-primary/15" />
                     <BoldItalicUnderlineToggles options={['Bold', 'Italic']} />
                     <StrikeThroughSupSubToggles options={['Strikethrough']} />
                     <CodeToggle />
-                    <Toolbar.Separator className="mx-1 h-5 w-px shrink-0 bg-border/80" />
+                    <Toolbar.Separator className="mx-1 h-5 w-px shrink-0 bg-primary/15" />
                     <CreateLink />
                     <InsertImage />
                     <Toolbar.Button
@@ -98,9 +98,9 @@ export function AdminBlogEditorToolbar({
                       <MessageSquareQuoteIcon className="size-4" aria-hidden />
                     </Toolbar.Button>
                     <InsertTable />
-                    <Toolbar.Separator className="mx-1 h-5 w-px shrink-0 bg-border/80" />
+                    <Toolbar.Separator className="mx-1 h-5 w-px shrink-0 bg-primary/15" />
                     <ListsToggle options={['bullet', 'number', 'check']} />
-                    <Toolbar.Separator className="mx-1 h-5 w-px shrink-0 bg-border/80" />
+                    <Toolbar.Separator className="mx-1 h-5 w-px shrink-0 bg-primary/15" />
                     <UndoRedo />
                   </>
                 ),
@@ -126,9 +126,7 @@ export function AdminBlogEditorToolbar({
           </Button>
         </Toolbar.Root>
       </div>
-      <p className="px-3 pb-1.5 text-xs text-muted-foreground/80 sm:px-4">
-        {slashTip}
-      </p>
+      <p className="px-4 pb-2 text-xs text-muted-foreground/80">{slashTip}</p>
       {toolbarExtra}
     </div>
   );
