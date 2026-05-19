@@ -171,7 +171,28 @@
         "scheduleNow": "Xuất bản ngay",
         "scheduleLater": "Đặt lịch xuất bản",
         "scheduleDateLabel": "Ngày và giờ xuất bản",
-        "previewButton": "Xem trước bài viết",
+        "previewButton": "Xem trước",
+        "previewNeedSlug": "Thêm slug trước khi xem trước.",
+        "editorSettingsLabel": "Cài đặt xuất bản",
+        "header": {
+          "breadcrumbRoot": "Bài viết",
+          "breadcrumbNew": "Tạo mới",
+          "breadcrumbEdit": "Chỉnh sửa"
+        },
+        "sections": {
+          "publish": "Xuất bản",
+          "metadata": "Metadata",
+          "seo": "SEO",
+          "cover": "Ảnh bìa"
+        },
+        "seoChecklist": {
+          "primaryKeyword": "Thêm từ khóa chính",
+          "titleLength": "Độ dài tiêu đề SEO (lý tưởng 30–60 ký tự)",
+          "metaDescription": "Độ dài mô tả meta (lý tưởng 120–160 ký tự)",
+          "headings": "Dùng ít nhất 2 heading trong nội dung",
+          "wordCount": "Nên có từ 300+ từ trong bài",
+          "coverImage": "Thêm ảnh bìa cho mạng xã hội"
+        },
         "slugCopied": "Đã sao chép slug.",
         "slugCopy": "Sao chép slug",
         "seoScore": "SEO",
@@ -189,7 +210,11 @@
           "quickQuote": "Trích dẫn",
           "quickTable": "Bảng",
           "slashTip": "Mẹo: Gõ / để mở menu lệnh nhanh.",
+          "quickTitle": "Bắt đầu với tiêu đề",
+          "quickSlash": "Lệnh /",
+          "quickOutline": "Tạo dàn ý",
           "toolbarBlockquote": "Chèn trích dẫn",
+          "toolbarAriaLabel": "Thanh công cụ định dạng",
           "formatMarkdown": "Markdown",
           "fullscreenEnter": "Mở rộng vùng soạn",
           "fullscreenExit": "Thu nhỏ vùng soạn"
@@ -201,8 +226,8 @@
         "featuredImageChooseFile": "Chọn ảnh",
         "featuredImageReplace": "Thay ảnh",
         "featuredImageRemove": "Xóa ảnh",
-        "featuredImageInvalidType": "Chỉ dùng file JPEG, PNG, WebP hoặc GIF.",
-        "featuredImageTooLarge": "Ảnh phải nhỏ hơn hoặc bằng 2 MB.",
+        "featuredImageInvalidType": "Chỉ dùng file JPEG, PNG hoặc WebP.",
+        "featuredImageTooLarge": "Ảnh phải nhỏ hơn hoặc bằng 5 MB.",
         "saving": "Đang lưu…",
         "saved": "Đã lưu.",
         "tabs": {
@@ -259,6 +284,17 @@
           "commandShortcutHint": "Nhấn Ctrl+K để mở từ bất kỳ đâu trong form",
           "fabAriaLabel": "Mở công cụ AI",
           "commandMenuLabel": "Lời nhắc tùy chỉnh…"
+        },
+        "validation": {
+          "titleRequired": "Tiêu đề không được để trống.",
+          "titleMax": "Tiêu đề tối đa 200 ký tự.",
+          "excerptMax": "Mô tả ngắn tối đa 200 ký tự.",
+          "contentRequiredPublish": "Nội dung không được để trống khi xuất bản.",
+          "coverInvalid": "Ảnh bìa không hợp lệ."
+        },
+        "toast": {
+          "saveSuccess": "Đã lưu bài viết.",
+          "saveError": "Không thể lưu bài viết."
         },
         "errors": {
           "generic": "Đã xảy ra lỗi.",

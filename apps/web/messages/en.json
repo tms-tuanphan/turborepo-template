@@ -171,7 +171,28 @@
         "scheduleNow": "Publish now",
         "scheduleLater": "Schedule for later",
         "scheduleDateLabel": "Scheduled date and time",
-        "previewButton": "Preview article",
+        "previewButton": "Preview",
+        "previewNeedSlug": "Add a slug before previewing.",
+        "editorSettingsLabel": "Publish settings",
+        "header": {
+          "breadcrumbRoot": "Blogs",
+          "breadcrumbNew": "New",
+          "breadcrumbEdit": "Edit"
+        },
+        "sections": {
+          "publish": "Publish",
+          "metadata": "Metadata",
+          "seo": "SEO",
+          "cover": "Cover image"
+        },
+        "seoChecklist": {
+          "primaryKeyword": "Add a primary keyword",
+          "titleLength": "SEO title length (30–60 characters ideal)",
+          "metaDescription": "Meta description length (120–160 characters ideal)",
+          "headings": "Use at least 2 content headings",
+          "wordCount": "Aim for 300+ words in the body",
+          "coverImage": "Add a cover image for social previews"
+        },
         "slugCopied": "Slug copied to clipboard.",
         "slugCopy": "Copy slug",
         "seoScore": "SEO",
@@ -189,20 +210,24 @@
           "quickQuote": "Quote",
           "quickTable": "Table",
           "slashTip": "Tip: Type / to open the quick command menu.",
+          "quickTitle": "Start with a title",
+          "quickSlash": "Slash commands",
+          "quickOutline": "Generate outline",
           "toolbarBlockquote": "Insert blockquote",
+          "toolbarAriaLabel": "Formatting toolbar",
           "formatMarkdown": "Markdown",
           "fullscreenEnter": "Expand editor",
           "fullscreenExit": "Exit expanded editor"
         },
         "categoryLabel": "Category",
         "featuredImageLabel": "Cover image",
-        "featuredImageHint": "JPEG, PNG, WebP, or GIF. Maximum size 2 MB.",
+        "featuredImageHint": "JPEG, PNG, or WebP. Maximum size 5 MB.",
         "featuredImageUploadPrompt": "Drag and drop an image here, or click to choose.",
         "featuredImageChooseFile": "Choose image",
         "featuredImageReplace": "Replace image",
         "featuredImageRemove": "Remove image",
-        "featuredImageInvalidType": "Please use a JPEG, PNG, WebP, or GIF file.",
-        "featuredImageTooLarge": "Image must be 2 MB or smaller.",
+        "featuredImageInvalidType": "Please use a JPEG, PNG, or WebP file.",
+        "featuredImageTooLarge": "Image must be 5 MB or smaller.",
         "saving": "Saving…",
         "saved": "Saved.",
         "tabs": {
@@ -259,6 +284,17 @@
           "commandShortcutHint": "Press Ctrl+K to open from anywhere in the form",
           "fabAriaLabel": "Open AI tools",
           "commandMenuLabel": "Custom prompt…"
+        },
+        "validation": {
+          "titleRequired": "Title is required.",
+          "titleMax": "Title must be at most 200 characters.",
+          "excerptMax": "Excerpt must be at most 200 characters.",
+          "contentRequiredPublish": "Content is required when publishing.",
+          "coverInvalid": "Cover image is invalid."
+        },
+        "toast": {
+          "saveSuccess": "Article saved.",
+          "saveError": "Could not save the article."
         },
         "errors": {
           "generic": "Something went wrong.",

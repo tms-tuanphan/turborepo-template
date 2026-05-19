@@ -3,23 +3,16 @@ import { z } from 'zod';
 import { BLOG_CATEGORIES, BLOG_STATUSES } from '@/shared/types/blog';
 
 export const ADMIN_BLOG_STATUSES = ['DRAFT', 'PUBLISHED'] as const;
-export const ADMIN_BLOG_WORKFLOW_STATUSES = [
-  'DRAFT',
-  'REVIEWING',
-  'SCHEDULED',
-  'PUBLISHED',
-  'ARCHIVED',
-] as const;
 
 export type AdminBlogStatus = (typeof ADMIN_BLOG_STATUSES)[number];
 
-/** Base64 data URLs for ~2 MB files expand beyond raw bytes; cap total string length. */
-const COVER_IMAGE_MAX_LENGTH = 3_500_000;
+/** Base64 data URLs for ~5 MB files expand beyond raw bytes; cap total string length. */
+export const COVER_IMAGE_MAX_LENGTH = 7_000_000;
 
 const DATA_IMAGE_COVER_REGEX =
-  /^data:image\/(png|jpeg|jpg|webp|gif);base64,[A-Za-z0-9+/=]+$/;
+  /^data:image\/(png|jpeg|jpg|webp);base64,[A-Za-z0-9+/=]+$/;
 
-function isValidCoverImage(value: string): boolean {
+export function isValidCoverImage(value: string): boolean {
   if (value === '') {
     return true;
   }
@@ -48,28 +41,113 @@ function parseTags(raw: string): string[] {
     .slice(0, 20);
 }
 
-export const adminBlogSchema = z.object({
+/** Client form fields shown in the editor UI. */
+export const blogPostFormSchema = z.object({
   title: z.string().trim().min(1).max(200),
-  slug: z
-    .string()
-    .trim()
-    .min(1)
-    .max(120)
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
-  content: z.string().min(1),
   excerpt: z.string().trim().max(200).optional().default(''),
-  tags: z
-    .string()
-    .optional()
-    .default('')
-    .transform((v) => parseTags(v)),
-  category: z.enum(BLOG_CATEGORIES),
-  status: z.enum(BLOG_STATUSES),
+  content: z.string().default(''),
+  status: z.enum(ADMIN_BLOG_STATUSES),
+  category: z.enum(BLOG_CATEGORIES).optional(),
   coverImage: z
     .string()
+    .default('')
     .refine(isValidCoverImage, { message: 'Invalid cover image' }),
-  scheduledAt: z.string().optional().default(''),
-  primaryKeyword: z.string().trim().max(60).optional().default(''),
+  slug: z.string().trim().max(120).optional().default(''),
 });
+
+export type BlogPostFormInput = z.infer<typeof blogPostFormSchema>;
+
+export type BlogFormValidationMessages = {
+  titleRequired: string;
+  titleMax: string;
+  excerptMax: string;
+  contentRequiredPublish: string;
+  coverInvalid: string;
+};
+
+export function createBlogPostFormSchema(messages: BlogFormValidationMessages) {
+  return z.object({
+    title: z
+      .string()
+      .trim()
+      .min(1, messages.titleRequired)
+      .max(200, messages.titleMax),
+    excerpt: z
+      .string()
+      .trim()
+      .max(200, messages.excerptMax)
+      .optional()
+      .default(''),
+    content: z.string().default(''),
+    status: z.enum(ADMIN_BLOG_STATUSES),
+    category: z.enum(BLOG_CATEGORIES).optional(),
+    coverImage: z
+      .string()
+      .default('')
+      .refine(isValidCoverImage, { message: messages.coverInvalid }),
+    slug: z.string().trim().max(120).optional().default(''),
+  });
+}
+
+export function createPublishFormSchema(messages: BlogFormValidationMessages) {
+  return createBlogPostFormSchema(messages).refine(
+    (data) => data.content.trim().length > 0,
+    { message: messages.contentRequiredPublish, path: ['content'] },
+  );
+}
+
+export type SubmitIntent = 'draft' | 'publish' | 'save';
+
+export function validateBlogFormForSubmit(
+  data: BlogPostFormInput,
+  intent: SubmitIntent,
+  messages: BlogFormValidationMessages,
+):
+  | { success: true; data: BlogPostFormInput }
+  | { success: false; errors: z.ZodError } {
+  const schema =
+    intent === 'publish'
+      ? createPublishFormSchema(messages)
+      : createBlogPostFormSchema(messages);
+  const result = schema.safeParse(data);
+  if (result.success) {
+    return { success: true, data: result.data };
+  }
+  return { success: false, errors: result.error };
+}
+
+/** Server-side payload after FormData is assembled. */
+export const adminBlogSchema = z
+  .object({
+    title: z.string().trim().min(1).max(200),
+    slug: z
+      .string()
+      .trim()
+      .max(120)
+      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+    content: z.string(),
+    excerpt: z.string().trim().max(200).optional().default(''),
+    tags: z
+      .string()
+      .optional()
+      .default('')
+      .transform((v) => parseTags(v)),
+    category: z.enum(BLOG_CATEGORIES),
+    status: z.enum(BLOG_STATUSES),
+    coverImage: z
+      .string()
+      .refine(isValidCoverImage, { message: 'Invalid cover image' }),
+    scheduledAt: z.string().optional().default(''),
+    primaryKeyword: z.string().trim().max(60).optional().default(''),
+  })
+  .superRefine((data, ctx) => {
+    if (data.status === 'PUBLISHED' && data.content.trim().length === 0) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Content is required when publishing',
+        path: ['content'],
+      });
+    }
+  });
 
 export type AdminBlogInput = z.infer<typeof adminBlogSchema>;

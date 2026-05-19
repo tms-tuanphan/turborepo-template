@@ -52,7 +52,8 @@ type AdminBlogAiToolbarProps = {
   editorRef: React.RefObject<MDXEditorMethods | null>;
   onContentChange: (next: string) => void;
   labels: ToolbarLabels;
-  variant?: 'fab' | 'inline';
+  variant?: 'fab' | 'inline' | 'compact';
+  onRegisterOutline?: (handler: () => void) => void;
 };
 
 type ActionKey =
@@ -132,6 +133,7 @@ export function AdminBlogAiToolbar({
   onContentChange,
   labels,
   variant = 'inline',
+  onRegisterOutline,
 }: AdminBlogAiToolbarProps) {
   const [busy, setBusy] = useState<ActionKey | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -288,6 +290,12 @@ export function AdminBlogAiToolbar({
   }, [content, editorRef, flash, labels, onContentChange, title]);
 
   useEffect(() => {
+    onRegisterOutline?.(() => {
+      void runOutline();
+    });
+  }, [onRegisterOutline, runOutline]);
+
+  useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
@@ -307,63 +315,57 @@ export function AdminBlogAiToolbar({
 
   const menuDisabled = busy !== null;
 
-  const inlineButtons = (
+  const aiButtonClass =
+    'h-8 gap-1.5 border-violet-500/20 bg-violet-500/5 text-violet-700 hover:bg-violet-500/10 dark:text-violet-300';
+
+  const compactButtons = (
     <div
-      className="flex flex-wrap items-center gap-1.5 border-t border-border/60 px-2 py-2 sm:px-4"
+      className="flex flex-wrap items-center gap-1.5 border-t border-violet-500/15 bg-violet-500/5 px-2 py-2 sm:px-4"
       role="group"
       aria-label={labels.fabAriaLabel}
     >
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        className="h-8 gap-1.5 border-primary/30 bg-primary/5 text-primary hover:bg-primary/10"
-        disabled={menuDisabled}
-        onClick={() => void runContinueWriting()}
-        aria-busy={busy === 'continue'}
-      >
-        {busy === 'continue' ? (
-          <Loader2Icon className="size-3.5 animate-spin" aria-hidden />
-        ) : (
-          <SparklesIcon className="size-3.5" aria-hidden />
-        )}
-        {labels.continueWriting}
-      </Button>
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        className="h-8 border-primary/30 bg-primary/5 text-primary hover:bg-primary/10"
-        disabled={menuDisabled}
-        onClick={() => void runRewrite()}
-        aria-busy={busy === 'rewrite'}
-      >
-        {busy === 'rewrite' ? (
-          <Loader2Icon className="size-3.5 animate-spin" aria-hidden />
-        ) : null}
-        {labels.rewrite}
-      </Button>
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        className="h-8 border-primary/30 bg-primary/5 text-primary hover:bg-primary/10"
-        disabled={menuDisabled}
-        onClick={() => void runSeoOptimize()}
-        aria-busy={busy === 'seo'}
-      >
-        {busy === 'seo' ? (
-          <Loader2Icon className="size-3.5 animate-spin" aria-hidden />
-        ) : null}
-        {labels.seoOptimize}
-      </Button>
+      {(
+        [
+          ['continue', labels.continueWriting, runContinueWriting, true],
+          ['rewrite', labels.rewrite, runRewrite, false],
+          ['seo', labels.seoOptimize, runSeoOptimize, false],
+          ['summarize', labels.summarize, runSummarize, false],
+          ['outline', labels.outline, runOutline, false],
+        ] as const
+      ).map(([key, label, fn, showIcon]) => (
+        <Button
+          key={key}
+          type="button"
+          variant="outline"
+          size="sm"
+          className={aiButtonClass}
+          disabled={menuDisabled}
+          onClick={() => void fn()}
+          aria-busy={busy === key}
+        >
+          {busy === key ? (
+            <Loader2Icon
+              className="size-3.5 shrink-0 animate-spin"
+              aria-hidden
+            />
+          ) : showIcon ? (
+            <SparklesIcon className="size-3.5 shrink-0" aria-hidden />
+          ) : null}
+          <span className="truncate">{label}</span>
+        </Button>
+      ))}
+      {message ? (
+        <p className="w-full text-xs text-destructive" role="status">
+          {message}
+        </p>
+      ) : null}
     </div>
   );
 
   return (
     <>
-      {variant === 'inline' ? (
-        inlineButtons
+      {variant === 'compact' || variant === 'inline' ? (
+        compactButtons
       ) : (
         <DropdownMenu>
           <DropdownMenuTrigger asChild disabled={menuDisabled}>
@@ -432,12 +434,6 @@ export function AdminBlogAiToolbar({
           className="pointer-events-none absolute right-4 bottom-16 z-30 max-w-[min(18rem,calc(100%-2rem))] rounded-md border border-destructive/30 bg-background/95 px-3 py-2 text-xs text-destructive shadow-md sm:right-5"
           role="status"
         >
-          {message}
-        </p>
-      ) : null}
-
-      {message && variant === 'inline' ? (
-        <p className="sr-only" role="status">
           {message}
         </p>
       ) : null}

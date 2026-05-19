@@ -1,30 +1,33 @@
 'use client';
 
-import {
-  ArrowLeftIcon,
-  CalendarClockIcon,
-  CheckIcon,
-  FileTextIcon,
-  SendHorizontalIcon,
-} from 'lucide-react';
-import Link from 'next/link';
-import { useActionState, useEffect, useRef, useState } from 'react';
-
 import type { MDXEditorMethods } from '@mdxeditor/editor';
+import {
+  useActionState,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from 'react';
+import { toast } from 'sonner';
+
+import type { BlogPost } from '@/shared/types/blog';
+import type { Locale, Messages } from '@/shared/i18n';
 
 import { createBlogAction, updateBlogAction } from '../actions/blog-actions';
 import {
   initialBlogFormActionState,
   type BlogFormActionState,
 } from '../actions/blog-form-action-state';
-import { Button } from '@/components/ui/button';
-import type { BlogPost, BlogStatus } from '@/shared/types/blog';
-import type { Locale, Messages } from '@/shared/i18n';
-import { slugify } from '@/shared/utils/slugify';
+import { useAdminBlogForm } from '../hooks/use-admin-blog-form';
+import type { SubmitIntent } from '../validations/blog.schema';
 
 import { AdminBlogAiToolbar } from './admin-blog-ai-toolbar';
-import { AdminBlogEditorSidebar } from './admin-blog-editor-sidebar';
 import { AdminBlogMarkdownEditor } from './admin-blog-markdown-editor';
+import { AdminBlogEditorHeader } from './editor/admin-blog-editor-header';
+import { AdminBlogEditorLayout } from './editor/admin-blog-editor-layout';
+import { AdminBlogMobilePublishBar } from './editor/admin-blog-mobile-publish-bar';
+import { AdminBlogSidebar } from './metadata/admin-blog-sidebar';
 
 function firstFieldError(
   fieldErrors: BlogFormActionState['fieldErrors'],
@@ -32,16 +35,6 @@ function firstFieldError(
 ): string | undefined {
   const arr = fieldErrors?.[key];
   return arr?.[0];
-}
-
-type PublishMode = 'now' | 'scheduled';
-
-function toDatetimeLocalValue(iso: string | null | undefined): string {
-  if (!iso) return '';
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return '';
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
 type AdminBlogFormProps = {
@@ -60,44 +53,52 @@ export function AdminBlogForm({
   const t = messages.admin.blogs.form;
   const tc = messages.blogs.categories;
   const tActions = messages.admin.blogs.actions;
-  const tb = messages.admin.blogs;
+  const tv = t.validation;
 
   const actionFn = mode === 'create' ? createBlogAction : updateBlogAction;
-  const [state, action, pending] = useActionState(
+  const [state, formAction, pending] = useActionState(
     actionFn,
     initialBlogFormActionState,
   );
+  const [, startTransition] = useTransition();
 
-  const [title, setTitle] = useState(initial?.title ?? '');
-  const [slug, setSlug] = useState(initial?.slug ?? '');
-  const [content, setContent] = useState(initial?.content ?? '');
-  const [excerpt, setExcerpt] = useState(initial?.description ?? '');
-  const [category, setCategory] = useState(
-    initial?.category ?? 'IT_PARTNERSHIP',
-  );
-  const [coverImage, setCoverImage] = useState(initial?.coverImage ?? '');
-  const [tags, setTags] = useState<string[]>(initial?.tags ?? []);
-  const [workflowStatus, setWorkflowStatus] = useState<BlogStatus>(
-    initial?.status ?? 'DRAFT',
-  );
-  const [publishMode, setPublishMode] = useState<PublishMode>(
-    initial?.scheduledAt ? 'scheduled' : 'now',
-  );
-  const [scheduleDate, setScheduleDate] = useState(
-    toDatetimeLocalValue(initial?.scheduledAt),
-  );
-  const [keyword, setKeyword] = useState(initial?.seo.primaryKeyword ?? '');
+  const blogForm = useAdminBlogForm({
+    mode,
+    postId: initial?.id,
+    initial,
+    validationMessages: {
+      titleRequired: tv.titleRequired,
+      titleMax: tv.titleMax,
+      excerptMax: tv.excerptMax,
+      contentRequiredPublish: tv.contentRequiredPublish,
+      coverInvalid: tv.coverInvalid,
+    },
+  });
+
+  const {
+    form,
+    watch,
+    setValue,
+    setError,
+    onTitleBlur,
+    validateAndGetData,
+    clearDraftStorage,
+    buildFormData,
+    setSubmitIntent,
+  } = blogForm;
+
+  const { formState } = form;
+  const title = watch('title');
+  const excerpt = watch('excerpt');
+  const content = watch('content');
+  const status = watch('status');
+  const category = watch('category');
+  const coverImage = watch('coverImage');
+
   const editorRef = useRef<MDXEditorMethods | null>(null);
-
-  const slugTouched = useRef(Boolean(initial?.slug));
+  const outlineHandlerRef = useRef<(() => void) | null>(null);
   const skipFirstSaved = useRef(true);
   const [savedFlash, setSavedFlash] = useState(false);
-
-  useEffect(() => {
-    if (publishMode === 'scheduled') {
-      setWorkflowStatus('SCHEDULED');
-    }
-  }, [publishMode]);
 
   useEffect(() => {
     if (skipFirstSaved.current) {
@@ -106,22 +107,90 @@ export function AdminBlogForm({
     }
     if (state.ok && mode === 'edit') {
       setSavedFlash(true);
+      toast.success(t.toast.saveSuccess);
       const timer = window.setTimeout(() => setSavedFlash(false), 2500);
       return () => window.clearTimeout(timer);
     }
     return undefined;
-  }, [state, mode]);
+  }, [state, mode, t.toast.saveSuccess]);
 
-  function onTitleBlur() {
-    if (!slugTouched.current && title.trim()) {
-      setSlug(slugify(title));
+  useEffect(() => {
+    if (state.fieldErrors) {
+      for (const [field, messagesArr] of Object.entries(state.fieldErrors)) {
+        const msg = messagesArr?.[0];
+        if (msg) {
+          setError(
+            field as
+              | 'title'
+              | 'content'
+              | 'excerpt'
+              | 'status'
+              | 'category'
+              | 'coverImage'
+              | 'slug',
+            {
+              type: 'server',
+              message: msg,
+            },
+          );
+        }
+      }
     }
-  }
+  }, [state.fieldErrors, setError]);
 
-  function onSlugChange(v: string) {
-    slugTouched.current = true;
-    setSlug(v);
-  }
+  useEffect(() => {
+    if (!state.ok && state.formError) {
+      const formErrorText =
+        state.formError === 'unauthorized'
+          ? t.errors.unauthorized
+          : state.formError === 'slugTaken'
+            ? t.errors.slugTaken
+            : state.formError === 'notFound'
+              ? t.errors.notFound
+              : t.errors.invalid;
+      toast.error(formErrorText);
+    }
+  }, [state, t.errors]);
+
+  const submitWithIntent = useCallback(
+    (intent: SubmitIntent) => {
+      setSubmitIntent(intent);
+      const data = validateAndGetData(intent);
+      if (!data) return;
+
+      const fd = buildFormData(data, {
+        locale,
+        submitIntent: intent,
+        postId: initial?.id,
+      });
+
+      startTransition(() => {
+        formAction(fd);
+      });
+    },
+    [
+      buildFormData,
+      formAction,
+      initial?.id,
+      locale,
+      setSubmitIntent,
+      validateAndGetData,
+    ],
+  );
+
+  const onSaveDraft = useCallback(() => {
+    submitWithIntent(mode === 'create' ? 'draft' : 'save');
+  }, [mode, submitWithIntent]);
+
+  const onPublish = useCallback(() => {
+    submitWithIntent('publish');
+  }, [submitWithIntent]);
+
+  useEffect(() => {
+    if (state.ok && mode === 'create') {
+      clearDraftStorage();
+    }
+  }, [state.ok, mode, clearDraftStorage]);
 
   const formErrorText =
     state.formError === 'unauthorized'
@@ -130,236 +199,166 @@ export function AdminBlogForm({
         ? t.errors.slugTaken
         : state.formError === 'notFound'
           ? t.errors.notFound
-          : state.formError === 'scheduleRequired'
-            ? t.errors.scheduleRequired
-            : state.formError === 'scheduleInvalid'
-              ? t.errors.scheduleInvalid
-              : state.formError === 'invalid'
-                ? t.errors.invalid
-                : undefined;
+          : state.formError === 'invalid'
+            ? t.errors.invalid
+            : undefined;
 
   const listHref = `/${locale}/admin/blogs`;
-  const heroTitle = mode === 'create' ? tb.newPageTitle : tb.editPageTitle;
-  const heroDescription =
-    mode === 'create' ? tb.newPageDescription : tb.editPageDescription;
   const primarySaveLabel =
     mode === 'create' ? tActions.saveDraft : tActions.save;
 
+  const titleError =
+    formState.errors.title?.message ??
+    firstFieldError(state.fieldErrors, 'title');
+  const contentError =
+    formState.errors.content?.message ??
+    firstFieldError(state.fieldErrors, 'content');
+  const coverError =
+    formState.errors.coverImage?.message ??
+    firstFieldError(state.fieldErrors, 'coverImage');
+
   const aiToolbar = (
     <AdminBlogAiToolbar
-      variant="inline"
+      variant="compact"
       title={title}
       content={content}
       editorRef={editorRef}
-      onContentChange={setContent}
+      onContentChange={(next) => {
+        setValue('content', next, { shouldDirty: true });
+        void form.trigger('content');
+      }}
       labels={t.ai}
+      onRegisterOutline={(fn) => {
+        outlineHandlerRef.current = fn;
+      }}
     />
   );
 
+  const displayStatus = status;
+  const statusLabel = t.sidebar.statusLabels[displayStatus];
+
   return (
-    <form action={action} className="flex min-h-0 flex-1 flex-col">
-      <input type="hidden" name="locale" value={locale} />
-      <input type="hidden" name="status" value={workflowStatus} />
-      {mode === 'edit' && initial ? (
-        <input type="hidden" name="id" value={initial.id} />
-      ) : null}
-      <input type="hidden" name="category" value={category} />
-      <textarea
-        name="content"
-        value={content}
-        readOnly
-        tabIndex={-1}
-        aria-hidden
-        className="sr-only"
+    <form
+      className="flex min-h-0 flex-1 flex-col pb-16 xl:pb-0"
+      onSubmit={(e) => e.preventDefault()}
+      noValidate
+    >
+      <AdminBlogEditorHeader
+        listHref={listHref}
+        breadcrumbRoot={t.header.breadcrumbRoot}
+        breadcrumbCurrent={
+          mode === 'create' ? t.header.breadcrumbNew : t.header.breadcrumbEdit
+        }
+        status={displayStatus}
+        statusLabel={statusLabel}
+        saved={mode === 'edit' && savedFlash}
+        savedLabel={t.saved}
+        saveDraftLabel={primarySaveLabel}
+        savingLabel={t.saving}
+        publishLabel={tActions.publishNow}
+        pending={pending}
+        onSaveDraft={onSaveDraft}
+        onPublish={onPublish}
       />
-      <textarea
-        name="excerpt"
-        value={excerpt}
-        readOnly
-        tabIndex={-1}
-        aria-hidden
-        className="sr-only"
-      />
 
-      <div className="mx-auto flex w-full items-center gap-3 border-b bg-background/80 px-4 py-3 backdrop-blur sm:px-6">
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          className="shrink-0"
-          aria-label={t.backToBlogs}
-          asChild
-        >
-          <Link href={listHref}>
-            <ArrowLeftIcon className="size-4" aria-hidden />
-            <span className="sr-only">{t.backToBlogs}</span>
-          </Link>
-        </Button>
-        <div
-          className="flex size-10 shrink-0 items-center justify-center rounded-lg border bg-card text-primary"
-          aria-hidden
-        >
-          <FileTextIcon className="size-5" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <h1 className="truncate text-lg font-semibold tracking-tight sm:text-xl">
-            {heroTitle}
-          </h1>
-          <p className="truncate text-xs text-muted-foreground sm:text-sm">
-            {heroDescription}
-          </p>
-          {mode === 'edit' && savedFlash ? (
-            <p
-              className="inline-flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400"
-              role="status"
-            >
-              <CheckIcon className="size-3.5 shrink-0" aria-hidden />
-              {t.saved}
-            </p>
-          ) : null}
-        </div>
-        <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
-          <Button
-            type="submit"
-            name="submitIntent"
-            value={mode === 'create' ? 'draft' : 'save'}
-            variant="secondary"
-            size="sm"
-            disabled={pending}
-          >
-            {pending ? t.saving : primarySaveLabel}
-          </Button>
-          {publishMode === 'scheduled' ? (
-            <Button
-              type="submit"
-              name="submitIntent"
-              value="schedule"
-              size="sm"
-              variant="outline"
-              disabled={pending}
-              className="gap-1.5"
-            >
-              {pending ? (
-                t.saving
-              ) : (
-                <>
-                  <CalendarClockIcon className="size-4" aria-hidden />
-                  {tActions.schedule}
-                </>
-              )}
-            </Button>
-          ) : null}
-          <Button
-            type="submit"
-            name="submitIntent"
-            value="publish"
-            size="sm"
-            disabled={pending}
-            className="gap-1.5"
-          >
-            {pending ? (
-              t.saving
-            ) : (
-              <>
-                <SendHorizontalIcon className="size-4" aria-hidden />
-                {tActions.publishNow}
-              </>
-            )}
-          </Button>
-        </div>
-      </div>
-
-      <div className="mx-auto grid w-full flex-1 grid-cols-1 gap-6 px-4 py-6 sm:gap-8 sm:px-6 xl:grid-cols-[minmax(0,1fr)_min(100%,360px)] xl:items-start">
-        <div className="flex min-w-0 flex-col gap-4">
-          {formErrorText ? (
-            <p className="text-sm text-destructive" role="alert">
-              {formErrorText}
-            </p>
-          ) : null}
-
-          <AdminBlogMarkdownEditor
-            toolbarExtra={aiToolbar}
-            editorRef={editorRef}
-            title={title}
-            onTitleChange={setTitle}
-            onTitleBlur={onTitleBlur}
-            titleLabel={t.titleLabel}
-            titlePlaceholder={t.titlePlaceholder}
-            excerptLabel={t.excerptLabel}
-            excerptPlaceholder={t.excerptPlaceholder}
-            titleInputId="blog-title"
-            titleError={firstFieldError(state.fieldErrors, 'title')}
-            titleErrorId="err-title"
-            excerpt={excerpt}
-            onExcerptChange={setExcerpt}
-            keyword={keyword}
-            seoScoreLabel={t.seoScore}
-            value={content}
-            onChange={setContent}
-            loadingLabel={t.editorLoading}
-            stats={{
-              wordsLabel: t.stats.words,
-              charactersLabel: t.stats.characters,
-              readingTimeLabel: t.stats.readingTime,
-              headingsLabel: t.stats.headings,
-              minutesLabel: t.stats.minutes,
-            }}
-            editorLabels={{
-              titleLabel: t.titleLabel,
-              titlePlaceholder: t.titlePlaceholder,
-              excerptLabel: t.excerptLabel,
-              excerptPlaceholder: t.excerptPlaceholder,
-              contentAriaLabel: t.contentLabel,
-              emptyTitle: t.editorSurface.emptyTitle,
-              emptyHint: t.editorSurface.emptyHint,
-              quickHeading: t.editorSurface.quickHeading,
-              quickCode: t.editorSurface.quickCode,
-              quickImage: t.editorSurface.quickImage,
-              quickQuote: t.editorSurface.quickQuote,
-              quickTable: t.editorSurface.quickTable,
-              slashTip: t.editorSurface.slashTip,
-              toolbarBlockquote: t.editorSurface.toolbarBlockquote,
-              formatMarkdown: t.editorSurface.formatMarkdown,
-              fullscreenEnter: t.editorSurface.fullscreenEnter,
-              fullscreenExit: t.editorSurface.fullscreenExit,
-            }}
-            contentPlaceholder={t.editorSurface.contentPlaceholder}
-            aria-label={t.contentLabel}
+      <AdminBlogEditorLayout
+        settingsLabel={t.editorSettingsLabel}
+        editor={
+          <>
+            {formErrorText ? (
+              <p className="text-sm text-destructive" role="alert">
+                {formErrorText}
+              </p>
+            ) : null}
+            <AdminBlogMarkdownEditor
+              toolbarExtra={aiToolbar}
+              editorRef={editorRef}
+              title={title}
+              onTitleChange={(v) =>
+                setValue('title', v, {
+                  shouldDirty: true,
+                  shouldValidate: true,
+                })
+              }
+              onTitleBlur={onTitleBlur}
+              titleLabel={t.titleLabel}
+              titlePlaceholder={t.titlePlaceholder}
+              excerptLabel={t.excerptLabel}
+              excerptPlaceholder={t.excerptPlaceholder}
+              titleInputId="blog-title"
+              titleError={titleError}
+              titleErrorId="err-title"
+              excerpt={excerpt}
+              onExcerptChange={(v) =>
+                setValue('excerpt', v.slice(0, 200), { shouldDirty: true })
+              }
+              value={content}
+              onChange={(v) => setValue('content', v, { shouldDirty: true })}
+              loadingLabel={t.editorLoading}
+              stats={{
+                wordsLabel: t.stats.words,
+                charactersLabel: t.stats.characters,
+                readingTimeLabel: t.stats.readingTime,
+                headingsLabel: t.stats.headings,
+                minutesLabel: t.stats.minutes,
+              }}
+              editorLabels={{
+                contentAriaLabel: t.contentLabel,
+                slashTip: t.editorSurface.slashTip,
+                toolbarBlockquote: t.editorSurface.toolbarBlockquote,
+                toolbarAriaLabel: t.editorSurface.toolbarAriaLabel,
+                fullscreenEnter: t.editorSurface.fullscreenEnter,
+                fullscreenExit: t.editorSurface.fullscreenExit,
+                quickTitle: t.editorSurface.quickTitle,
+                quickSlash: t.editorSurface.quickSlash,
+                quickOutline: t.editorSurface.quickOutline,
+                quickCode: t.editorSurface.quickCode,
+              }}
+              contentPlaceholder={t.editorSurface.contentPlaceholder}
+              onOutlineRequest={() => outlineHandlerRef.current?.()}
+              aria-label={t.contentLabel}
+            />
+            {contentError ? (
+              <p
+                id="err-content"
+                className="px-4 text-sm text-destructive sm:px-6"
+                role="alert"
+              >
+                {contentError}
+              </p>
+            ) : null}
+          </>
+        }
+        sidebar={
+          <AdminBlogSidebar
+            messages={t}
+            categoryMessages={tc}
+            status={status}
+            onStatusChange={(v) => setValue('status', v, { shouldDirty: true })}
+            category={category ?? 'IT_PARTNERSHIP'}
+            onCategoryChange={(v) =>
+              setValue('category', v, { shouldDirty: true })
+            }
+            coverImage={coverImage}
+            onCoverImageChange={(v) =>
+              setValue('coverImage', v, { shouldDirty: true })
+            }
+            statusError={formState.errors.status?.message}
+            categoryError={formState.errors.category?.message}
+            coverError={coverError}
           />
-          {firstFieldError(state.fieldErrors, 'content') ? (
-            <p className="text-sm text-destructive" role="alert">
-              {firstFieldError(state.fieldErrors, 'content')}
-            </p>
-          ) : null}
-        </div>
-
-        <AdminBlogEditorSidebar
-          locale={locale}
-          messages={t}
-          categoryMessages={tc}
-          category={category}
-          onCategoryChange={setCategory}
-          coverImage={coverImage}
-          onCoverImageChange={setCoverImage}
-          slug={slug}
-          onSlugChange={onSlugChange}
-          title={title}
-          content={content}
-          excerpt={excerpt}
-          tags={tags}
-          onTagsChange={setTags}
-          status={workflowStatus}
-          onStatusChange={setWorkflowStatus}
-          publishMode={publishMode}
-          onPublishModeChange={setPublishMode}
-          scheduleDate={scheduleDate}
-          onScheduleDateChange={setScheduleDate}
-          keyword={keyword}
-          onKeywordChange={setKeyword}
-          slugError={firstFieldError(state.fieldErrors, 'slug')}
-          coverError={firstFieldError(state.fieldErrors, 'coverImage')}
-        />
-      </div>
+        }
+        mobilePublishBar={
+          <AdminBlogMobilePublishBar
+            saveDraftLabel={primarySaveLabel}
+            publishLabel={tActions.publishNow}
+            savingLabel={t.saving}
+            pending={pending}
+            onSaveDraft={onSaveDraft}
+            onPublish={onPublish}
+          />
+        }
+      />
     </form>
   );
 }

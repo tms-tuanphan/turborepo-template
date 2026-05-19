@@ -171,7 +171,28 @@
         "scheduleNow": "今すぐ公開",
         "scheduleLater": "予約公開",
         "scheduleDateLabel": "公開日時",
-        "previewButton": "記事をプレビュー",
+        "previewButton": "プレビュー",
+        "previewNeedSlug": "プレビューする前にスラッグを追加してください。",
+        "editorSettingsLabel": "公開設定",
+        "header": {
+          "breadcrumbRoot": "ブログ",
+          "breadcrumbNew": "新規",
+          "breadcrumbEdit": "編集"
+        },
+        "sections": {
+          "publish": "公開",
+          "metadata": "メタデータ",
+          "seo": "SEO",
+          "cover": "カバー画像"
+        },
+        "seoChecklist": {
+          "primaryKeyword": "主要キーワードを追加",
+          "titleLength": "SEOタイトルの長さ（理想は30〜60文字）",
+          "metaDescription": "メタ説明の長さ（理想は120〜160文字）",
+          "headings": "見出しを2つ以上使用",
+          "wordCount": "本文は300語以上を目標に",
+          "coverImage": "SNSプレビュー用のカバー画像を追加"
+        },
         "slugCopied": "スラッグをコピーしました。",
         "slugCopy": "スラッグをコピー",
         "seoScore": "SEO",
@@ -189,7 +210,11 @@
           "quickQuote": "引用",
           "quickTable": "表",
           "slashTip": "ヒント: / を入力するとクイックコマンドメニューが開きます。",
+          "quickTitle": "タイトルから始める",
+          "quickSlash": "スラッシュコマンド",
+          "quickOutline": "アウトライン生成",
           "toolbarBlockquote": "引用を挿入",
+          "toolbarAriaLabel": "書式ツールバー",
           "formatMarkdown": "Markdown",
           "fullscreenEnter": "エディタを全画面表示",
           "fullscreenExit": "全画面表示を終了"
@@ -201,8 +226,8 @@
         "featuredImageChooseFile": "画像を選択",
         "featuredImageReplace": "画像を差し替え",
         "featuredImageRemove": "画像を削除",
-        "featuredImageInvalidType": "JPEG、PNG、WebP、GIF のいずれかを使用してください。",
-        "featuredImageTooLarge": "画像は 2 MB 以下にしてください。",
+        "featuredImageInvalidType": "JPEG、PNG、WebP のいずれかを使用してください。",
+        "featuredImageTooLarge": "画像は 5 MB 以下にしてください。",
         "saving": "保存中…",
         "saved": "保存しました。",
         "tabs": {
@@ -259,6 +284,17 @@
           "commandShortcutHint": "Ctrl+K でフォーム内のどこからでも開けます",
           "fabAriaLabel": "AIツールを開く",
           "commandMenuLabel": "カスタムプロンプト…"
+        },
+        "validation": {
+          "titleRequired": "タイトルは必須です。",
+          "titleMax": "タイトルは200文字以内にしてください。",
+          "excerptMax": "抜粋は200文字以内にしてください。",
+          "contentRequiredPublish": "公開時は本文が必須です。",
+          "coverInvalid": "カバー画像が無効です。"
+        },
+        "toast": {
+          "saveSuccess": "記事を保存しました。",
+          "saveError": "記事を保存できませんでした。"
         },
         "errors": {
           "generic": "問題が発生しました。",

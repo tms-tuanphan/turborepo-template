@@ -1,5 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 
+import { Toaster } from '@/components/ui/sonner';
 import { AdminShell } from '@/features/admin-shell';
 import { auth } from '@/auth';
 import { getMessages, isLocale } from '@/shared/i18n';
@@ -36,6 +37,7 @@ export default async function AdminMainLayout({
       userName={session.user?.name ?? null}
     >
       {children}
+      <Toaster richColors position="top-right" />
     </AdminShell>
   );
 }

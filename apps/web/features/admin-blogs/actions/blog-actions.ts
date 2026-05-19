@@ -12,14 +12,12 @@ import {
   updateBlogInStore,
 } from '@/features/blogs';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
-import {
-  BLOG_STATUSES,
-  type BlogPost,
-  type BlogStatus,
-} from '@/shared/types/blog';
+import { type BlogPost, type BlogStatus } from '@/shared/types/blog';
+import { slugify } from '@/shared/utils/slugify';
 
 import { deriveStoredSeo } from '../lib/blog-meta';
 import {
+  ADMIN_BLOG_STATUSES,
   adminBlogSchema,
   type AdminBlogInput,
 } from '../validations/blog.schema';
@@ -68,7 +66,6 @@ function pickSubmitIntent(formData: FormData): SubmitIntent {
 
 function resolveStatusForSubmit(
   intent: SubmitIntent,
-  scheduledAt: string,
   sidebarStatus: string,
 ): { status: BlogStatus } | { error: BlogFormFormError } {
   switch (intent) {
@@ -76,27 +73,14 @@ function resolveStatusForSubmit(
       return { status: 'DRAFT' };
     case 'publish':
       return { status: 'PUBLISHED' };
-    case 'schedule': {
-      const trimmed = scheduledAt.trim();
-      if (!trimmed) return { error: 'scheduleRequired' };
-      const d = new Date(trimmed);
-      if (Number.isNaN(d.getTime())) return { error: 'scheduleInvalid' };
-      return { status: 'SCHEDULED' };
-    }
     case 'save': {
-      if (!(BLOG_STATUSES as readonly string[]).includes(sidebarStatus)) {
+      if (!(ADMIN_BLOG_STATUSES as readonly string[]).includes(sidebarStatus)) {
         return { error: 'invalid' };
       }
-      const status = sidebarStatus as BlogStatus;
-      if (status === 'SCHEDULED' && !scheduledAt.trim()) {
-        return { error: 'scheduleRequired' };
-      }
-      if (status === 'SCHEDULED') {
-        const d = new Date(scheduledAt);
-        if (Number.isNaN(d.getTime())) return { error: 'scheduleInvalid' };
-      }
-      return { status };
+      return { status: sidebarStatus as BlogStatus };
     }
+    case 'schedule':
+      return { error: 'invalid' };
   }
 }
 
@@ -112,15 +96,20 @@ function parseBlogFormInput(formData: FormData): ParseBlogFormResult {
   const intent = pickSubmitIntent(formData);
   const resolved = resolveStatusForSubmit(
     intent,
-    pickString(formData, 'scheduledAt'),
     pickString(formData, 'status'),
   );
   if ('error' in resolved) {
     return { ok: false, formError: resolved.error };
   }
 
+  const title = pickString(formData, 'title');
+  const slugRaw = pickString(formData, 'slug').trim();
+  const slug = slugRaw.length > 0 ? slugRaw : slugify(title);
+
   const raw = {
     ...formDataToBlogInput(formData),
+    title,
+    slug,
     status: resolved.status,
   };
   const parsed = adminBlogSchema.safeParse(raw);
@@ -130,7 +119,11 @@ function parseBlogFormInput(formData: FormData): ParseBlogFormResult {
       fieldErrors: parsed.error.flatten().fieldErrors,
     };
   }
-  return { ok: true, data: parsed.data };
+  const data: AdminBlogInput = {
+    ...parsed.data,
+    slug: parsed.data.slug.trim() || slugify(parsed.data.title),
+  };
+  return { ok: true, data };
 }
 
 function toBlogPayload(
