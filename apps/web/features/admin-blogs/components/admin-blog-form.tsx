@@ -16,7 +16,7 @@ import {
   initialBlogFormActionState,
   updateBlogAction,
   type BlogFormActionState,
-} from '@/app/[locale]/(admin)/admin/(main)/blogs/_actions/blog-actions';
+} from '../actions/blog-actions';
 import { Button } from '@/components/ui/button';
 import type { BlogPost, BlogStatus } from '@/shared/types/blog';
 import type { Locale, Messages } from '@/shared/i18n';

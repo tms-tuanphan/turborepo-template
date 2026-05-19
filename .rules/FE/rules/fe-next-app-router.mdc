@@ -1,0 +1,16 @@
+---
+description: Next.js App Router — routing-only app/, RSC, Server Actions, boundaries
+globs: apps/web/app/**/*
+alwaysApply: false
+---
+
+# Next.js App Router
+
+- `apps/web/app/` — **routing only**; business logic in `features/`, cross-feature in `shared/`, infra in `core/`
+- Private colocation: `_folder` prefix inside `app/` (not routes)
+- Route boundaries: `loading.tsx`, `error.tsx`, `not-found.tsx`
+- Default **Server Components**; `'use client'` only when needed
+- No secrets/env in client modules
+- Mutations: **Server Actions** (`'use server'`) + `revalidatePath`; handle errors gracefully
+
+Coding principles: KISS, YAGNI, DRY; SOLID (S & O) for components.

@@ -1,0 +1,14 @@
+---
+description: FE monorepo boundaries — apps/web, packages/ui, workspace imports
+globs: apps/web/**/*,packages/ui/**/*
+alwaysApply: false
+---
+
+# FE monorepo
+
+- FE runtime app: `apps/web`
+- Shared UI: `packages/ui` — import via `@repo/ui/*` (no deep cross-package imports)
+- Internal deps: `workspace:*` in package.json
+- `packages/ui` must remain **UI-only** (no `next/*`, no app wiring)
+
+Sub-agents: [agents/coordinator/AGENTS.md](../agents/coordinator/AGENTS.md)

@@ -3,12 +3,12 @@
 import Image from 'next/image';
 
 import { Input } from '@/components/ui/input';
-import { KEYWORD_MAX_LENGTH } from '@/features/admin-blogs/lib/blog-seo-score';
+import { KEYWORD_MAX_LENGTH } from '../lib/blog-seo-score';
 import {
   META_DESCRIPTION_MAX,
   META_TITLE_MAX,
   deriveStoredSeo,
-} from '@/features/admin-blogs/lib/blog-meta';
+} from '../lib/blog-meta';
 import { cn } from '@/lib/utils';
 
 type AdminBlogSeoPreviewLabels = {

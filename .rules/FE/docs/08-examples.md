@@ -247,3 +247,87 @@ import { DataTable } from '@/shared/...'; // trong core
 | Hook      | use + camelCase    | `useAuth`          |
 | Type      | PascalCase         | `User`             |
 | Constant  | UPPER_SNAKE        | `API_BASE_URL`     |
+
+---
+
+## Sub-agents (Cursor-native)
+
+For complex FE work, use the **Coordinator** instead of reading the whole repo.
+
+| Resource          | Path                                                                          |
+| ----------------- | ----------------------------------------------------------------------------- |
+| Coordinator       | [../agents/coordinator/AGENTS.md](../agents/coordinator/AGENTS.md)            |
+| Registry          | [../agents/README.md](../agents/README.md)                                    |
+| Output contract   | [../agents/\_shared/output-contract.md](../agents/_shared/output-contract.md) |
+| Feature manifests | [../agents/feature/manifests/](../agents/feature/manifests/)                  |
+
+Validate manifests: `pnpm fe:manifest-check`
+
+### Example flow: optimize admin blogs list
+
+```text
+User: "Admin blogs list is slow"
+
+Coordinator:
+1. repo-scanner     → JSON map (features, routes)
+2. feature          → manifest admin-blogs.json (scoped read)
+3. performance      → rerender-*, async-* rules in scope only
+4. dependency       → import graph for admin-blogs + blogs routes
+5. (implement fix)
+6. reviewer         → diff only, fresh context
+```
+
+### Example: Repo Scanner JSON (excerpt)
+
+```json
+{
+  "framework": "Next.js",
+  "appRoot": "apps/web",
+  "features": ["blogs", "admin-blogs", "admin-auth", "admin-shell"],
+  "ui": "@repo/ui + apps/web/components/ui",
+  "auth": "next-auth",
+  "i18n": "apps/web/messages/*.json",
+  "stateManagement": "React hooks / local state",
+  "routes": {
+    "site": "apps/web/app/[locale]/(site)/**",
+    "admin": "apps/web/app/[locale]/(admin)/**",
+    "api": "apps/web/app/api/**"
+  }
+}
+```
+
+### Example: sub-agent response (evidence required)
+
+```markdown
+### status
+
+OK
+
+### evidence
+
+apps/web/features/admin-blogs/components/admin-blogs-table.tsx:L28 — maps full list without pagination memo
+
+### findings
+
+- Table re-renders on parent state change (see evidence)
+- No Suspense boundary on blogs page route
+
+### scope_read
+
+apps/web/features/admin-blogs/\*\*
+apps/web/app/[locale]/(admin)/admin/(main)/blogs/page.tsx
+
+### next_agents
+
+performance, component
+```
+
+### INSUFFICIENT_CONTEXT
+
+If files were not read, agents must return `INSUFFICIENT_CONTEXT` — the Coordinator must not invent architecture details.
+
+### New feature manifest
+
+1. Copy [../agents/feature/manifests/\_template.json](../agents/feature/manifests/_template.json)
+2. Fill `scope` / `forbiddenRoots`
+3. Run `pnpm fe:manifest-check`

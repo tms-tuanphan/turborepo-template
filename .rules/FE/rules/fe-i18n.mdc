@@ -1,0 +1,13 @@
+---
+description: FE i18n — EN + JA message catalogs, no hardcoded user strings
+globs: apps/web/messages/**,apps/web/app/**/*.{ts,tsx},apps/web/features/**/*.{ts,tsx},apps/web/shared/**/*
+alwaysApply: false
+---
+
+# I18N (mandatory)
+
+- User-facing strings in **English and Japanese**
+- Avoid hardcoded UI copy in components/pages (except rare technical labels)
+- Catalogs: `apps/web/messages/en.json`, `apps/web/messages/ja.json`, `vi.json` if used
+- Stable keys: e.g. `auth.login.title`, `users.table.empty`
+- Keep `<html lang="...">` in sync with active locale

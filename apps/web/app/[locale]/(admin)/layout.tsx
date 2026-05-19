@@ -9,5 +9,5 @@ export default async function AdminShellLayout({
 }) {
   await params;
 
-  return <div className="flex min-h-svh flex-col bg-muted/30">{children}</div>;
+  return children;
 }

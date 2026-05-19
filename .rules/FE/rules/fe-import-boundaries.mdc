@@ -1,0 +1,32 @@
+---
+description: FE 5-layer import boundaries — APP → FEATURES → SHARED → CORE → UI
+globs: apps/web/**/*.{ts,tsx},packages/ui/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Import boundaries
+
+Allowed direction:
+
+`APP → FEATURES → SHARED → CORE → COMPONENTS/UI`
+
+- `features/*` must **never** import from other `features/*`
+- `components/ui/*` must stay UI-only (no imports from `core`, `shared`, `features`)
+- Detail: [docs/01-architecture.md](../docs/01-architecture.md), [docs/03-code-organization.md](../docs/03-code-organization.md)
+
+## Feature public API
+
+- Export via `apps/web/features/<feature>/index.ts`
+- Keep `hooks/`, `stores/`, `utils/` private unless explicitly exported
+
+## Defensive programming
+
+- Use `?.` and `??` for nested access
+- Lists: empty, loading, error states
+- Zod for user input (forms, server actions, route handlers)
+
+## Clean props
+
+- Destructure in signature; ~5–7 props (guideline)
+- Boolean shorthand; defaults in destructuring
+- Prefer `onEmailChange` over `handleChange`

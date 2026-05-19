@@ -1,0 +1,18 @@
+{
+  "id": "my-feature",
+  "displayName": "My Feature",
+  "scope": {
+    "featureRoot": "apps/web/features/my-feature",
+    "publicApi": "apps/web/features/my-feature/index.ts",
+    "routes": ["apps/web/app/[locale]/(site)/my-feature/**"],
+    "apiRoutes": []
+  },
+  "allowedImports": [
+    "apps/web/shared/**",
+    "apps/web/core/**",
+    "apps/web/components/ui/**",
+    "@repo/ui/**"
+  ],
+  "forbiddenRoots": ["apps/web/features/other-feature"],
+  "relatedDocs": [".rules/FE/docs/04-feature-module.md"]
+}

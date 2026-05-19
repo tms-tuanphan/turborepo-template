@@ -40,10 +40,8 @@ export default async function AdminLoginPage({ params }: { params: Params }) {
   const messages = getMessages(locale);
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center px-4 py-12">
-      <Suspense fallback={<LoginFormFallback />}>
-        <AdminLoginForm locale={locale} messages={messages} />
-      </Suspense>
-    </div>
+    <Suspense fallback={<LoginFormFallback />}>
+      <AdminLoginForm locale={locale} messages={messages} />
+    </Suspense>
   );
 }

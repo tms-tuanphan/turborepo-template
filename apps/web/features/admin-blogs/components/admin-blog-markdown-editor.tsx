@@ -22,10 +22,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  EXCERPT_MAX_LENGTH,
-  computeSeoScore,
-} from '@/features/admin-blogs/lib/blog-seo-score';
+import { EXCERPT_MAX_LENGTH, computeSeoScore } from '../lib/blog-seo-score';
 import { cn } from '@/lib/utils';
 
 import type { AdminBlogMdxEditorLoadedLabels } from './admin-blog-mdx-editor-loaded';

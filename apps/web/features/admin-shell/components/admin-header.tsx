@@ -24,6 +24,8 @@ import {
 import type { Messages } from '@/shared/i18n';
 import { Logo } from '@/shared/layout/_components/logo';
 
+import { getAdminBreadcrumbItems } from '../lib/admin-breadcrumbs';
+
 type AdminHeaderProps = {
   messages: Messages;
   userEmail: string | null;
@@ -37,58 +39,6 @@ type AdminHeaderProps = {
   collapseLabel: string;
   expandLabel: string;
 };
-
-type BreadcrumbItem = {
-  label: string;
-};
-
-function getAdminBreadcrumbItems(
-  pathname: string,
-  messages: Messages,
-): BreadcrumbItem[] {
-  const tShell = messages.admin.shell;
-  const segments = pathname.split('/').filter(Boolean);
-  const adminIndex = segments.indexOf('admin');
-  if (adminIndex === -1) {
-    return [{ label: tShell.brand }];
-  }
-
-  const afterAdmin = segments.slice(adminIndex + 1);
-
-  // Root crumb always present.
-  const items: BreadcrumbItem[] = [{ label: tShell.brand }];
-
-  // /{locale}/admin
-  if (afterAdmin.length === 0) {
-    items.push({ label: messages.admin.intro.pageTitle });
-    return items;
-  }
-
-  const [section, maybeId, maybeAction] = afterAdmin;
-
-  if (section === 'blogs') {
-    items.push({ label: messages.admin.blogs.pageTitle });
-    if (maybeId === 'new') {
-      items.push({ label: messages.admin.blogs.newPageTitle });
-    } else if (maybeAction === 'edit') {
-      items.push({ label: messages.admin.blogs.editPageTitle });
-    }
-    return items;
-  }
-
-  if (section === 'products') {
-    items.push({ label: messages.admin.productsPlaceholder.pageTitle });
-    return items;
-  }
-
-  if (section === 'ai-driven-development') {
-    items.push({ label: messages.admin.aiDrivenPlaceholder.pageTitle });
-    return items;
-  }
-
-  // Unknown admin subsection: keep it conservative.
-  return items;
-}
 
 function AdminThemeToggle({ messages }: { messages: Messages }) {
   const { resolvedTheme, setTheme } = useTheme();

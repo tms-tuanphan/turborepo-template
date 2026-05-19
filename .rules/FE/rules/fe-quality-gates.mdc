@@ -1,0 +1,22 @@
+---
+description: FE quality gates — lint, types, Knip, tests, build
+globs: apps/web/**/*
+alwaysApply: false
+---
+
+# Code quality gates
+
+Must pass hooks/CI:
+
+- lint / format
+- typecheck (`pnpm check-types` in app)
+- Knip (unused exports)
+- tests
+- build
+
+- No `any` (TypeScript strict)
+- Prefer repo root: `pnpm dev`, `pnpm lint`, `pnpm test`, `pnpm build` (Turborepo cache)
+
+Source: [docs/06-code-quality.md](../docs/06-code-quality.md), [docs/07-package-cicd.md](../docs/07-package-cicd.md)
+
+After non-trivial changes: run [reviewer agent](../agents/reviewer/SKILL.md) via [coordinator](../agents/coordinator/AGENTS.md).

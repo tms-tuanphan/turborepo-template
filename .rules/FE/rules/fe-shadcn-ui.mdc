@@ -1,0 +1,15 @@
+---
+description: ShadcnUI and Tailwind — web components/ui vs packages/ui
+globs: apps/web/components/ui/**/*,packages/ui/**/*
+alwaysApply: false
+---
+
+# ShadcnUI & Tailwind
+
+- `apps/web/components/ui/*` — web-only shadcn primitives
+- Cross-app primitives → `packages/ui`, import `@repo/ui/*`
+- Prefer Tailwind utilities over CSS files
+- Radix `asChild` composition
+- Check existing shadcn components before adding new ones
+
+AI / quality: split complex UI; a11y (aria, keyboard); JSDoc only for non-obvious **why**.

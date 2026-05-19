@@ -1,0 +1,32 @@
+{
+  "id": "admin-auth",
+  "displayName": "Admin Authentication",
+  "scope": {
+    "featureRoot": "apps/web/features/admin-auth",
+    "publicApi": "apps/web/features/admin-auth/index.ts",
+    "routes": [
+      "apps/web/app/[locale]/(admin)/admin/(auth)/**"
+    ],
+    "apiRoutes": [
+      "apps/web/app/api/auth/**"
+    ],
+    "authConfig": [
+      "apps/web/auth.ts",
+      "apps/web/core/auth/**"
+    ]
+  },
+  "allowedImports": [
+    "apps/web/shared/**",
+    "apps/web/core/**",
+    "apps/web/components/ui/**",
+    "@repo/ui/**"
+  ],
+  "forbiddenRoots": [
+    "apps/web/features/blogs",
+    "apps/web/features/admin-blogs"
+  ],
+  "relatedDocs": [
+    ".rules/FE/docs/04-feature-module.md",
+    ".rules/FE/skills/auth-patterns/SKILL.md"
+  ]
+}

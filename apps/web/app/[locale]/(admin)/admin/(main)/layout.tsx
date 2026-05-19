@@ -20,7 +20,10 @@ export default async function AdminMainLayout({
   const locale = rawLocale;
   const session = await auth();
   if (!session) {
-    redirect(`/${locale}/admin/login`);
+    const loginPath = `/${locale}/admin/login`;
+    redirect(
+      `${loginPath}?callbackUrl=${encodeURIComponent(`/${locale}/admin`)}`,
+    );
   }
 
   const messages = getMessages(locale);

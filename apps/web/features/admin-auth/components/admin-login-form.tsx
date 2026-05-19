@@ -15,6 +15,7 @@ import {
 import { Input } from '@/components/ui/input';
 import type { Messages } from '@/shared/i18n';
 
+import { sanitizeAdminCallbackUrl } from '../lib/sanitize-callback-url';
 import { adminLoginSchema } from '../validations/login.schema';
 
 type AdminLoginFormProps = {
@@ -32,7 +33,10 @@ export function AdminLoginForm({ locale, messages }: AdminLoginFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
-  const callbackUrl = searchParams.get('callbackUrl') ?? `/${locale}/admin`;
+  const callbackUrl = sanitizeAdminCallbackUrl(
+    searchParams.get('callbackUrl'),
+    locale,
+  );
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();

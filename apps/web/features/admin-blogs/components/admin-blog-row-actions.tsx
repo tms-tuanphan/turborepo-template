@@ -11,7 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { deleteBlogAction } from '@/app/[locale]/(admin)/admin/(main)/blogs/_actions/blog-actions';
+import { deleteBlogAction } from '../actions/blog-actions';
 import type { Locale, Messages } from '@/shared/i18n';
 
 type AdminBlogRowActionsProps = {

@@ -4,8 +4,6 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { auth } from '@/auth';
-import { adminBlogSchema, type AdminBlogInput } from '@/features/admin-blogs';
-import { deriveStoredSeo } from '@/features/admin-blogs/lib/blog-meta';
 import {
   createBlogInStore,
   deleteBlogInStore,
@@ -15,6 +13,12 @@ import {
 } from '@/features/blogs';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 import type { BlogPost } from '@/shared/types/blog';
+
+import { deriveStoredSeo } from '../lib/blog-meta';
+import {
+  adminBlogSchema,
+  type AdminBlogInput,
+} from '../validations/blog.schema';
 
 export type BlogFormActionState = {
   ok: boolean;

@@ -1,0 +1,24 @@
+{
+  "id": "blogs",
+  "displayName": "Public Blogs",
+  "scope": {
+    "featureRoot": "apps/web/features/blogs",
+    "publicApi": "apps/web/features/blogs/index.ts",
+    "routes": [
+      "apps/web/app/[locale]/(site)/resources/blogs/**"
+    ],
+    "apiRoutes": []
+  },
+  "allowedImports": [
+    "apps/web/shared/**",
+    "apps/web/core/**",
+    "apps/web/components/ui/**",
+    "@repo/ui/**"
+  ],
+  "forbiddenRoots": [
+    "apps/web/features/admin-blogs",
+    "apps/web/features/admin-auth",
+    "apps/web/features/admin-shell"
+  ],
+  "relatedDocs": [".rules/FE/docs/04-feature-module.md"]
+}
