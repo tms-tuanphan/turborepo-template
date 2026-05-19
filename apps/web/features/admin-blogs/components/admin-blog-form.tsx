@@ -2,6 +2,7 @@
 
 import {
   ArrowLeftIcon,
+  CalendarClockIcon,
   CheckIcon,
   FileTextIcon,
   SendHorizontalIcon,
@@ -11,12 +12,11 @@ import { useActionState, useEffect, useRef, useState } from 'react';
 
 import type { MDXEditorMethods } from '@mdxeditor/editor';
 
+import { createBlogAction, updateBlogAction } from '../actions/blog-actions';
 import {
-  createBlogAction,
   initialBlogFormActionState,
-  updateBlogAction,
   type BlogFormActionState,
-} from '../actions/blog-actions';
+} from '../actions/blog-form-action-state';
 import { Button } from '@/components/ui/button';
 import type { BlogPost, BlogStatus } from '@/shared/types/blog';
 import type { Locale, Messages } from '@/shared/i18n';
@@ -130,12 +130,20 @@ export function AdminBlogForm({
         ? t.errors.slugTaken
         : state.formError === 'notFound'
           ? t.errors.notFound
-          : state.formError === 'invalid'
-            ? t.errors.invalid
-            : undefined;
+          : state.formError === 'scheduleRequired'
+            ? t.errors.scheduleRequired
+            : state.formError === 'scheduleInvalid'
+              ? t.errors.scheduleInvalid
+              : state.formError === 'invalid'
+                ? t.errors.invalid
+                : undefined;
 
   const listHref = `/${locale}/admin/blogs`;
   const heroTitle = mode === 'create' ? tb.newPageTitle : tb.editPageTitle;
+  const heroDescription =
+    mode === 'create' ? tb.newPageDescription : tb.editPageDescription;
+  const primarySaveLabel =
+    mode === 'create' ? tActions.saveDraft : tActions.save;
 
   const aiToolbar = (
     <AdminBlogAiToolbar
@@ -197,6 +205,9 @@ export function AdminBlogForm({
           <h1 className="truncate text-lg font-semibold tracking-tight sm:text-xl">
             {heroTitle}
           </h1>
+          <p className="truncate text-xs text-muted-foreground sm:text-sm">
+            {heroDescription}
+          </p>
           {mode === 'edit' && savedFlash ? (
             <p
               className="inline-flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400"
@@ -210,22 +221,41 @@ export function AdminBlogForm({
         <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
           <Button
             type="submit"
+            name="submitIntent"
+            value={mode === 'create' ? 'draft' : 'save'}
             variant="secondary"
             size="sm"
             disabled={pending}
-            onClick={() => setWorkflowStatus('DRAFT')}
           >
-            {pending ? t.saving : tActions.saveDraft}
+            {pending ? t.saving : primarySaveLabel}
           </Button>
+          {publishMode === 'scheduled' ? (
+            <Button
+              type="submit"
+              name="submitIntent"
+              value="schedule"
+              size="sm"
+              variant="outline"
+              disabled={pending}
+              className="gap-1.5"
+            >
+              {pending ? (
+                t.saving
+              ) : (
+                <>
+                  <CalendarClockIcon className="size-4" aria-hidden />
+                  {tActions.schedule}
+                </>
+              )}
+            </Button>
+          ) : null}
           <Button
             type="submit"
+            name="submitIntent"
+            value="publish"
             size="sm"
             disabled={pending}
             className="gap-1.5"
-            onClick={() => {
-              setPublishMode('now');
-              setWorkflowStatus('PUBLISHED');
-            }}
           >
             {pending ? (
               t.saving

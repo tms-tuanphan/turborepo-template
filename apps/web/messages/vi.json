@@ -265,7 +265,9 @@
           "slugTaken": "Slug này đã được sử dụng.",
           "unauthorized": "Bạn cần đăng nhập.",
           "notFound": "Không tìm thấy bài viết.",
-          "invalid": "Yêu cầu không hợp lệ."
+          "invalid": "Yêu cầu không hợp lệ.",
+          "scheduleRequired": "Chọn ngày giờ để lên lịch đăng bài.",
+          "scheduleInvalid": "Ngày giờ lên lịch không hợp lệ."
         }
       },
       "emptyTitle": "Chưa có bài viết",

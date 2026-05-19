@@ -265,7 +265,9 @@
           "slugTaken": "このスラッグは既に使用されています。",
           "unauthorized": "サインインが必要です。",
           "notFound": "記事が見つかりません。",
-          "invalid": "無効なリクエストです。"
+          "invalid": "無効なリクエストです。",
+          "scheduleRequired": "予約公開する日時を選択してください。",
+          "scheduleInvalid": "予約日時が正しくありません。"
         }
       },
       "emptyTitle": "ブログ記事がありません",

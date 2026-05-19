@@ -265,7 +265,9 @@
           "slugTaken": "This slug is already in use.",
           "unauthorized": "You must be signed in.",
           "notFound": "Article not found.",
-          "invalid": "Invalid request."
+          "invalid": "Invalid request.",
+          "scheduleRequired": "Choose a date and time to schedule this article.",
+          "scheduleInvalid": "The scheduled date and time is not valid."
         }
       },
       "emptyTitle": "No blog posts",

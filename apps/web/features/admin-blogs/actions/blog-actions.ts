@@ -12,7 +12,11 @@ import {
   updateBlogInStore,
 } from '@/features/blogs';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
-import type { BlogPost } from '@/shared/types/blog';
+import {
+  BLOG_STATUSES,
+  type BlogPost,
+  type BlogStatus,
+} from '@/shared/types/blog';
 
 import { deriveStoredSeo } from '../lib/blog-meta';
 import {
@@ -20,13 +24,13 @@ import {
   type AdminBlogInput,
 } from '../validations/blog.schema';
 
-export type BlogFormActionState = {
-  ok: boolean;
-  fieldErrors?: Partial<Record<string, string[]>>;
-  formError?: 'unauthorized' | 'slugTaken' | 'notFound' | 'invalid';
-};
+import type {
+  BlogFormActionState,
+  BlogFormFormError,
+} from './blog-form-action-state';
 
-export const initialBlogFormActionState: BlogFormActionState = { ok: true };
+const SUBMIT_INTENTS = ['draft', 'publish', 'schedule', 'save'] as const;
+type SubmitIntent = (typeof SUBMIT_INTENTS)[number];
 
 function pickString(formData: FormData, key: string): string {
   const v = formData.get(key);
@@ -52,6 +56,81 @@ function resolveAuthor(session: {
   user?: { name?: string | null; email?: string | null } | null;
 }): string {
   return session.user?.name?.trim() || session.user?.email?.trim() || 'Admin';
+}
+
+function pickSubmitIntent(formData: FormData): SubmitIntent {
+  const raw = pickString(formData, 'submitIntent');
+  if ((SUBMIT_INTENTS as readonly string[]).includes(raw)) {
+    return raw as SubmitIntent;
+  }
+  return 'save';
+}
+
+function resolveStatusForSubmit(
+  intent: SubmitIntent,
+  scheduledAt: string,
+  sidebarStatus: string,
+): { status: BlogStatus } | { error: BlogFormFormError } {
+  switch (intent) {
+    case 'draft':
+      return { status: 'DRAFT' };
+    case 'publish':
+      return { status: 'PUBLISHED' };
+    case 'schedule': {
+      const trimmed = scheduledAt.trim();
+      if (!trimmed) return { error: 'scheduleRequired' };
+      const d = new Date(trimmed);
+      if (Number.isNaN(d.getTime())) return { error: 'scheduleInvalid' };
+      return { status: 'SCHEDULED' };
+    }
+    case 'save': {
+      if (!(BLOG_STATUSES as readonly string[]).includes(sidebarStatus)) {
+        return { error: 'invalid' };
+      }
+      const status = sidebarStatus as BlogStatus;
+      if (status === 'SCHEDULED' && !scheduledAt.trim()) {
+        return { error: 'scheduleRequired' };
+      }
+      if (status === 'SCHEDULED') {
+        const d = new Date(scheduledAt);
+        if (Number.isNaN(d.getTime())) return { error: 'scheduleInvalid' };
+      }
+      return { status };
+    }
+  }
+}
+
+type ParseBlogFormResult =
+  | { ok: true; data: AdminBlogInput }
+  | {
+      ok: false;
+      formError?: BlogFormFormError;
+      fieldErrors?: BlogFormActionState['fieldErrors'];
+    };
+
+function parseBlogFormInput(formData: FormData): ParseBlogFormResult {
+  const intent = pickSubmitIntent(formData);
+  const resolved = resolveStatusForSubmit(
+    intent,
+    pickString(formData, 'scheduledAt'),
+    pickString(formData, 'status'),
+  );
+  if ('error' in resolved) {
+    return { ok: false, formError: resolved.error };
+  }
+
+  const raw = {
+    ...formDataToBlogInput(formData),
+    status: resolved.status,
+  };
+  const parsed = adminBlogSchema.safeParse(raw);
+  if (!parsed.success) {
+    return {
+      ok: false,
+      fieldErrors: parsed.error.flatten().fieldErrors,
+    };
+  }
+  return { ok: true, data: parsed.data };
 }
 
 function toBlogPayload(
@@ -129,20 +208,23 @@ export async function createBlogAction(
   }
   const locale: Locale = localeRaw;
 
-  const parsed = adminBlogSchema.safeParse(formDataToBlogInput(formData));
-  if (!parsed.success) {
+  const parsedInput = parseBlogFormInput(formData);
+  if (!parsedInput.ok) {
     return {
       ok: false,
-      fieldErrors: parsed.error.flatten().fieldErrors,
+      formError: parsedInput.formError,
+      fieldErrors: parsedInput.fieldErrors,
     };
   }
 
-  if (isSlugTaken(parsed.data.slug, undefined)) {
+  const { data } = parsedInput;
+
+  if (isSlugTaken(data.slug, undefined)) {
     return { ok: false, formError: 'slugTaken' };
   }
 
   const author = resolveAuthor(session);
-  const payload = toBlogPayload(parsed.data, { author });
+  const payload = toBlogPayload(data, { author });
   const id = createBlogInStore(payload);
 
   revalidatePath(`/${locale}/admin/blogs`);
@@ -175,20 +257,23 @@ export async function updateBlogAction(
     return { ok: false, formError: 'notFound' };
   }
 
-  const parsed = adminBlogSchema.safeParse(formDataToBlogInput(formData));
-  if (!parsed.success) {
+  const parsedInput = parseBlogFormInput(formData);
+  if (!parsedInput.ok) {
     return {
       ok: false,
-      fieldErrors: parsed.error.flatten().fieldErrors,
+      formError: parsedInput.formError,
+      fieldErrors: parsedInput.fieldErrors,
     };
   }
 
-  if (isSlugTaken(parsed.data.slug, id)) {
+  const { data } = parsedInput;
+
+  if (isSlugTaken(data.slug, id)) {
     return { ok: false, formError: 'slugTaken' };
   }
 
   const author = resolveAuthor(session);
-  const payload = toBlogPayload(parsed.data, { author, existing });
+  const payload = toBlogPayload(data, { author, existing });
   const ok = updateBlogInStore(id, payload);
   if (!ok) {
     return { ok: false, formError: 'notFound' };
