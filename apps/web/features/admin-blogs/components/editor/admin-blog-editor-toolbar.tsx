@@ -59,12 +59,12 @@ export function AdminBlogEditorToolbar({
   return (
     <div
       className={cn(
-        'sticky top-12 z-20 border-b border-primary/15 bg-background/90 backdrop-blur supports-backdrop-filter:bg-background/75',
+        'sticky top-12 z-20 w-full border-b border-primary/15 bg-background/90 backdrop-blur supports-backdrop-filter:bg-background/75',
         className,
       )}
     >
       <div
-        className="-mx-1 overflow-x-auto px-3 py-2 sm:px-4 [&::-webkit-scrollbar]:hidden"
+        className="-mx-1 w-full overflow-x-auto px-3 py-2 sm:px-4 [&::-webkit-scrollbar]:hidden"
         style={{ scrollbarWidth: 'none' }}
       >
         <Toolbar.Root

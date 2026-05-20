@@ -21,6 +21,8 @@ import {
 import { useTheme } from 'next-themes';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import { cn } from '@/lib/utils';
+
 import { AdminBlogEditorToolbar } from './editor/admin-blog-editor-toolbar';
 
 export type AdminBlogMdxEditorLoadedLabels = {
@@ -112,7 +114,7 @@ export default function AdminBlogMdxEditorLoaded({
       }),
       toolbarPlugin({
         toolbarClassName:
-          'border-0 bg-transparent p-0 w-full items-stretch justify-start',
+          'border-0 bg-transparent p-0 flex w-full max-w-none flex-col items-stretch justify-start',
         toolbarContents: () => (
           <AdminBlogEditorToolbar
             editorRef={editorRef}
@@ -144,7 +146,12 @@ export default function AdminBlogMdxEditorLoaded({
     mounted && resolvedTheme === 'dark' ? 'dark-theme' : '';
 
   return (
-    <div className={themeWrapperClass}>
+    <div
+      className={cn(
+        'admin-blog-mdx-editor w-full min-w-0 [&_.mdxeditor]:w-full [&_.mdxeditor]:max-w-none',
+        themeWrapperClass,
+      )}
+    >
       <MDXEditor ref={editorRef} {...mdxProps} />
     </div>
   );

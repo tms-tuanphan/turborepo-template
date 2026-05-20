@@ -129,7 +129,7 @@ export function AdminBlogMarkdownEditor({
         excerptLabel={excerptLabel}
         excerptPlaceholder={excerptPlaceholder}
       />
-      <div className="relative min-h-[min(20rem,55vh)] flex-1">
+      <div className="relative min-h-[min(20rem,55vh)] w-full min-w-0 flex-1">
         <MdxLazy
           editorRef={editorRef}
           markdown={value}

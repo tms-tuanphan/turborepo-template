@@ -320,7 +320,7 @@ export function AdminBlogAiToolbar({
 
   const compactButtons = (
     <div
-      className="flex flex-wrap items-center gap-2 border-t border-violet-500/15 bg-violet-500/5 px-3 py-2.5 sm:px-4"
+      className="flex w-full flex-wrap items-center gap-2 border-t border-violet-500/15 bg-violet-500/5 px-3 py-2.5 sm:px-4"
       role="group"
       aria-label={labels.fabAriaLabel}
     >
