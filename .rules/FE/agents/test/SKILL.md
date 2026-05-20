@@ -52,6 +52,20 @@ Generate **focused** tests from observable behavior — not exhaustive boilerpla
 
 - Prioritize: Zod schemas, pure lib, then hooks, then Server Actions with mocks
 
+## Definition of done (by layer)
+
+Use this when reporting `test_plan` — adapt to what the repo supports today.
+
+| Layer             | Requirement (target)    | Current repo (`apps/web`) |
+| ----------------- | ----------------------- | ------------------------- |
+| Zod / pure `lib/` | Unit tests              | Plan only until Vitest    |
+| Hooks             | Unit (+ RTL if used)    | Plan / manual checklist   |
+| Server Actions    | Integration with mocks  | Plan / manual + build     |
+| Components        | RTL or Storybook        | Plan / manual             |
+| Page / flow       | E2E or manual checklist | Manual checklist          |
+
+If no runner: `INSUFFICIENT_CONTEXT` + `test_setup_recommendation` — still output manual checklist for the change.
+
 ## Forbidden
 
 - Changing production source unless user explicitly asked to implement tests

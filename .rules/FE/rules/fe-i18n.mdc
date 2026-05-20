@@ -9,5 +9,5 @@ alwaysApply: false
 - User-facing strings in **English and Japanese**
 - Avoid hardcoded UI copy in components/pages (except rare technical labels)
 - Catalogs: `apps/web/messages/en.json`, `apps/web/messages/ja.json`, `vi.json` if used
-- Stable keys: e.g. `auth.login.title`, `users.table.empty`
+- Stable **namespaced** keys: `<feature>.<area>.<name>` — e.g. `adminBlogs.filters.status`, `auth.login.title`
 - Keep `<html lang="...">` in sync with active locale

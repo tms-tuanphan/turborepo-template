@@ -14,22 +14,34 @@ Focus: **what to run** and **what failed** for `apps/web` / `packages/ui` — no
 - [../../docs/06-code-quality.md](../../docs/06-code-quality.md)
 - [../../docs/07-package-cicd.md](../../docs/07-package-cicd.md)
 
+## Command priority (apps/web)
+
+Read `apps/web/package.json` and root `package.json`. Run or recommend in this order:
+
+| Priority                                               | Command                         | Purpose                                       |
+| ------------------------------------------------------ | ------------------------------- | --------------------------------------------- |
+| Required                                               | `pnpm --filter web lint`        | ESLint                                        |
+| Required                                               | `pnpm --filter web check-types` | `tsc --noEmit`                                |
+| **Required** when routes/pages/actions/layouts changed | `pnpm --filter web build`       | `next build` — catches App Router-only errors |
+| If script exists                                       | `pnpm knip` (repo root)         | Unused exports                                |
+| If `apps/web` has `test` script                        | `pnpm --filter web test`        | Unit/integration                              |
+| Optional CI parity                                     | `pnpm build` (turbo)            | Full monorepo build                           |
+
+**Note:** `apps/web` may not have `test` yet — report `INSUFFICIENT_CONTEXT` for test only; do not skip **build** for non-trivial FE changes.
+
+`depcruise` / bundle budgets: recommend only if configured in repo; do not invent scripts.
+
 ## Procedure
 
-1. Read root `package.json` and `apps/web/package.json` scripts
-2. List applicable commands (typical monorepo):
-   - `pnpm lint` (or filtered turbo task)
-   - `pnpm check-types`
-   - Knip / unused exports (if configured)
-   - `pnpm test` / app-level test script
-   - `pnpm build` (or `turbo run build --filter=web`)
-3. If Coordinator allows **non-readonly** shell: run only commands relevant to stated changed paths; capture exit code + last 30 lines of errors
-4. If **readonly** Task: output `commands_recommended` without claiming pass/fail
-5. Map failures to changed files when log output includes paths
+1. Read package scripts (root + `apps/web`)
+2. Map changed paths → which commands are required (see table)
+3. If Coordinator allows **non-readonly** shell: run required commands; capture exit code + last ~30 lines on failure
+4. If **readonly** Task: output `commands_recommended` with `required: true|false` per command — do not claim pass/fail
+5. Map failures to changed files when logs include paths
 
 ## Scope
 
-- Prefer `--filter` / path-scoped checks when user provided changed files
+- Prefer `--filter web` for app-scoped work
 - Do not fix code — report only
 
 ## Output
@@ -39,10 +51,10 @@ Focus: **what to run** and **what failed** for `apps/web` / `packages/ui` — no
 ```markdown
 ### quality_gates
 
-- commands_recommended: [{ cmd, purpose }]
+- commands_recommended: [{ cmd, purpose, required: true|false }]
 - commands_run: [{ cmd, exit_code, summary }]
 - failures: [{ cmd, file, message }]
-- blockers: [] # must fix before merge
+- blockers: [] # required commands that failed
 ```
 
 ## next_agents
@@ -52,5 +64,6 @@ Focus: **what to run** and **what failed** for `apps/web` / `packages/ui` — no
 
 ## Forbidden
 
-- Approving merge without evidence commands passed (when run was requested)
+- Approving merge without evidence required commands passed (when run was requested)
+- Skipping `build` when App Router / pages / server actions changed
 - Running destructive git commands

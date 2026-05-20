@@ -19,6 +19,16 @@ Focus: **user-facing copy** in Coordinator scope — catalogs and usage sites.
 - [../../rules/fe-i18n.mdc](../../rules/fe-i18n.mdc)
 - [../../docs/03-code-organization.md](../../docs/03-code-organization.md) (i18n section if present)
 
+## Key naming convention
+
+- Use **namespaced** keys by feature and area — not flat globals
+- Pattern: `<featureCamel>.<area>.<name>`
+  - Examples: `adminBlogs.filters.status`, `adminBlogs.filters.searchPlaceholder`, `adminBlogs.table.empty`
+- Same key path in **EN and JA** (`apps/web/messages/en.json`, `ja.json`)
+- Prefer reusing existing namespace for the feature before adding new top-level keys
+- Interpolation: use ICU-style placeholders consistent with existing messages in that namespace
+- Pluralization: follow existing keys in the same feature (do not invent a new pattern if one exists)
+
 ## Procedure
 
 1. Read `apps/web/messages/en.json` and `ja.json` (and `vi.json` if referenced in scope)
@@ -43,6 +53,7 @@ Focus: **user-facing copy** in Coordinator scope — catalogs and usage sites.
 - missing_in_en: [{ key, ja_value }]
 - hardcoded_strings: [{ file, line, text }]
 - orphan_keys: [{ locale, key }]
+- naming_violations: [{ key, suggestion }] # flat or non-namespaced keys
 ```
 
 ## next_agents

@@ -10,6 +10,7 @@ Scope: **Turborepo + Next.js (App Router) + TypeScript + ShadcnUI + Tailwind**.
 
 | Resource | When to use |
 | --- | --- |
+| [agents/WORKFLOW.md](./agents/WORKFLOW.md) | **Start here** — tier Small/Medium/Large + task checklist |
 | [agents/coordinator/AGENTS.md](./agents/coordinator/AGENTS.md) | Complex FE tasks — orchestrate sub-agents |
 | [agents/README.md](./agents/README.md) | Sub-agent registry and manifests |
 | [rules/](./rules/) | Glob-triggered rules (detail) |
@@ -37,10 +38,11 @@ Registry: [agents/README.md](./agents/README.md). Task recipes: [agents/coordina
 
 For refactors, performance, bugs, new features, forms, or i18n:
 
-1. Read [agents/coordinator/AGENTS.md](./agents/coordinator/AGENTS.md)
-2. Run sub-agents via Task tool with **scoped paths** (feature [manifests](./agents/feature/manifests/))
-3. Follow [_shared/output-contract.md](./agents/_shared/output-contract.md) — cite evidence; use `INSUFFICIENT_CONTEXT` instead of guessing
-4. After implementation: **quality-gates** (recommended) → **reviewer** last
+1. Read [agents/WORKFLOW.md](./agents/WORKFLOW.md) — pick tier; use checklist
+2. Read [agents/coordinator/AGENTS.md](./agents/coordinator/AGENTS.md) — recipes & ownership
+3. Run sub-agents via Task tool with **scoped paths** (feature [manifests](./agents/feature/manifests/)); max agents per tier
+4. Follow [_shared/output-contract.md](./agents/_shared/output-contract.md) — cite evidence; use `INSUFFICIENT_CONTEXT` instead of guessing
+5. After implementation: **quality-gates** (lint, types, **build**) → **reviewer** last (severity on issues)
 
 ## Always apply (summary)
 

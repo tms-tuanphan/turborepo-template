@@ -2,6 +2,7 @@
 
 Cursor-native sub-agents for `apps/web` and `packages/ui`. The main agent acts as **Coordinator**; specialized agents run via **Task tool** with scoped paths.
 
+**Follow guide (start here):** [WORKFLOW.md](./WORKFLOW.md) — tier Small/Medium/Large + checklist từng task  
 **Entry:** [coordinator/AGENTS.md](./coordinator/AGENTS.md) — decision tree + **Task recipes for every agent**  
 **Output format:** [\_shared/output-contract.md](./_shared/output-contract.md)
 
@@ -19,6 +20,16 @@ Use the Coordinator flow when the task involves any of:
 - CI / lint / types failures on FE paths
 
 For small, single-file edits, apply [rules/](../rules/) and [skills/](../skills/) directly.
+
+## Complexity tiers (summary)
+
+| Tier       | Discovery                       | Example                        |
+| ---------- | ------------------------------- | ------------------------------ |
+| **Small**  | ≤1 agent (`feature`)            | Fix one schema / key           |
+| **Medium** | ≤3 agents (`feature` + focused) | Filter + search in one feature |
+| **Large**  | Full pipeline                   | New admin screen               |
+
+Details: [WORKFLOW.md](./WORKFLOW.md), [coordinator/AGENTS.md](./coordinator/AGENTS.md).
 
 ## Agent registry
 
@@ -43,13 +54,14 @@ For small, single-file edits, apply [rules/](../rules/) and [skills/](../skills/
 
 ## Typical flows
 
-| Task             | Agent order                                                                                            |
-| ---------------- | ------------------------------------------------------------------------------------------------------ |
-| New admin screen | scanner → feature → route ∥ component → api → validation → i18n → implement → quality-gates → reviewer |
-| Filter bug       | feature → bug-reproduction → state → reviewer                                                          |
-| Slow list page   | feature → performance → state → reviewer                                                               |
-| PR review        | i18n (if UI) → quality-gates → reviewer                                                                |
-| Layer violation  | architecture → dependency → reviewer                                                                   |
+| Task                            | Tier   | Agent order                                                                                                            |
+| ------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------- |
+| New admin screen                | Large  | feature [→ scanner] → route ∥ component → api → validation → i18n → implement → test (plan) → quality-gates → reviewer |
+| Filter + search (known feature) | Medium | feature → state \| api → implement → quality-gates → reviewer                                                          |
+| Filter bug                      | Medium | feature → bug-reproduction → state → quality-gates → reviewer                                                          |
+| Slow list page                  | Medium | feature → performance → state → quality-gates → reviewer                                                               |
+| PR review                       | —      | i18n (if UI) → quality-gates → reviewer                                                                                |
+| Layer violation                 | Large  | architecture → dependency → reviewer                                                                                   |
 
 Full recipes: [coordinator/AGENTS.md](./coordinator/AGENTS.md).
 

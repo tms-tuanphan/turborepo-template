@@ -20,7 +20,9 @@ Analyze UI components within Coordinator scope (feature `components/`, `shared/`
 - Shadcn: reuse `components/ui` before new primitives
 - Shared cross-app UI → `@repo/ui`
 - Split large JSX into subcomponents
-- Loading / empty / error UI where lists or async data exist
+- **UX states:** loading, empty, error, disabled for lists/forms/async UI
+- **Responsive:** tables/filters usable on typical admin viewport
+- **a11y spot-check:** keyboard reachability, focus visible, labels on inputs/filters
 - `asChild` + Radix patterns where applicable
 
 ## Output

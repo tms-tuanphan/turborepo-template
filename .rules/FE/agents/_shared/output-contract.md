@@ -84,7 +84,11 @@ Root cause probability:
 
 ```text
 verdict: APPROVE | REQUEST_CHANGES | BLOCK
-blocking_issues: []
-non_blocking: []
+issues: [{ file, line, issue, severity: nit|minor|major|blocking }]
+blocking_issues: []   # severity=blocking only (optional duplicate)
+non_blocking: []       # severity=nit only (optional duplicate)
 hallucination_flags: []
+scope_creep: []
 ```
+
+Severity guide: `blocking` → BLOCK; `major` → REQUEST_CHANGES; `minor` → REQUEST_CHANGES; `nit` → non_blocking only.

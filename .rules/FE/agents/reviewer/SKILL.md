@@ -34,10 +34,35 @@ If a claim cannot be verified in those files → flag `hallucination_risk`.
 
 1. List changed files from diff
 2. Per file: verify layer placement and imports
-3. Check new user strings use message keys (EN + JA)
+3. Check new user strings use message keys (EN + JA) — keys namespaced per [i18n agent](../i18n/SKILL.md)
 4. Check Server Actions have Zod + auth where needed
 5. Detect drive-by refactors unrelated to task → `scope_creep`
 6. Detect unsafe patterns: secrets in client, cross-feature imports
+7. If UI in diff — UX/a11y spot-check (see below)
+8. Use task **Risk** from plan when provided; flag regressions against listed risks
+
+### UX / a11y spot-check (when diff touches UI)
+
+- Loading, empty, error, disabled states for lists/forms/filters
+- Keyboard reachable controls; visible focus
+- Labels / `aria-invalid` / error text linked to fields
+- No new hardcoded user-visible strings (EN + JA via keys)
+- Delegate detailed a11y rules to [web-design-guidelines](../../skills/web-design-guidelines/SKILL.md) for cited files only
+
+### Severity (every issue)
+
+| Severity   | Meaning                                      | Affects verdict     |
+| ---------- | -------------------------------------------- | ------------------- |
+| `nit`      | Style, naming preference, optional polish    | `non_blocking` only |
+| `minor`    | Should fix; low user impact                  | `REQUEST_CHANGES`   |
+| `major`    | Correctness, a11y, i18n gap, maintainability | `REQUEST_CHANGES`   |
+| `blocking` | Security, boundary break, broken build/types | `BLOCK` or blocking |
+
+`verdict` rules:
+
+- `APPROVE` — no `blocking` or `major` issues
+- `REQUEST_CHANGES` — any `major` or `minor` worth fixing before merge
+- `BLOCK` — any `blocking` issue, or multiple `major` without mitigation
 
 ## Output
 
@@ -45,8 +70,9 @@ If a claim cannot be verified in those files → flag `hallucination_risk`.
 
 ```text
 verdict: APPROVE | REQUEST_CHANGES | BLOCK
-blocking_issues: [{ file, line, issue }]
-non_blocking: []
+issues: [{ file, line, issue, severity: nit|minor|major|blocking }]
+blocking_issues: []  # subset severity=blocking (legacy compat)
+non_blocking: []     # subset severity=nit
 hallucination_flags: [{ claim, reason }]
 scope_creep: []
 ```
