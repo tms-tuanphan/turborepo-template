@@ -1,0 +1,14 @@
+---
+description: Swagger / OpenAPI — DTO metadata in packages/api, setup in apps/api
+globs: apps/api/**/*.ts,packages/api/**/*.ts
+alwaysApply: false
+---
+
+# Swagger / OpenAPI
+
+- `@ApiProperty` on DTOs in `packages/api` (single source of truth)
+- `@ApiTags`, `@ApiBearerAuth`, `@ApiResponse` on controllers
+- Disable or guard Swagger in production unless required
+
+Detail: [docs/05-api-contract-swagger.md](../docs/05-api-contract-swagger.md)  
+Skill: [skills/swagger-openapi/SKILL.md](../skills/swagger-openapi/SKILL.md)

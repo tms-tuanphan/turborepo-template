@@ -1,0 +1,25 @@
+---
+description: NestJS structure — modules, layers, mapping, transactions, module isolation
+globs: apps/api/**/*.ts,packages/api/**/*.ts,packages/database/**/*.ts
+alwaysApply: false
+---
+
+# NestJS structure
+
+## Layers
+
+| Layer | Role |
+| --- | --- |
+| controller | HTTP transport, DTO binding |
+| service | Use-case orchestration |
+| domain | Business invariants (when separated) |
+| dto (`@repo/api`) | Contract shape |
+| prisma | Persistence only in `packages/database` |
+
+- No Prisma in controllers.
+- No raw Prisma models in HTTP responses — map to `@repo/api`.
+- Multi-step DB → transaction in service.
+- Module-per-domain; no cross-import internal files.
+
+Detail: [docs/01-architecture.md](../docs/01-architecture.md), [docs/02-project-structure.md](../docs/02-project-structure.md), [docs/03-layering-and-patterns.md](../docs/03-layering-and-patterns.md)  
+Skill: [skills/project-architecture/SKILL.md](../skills/project-architecture/SKILL.md)

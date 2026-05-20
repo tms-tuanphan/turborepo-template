@@ -1,0 +1,16 @@
+---
+description: Prisma + @repo/database — schema, client, queries in Nest services
+globs: apps/api/**/*.ts,packages/api/**/*.ts,packages/database/**/*.ts,packages/database/prisma/**/*
+alwaysApply: false
+---
+
+# Prisma
+
+- Schema / migrate / generate → **only** `packages/database`
+- Inject via `PrismaService` — no `new PrismaClient()` in `apps/api`
+- KISS queries; cap `take`; avoid N+1
+- Map errors to Nest HTTP exceptions
+
+Detail: [docs/04-prisma-database.md](../docs/04-prisma-database.md)  
+Skill: [skills/prisma-patterns/SKILL.md](../skills/prisma-patterns/SKILL.md)  
+Agents: never run migrate — [agents/_shared/COMMAND_POLICY.md](../agents/_shared/COMMAND_POLICY.md)

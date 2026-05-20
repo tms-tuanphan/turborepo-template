@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "your-module-id",
+  "displayName": "Human-readable name",
+  "scope": {
+    "moduleRoot": "apps/api/src/your-module",
+    "contractRoot": "packages/api/src/your-module",
+    "databaseModels": [],
+    "controllers": ["apps/api/src/your-module/your-module.controller.ts"],
+    "services": ["apps/api/src/your-module/your-module.service.ts"],
+    "tests": []
+  },
+  "allowedImports": [
+    "apps/api/src/common/**",
+    "packages/api/src/your-module/**",
+    "@repo/api/**"
+  ],
+  "forbiddenRoots": [],
+  "relatedRules": [
+    ".rules/BE/rules/be-nestjs-structure.mdc",
+    ".rules/BE/rules/be-swagger-openapi.mdc"
+  ]
+}

@@ -1,0 +1,20 @@
+---
+description: BE quality gates — lint, test, build for apps/api
+globs: apps/api/**/*,packages/api/**/*
+alwaysApply: false
+---
+
+# BE quality gates
+
+Must pass before merge (when applicable):
+
+- `pnpm --filter api lint`
+- `pnpm --filter api test`
+- `pnpm --filter api build` (module/bootstrap changes)
+- `pnpm --filter @repo/api build` (contract changes)
+- `pnpm --filter api test:e2e` (HTTP flows, optional)
+
+Commands policy: [agents/_shared/COMMAND_POLICY.md](../agents/_shared/COMMAND_POLICY.md)  
+Detail: [docs/09-monorepo-and-commands.md](../docs/09-monorepo-and-commands.md)
+
+After changes: **quality-gates** agent → **reviewer** last ([agents/coordinator/AGENTS.md](../agents/coordinator/AGENTS.md)).

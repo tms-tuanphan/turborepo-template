@@ -1,0 +1,15 @@
+---
+description: BE monorepo boundaries — apps/api, packages/api, packages/database, workspace imports
+alwaysApply: true
+---
+
+# BE monorepo
+
+- **Runtime:** `apps/api` (Nest), `apps/web` (Next)
+- **Contract:** `packages/api` (`@repo/api`) — no DB dependency
+- **Database:** `packages/database` (`@repo/database`) — Prisma only here
+- Internal deps: `workspace:*`; no deep cross-package paths
+- `packages/*` must not import from `apps/*`
+
+Detail: [docs/09-monorepo-and-commands.md](../docs/09-monorepo-and-commands.md)  
+Sub-agents: [agents/coordinator/AGENTS.md](../agents/coordinator/AGENTS.md)

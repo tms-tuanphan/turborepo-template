@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "app",
+  "displayName": "App root module",
+  "scope": {
+    "moduleRoot": "apps/api/src",
+    "contractRoot": "packages/api/src",
+    "databaseModels": [],
+    "controllers": ["apps/api/src/app.controller.ts"],
+    "services": ["apps/api/src/app.service.ts"],
+    "tests": ["apps/api/src/app.controller.spec.ts"]
+  },
+  "allowedImports": [
+    "apps/api/src/common/**",
+    "apps/api/src/links/**",
+    "packages/api/**",
+    "@repo/api/**"
+  ],
+  "forbiddenRoots": [],
+  "relatedRules": [".rules/BE/rules/be-nestjs-structure.mdc"]
+}

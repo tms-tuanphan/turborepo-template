@@ -1,0 +1,16 @@
+---
+description: Production — security, observability, config, reliability
+globs: apps/api/**/*.ts,packages/api/**/*.ts
+alwaysApply: false
+---
+
+# Production
+
+- Validate env at bootstrap; secrets never in code/logs
+- Structured logging + correlation id
+- Pagination ceilings; map DB errors; no silent catch
+- Auth guards; CORS/helmet for public APIs
+
+Detail: [docs/08-production.md](../docs/08-production.md)  
+Skill: [skills/production-hardening/SKILL.md](../skills/production-hardening/SKILL.md)  
+Agent **production**: readonly only

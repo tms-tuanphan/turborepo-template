@@ -1,0 +1,16 @@
+---
+description: NestJS tests — AAA, factories, typed mocks
+globs: apps/api/**/*.spec.ts,apps/api/test/**/*.ts
+alwaysApply: false
+---
+
+# Testing
+
+- Pyramid: unit (services) > integration > e2e
+- **Factories** in `apps/api/test/factories/**` — no hardcoded literals
+- **AAA** comments in every test
+- Typed mocks in `test/helpers/**`; `jest.clearAllMocks()` in `afterEach`
+- No `any` in specs
+
+Detail: [docs/06-testing.md](../docs/06-testing.md)  
+Skill: [skills/testing-factory-aaa/SKILL.md](../skills/testing-factory-aaa/SKILL.md)

@@ -1,0 +1,15 @@
+---
+description: Backend i18n — message keys, locale, validation errors
+globs: apps/api/**/*.ts,packages/api/**/*.ts
+alwaysApply: false
+---
+
+# Backend i18n
+
+- Client-facing errors use **stable keys** (`errors.domain.code`)
+- Keys in `packages/api` when part of contract
+- Locale from `Accept-Language` (or team header) — not body
+- No raw Prisma/DB messages to clients
+
+Detail: [docs/07-i18n.md](../docs/07-i18n.md)  
+Skill: [skills/i18n-patterns/SKILL.md](../skills/i18n-patterns/SKILL.md)

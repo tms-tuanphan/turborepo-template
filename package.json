@@ -12,7 +12,8 @@
     "test:e2e": "turbo run test:e2e",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "fe:manifest-check": "node .rules/FE/scripts/validate-feature-manifests.mjs"
+    "fe:manifest-check": "node .rules/FE/scripts/validate-feature-manifests.mjs",
+    "be:manifest-check": "node .rules/BE/scripts/validate-module-manifests.mjs"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

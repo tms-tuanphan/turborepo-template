@@ -1,23 +1,84 @@
 ---
-description: Chỉ mục backend — agent phải áp dụng đồng thời các rule BE khác trong .rules/BE (NestJS, Prisma, test, prod)
+description: Chỉ mục backend — agents, rules, docs, skills cho apps/api, packages/api, packages/database
 globs: apps/api/**/*,packages/api/**/*,packages/database/**/*
 alwaysApply: false
 ---
 
-# Backend — chỉ mục rule cho agent
+# Backend — chỉ mục cho agent
 
-Khi chỉnh sửa hoặc thiết kế code trong `apps/api`, `packages/api`, hoặc `packages/database`, **coi các file sau là bộ quy tắc backend đầy đủ** (cùng thư mục `.rules/BE/`). Cursor không merge tự động từ một file sang file khác — hãy **tuân thủ nội dung từng rule** tương ứng ngữ cảnh công việc.
+Scope: **Turborepo + NestJS + Prisma + `@repo/api` contract**.
 
-| Rule file | Áp dụng khi |
+## Entrypoints
+
+| Resource | When to use |
 | --- | --- |
-| `monorepo-structure.mdc` | Ranh giới app vs package, dependency `workspace:*`, lệnh turbo/pnpm |
-| `backend-structure-nestjs.mdc` | Cấu trúc module Nest, boundary `apps/api` ↔ `packages/api` ↔ `packages/database` |
-| `nestjs-prisma.mdc` | Schema, migrate, client, cách dùng Prisma trong app |
-| `nestjs-swagger-openapi.mdc` | DTO/decorator Swagger, contract HTTP |
-| `nestjs-testing-structure-factory-aaa.mdc` | Unit/integration/e2e: AAA + factory, typed mocks, test structure |
-| `nestjs-i18n.mdc` | Đa ngôn ngữ / i18n backend |
-| `backend-production-advanced.mdc` | Vận hành production, hardening nâng cao |
+| [agents/WORKFLOW.md](./agents/WORKFLOW.md) | **Bắt đầu** — tier Small/Medium/Large, budgets |
+| [agents/coordinator/AGENTS.md](./agents/coordinator/AGENTS.md) | Task phức tạp — orchestrate sub-agents |
+| [agents/README.md](./agents/README.md) | Registry Core vs Extended |
+| [rules/](./rules/) | Glob-triggered rules (ngắn) |
+| [docs/](./docs/) | Architecture & patterns (chi tiết) |
+| [skills/](./skills/) | Deep playbooks (Prisma, Swagger, test, …) |
 
-**Thứ tự gợi ý khi xung đột:** monorepo boundary → structure Nest → Prisma/DB → contract/Swagger → test → i18n → production.
+## Monorepo (always)
 
-**Ghi chú:** Nếu một task chỉ đụng một phần (ví dụ chỉ seed DB), vẫn giữ boundary trong `monorepo-structure.mdc` và `nestjs-prisma.mdc`; không tạo Prisma/schema lẻ ngoài `packages/database`.
+- API runtime: `apps/api`
+- Contract: `packages/api` → `@repo/api`
+- Database: `packages/database` → `@repo/database` (when present)
+- Không duplicate DTO giữa app và package
+
+## Sub-agents (Core + Extended)
+
+Registry: [agents/README.md](./agents/README.md). Recipes: [agents/coordinator/AGENTS.md](./agents/coordinator/AGENTS.md).
+
+| Tier | Core | Extended cap |
+| --- | --- | --- |
+| Small | module → QG → reviewer | 0 |
+| Medium | module + service \| dto \| prisma | ≤1 |
+| Large | full core path | ≤3 |
+
+Governance: [agents/_shared/COMMAND_POLICY.md](./agents/_shared/COMMAND_POLICY.md), [agents/_shared/ESCALATION.md](./agents/_shared/ESCALATION.md).
+
+Manifests: [agents/module/manifests/](./agents/module/manifests/) — `pnpm be:manifest-check`.
+
+## Complex task protocol
+
+1. [agents/WORKFLOW.md](./agents/WORKFLOW.md) — tier + checklist
+2. [agents/coordinator/AGENTS.md](./agents/coordinator/AGENTS.md) — core-first, budgets
+3. [agents/_shared/output-contract.md](./agents/_shared/output-contract.md) — evidence, severity
+4. After implement: **quality-gates** → **reviewer** last
+
+## Rules (glob — `rules/`)
+
+| Rule | Topic |
+| --- | --- |
+| [be-monorepo.mdc](./rules/be-monorepo.mdc) | Workspace boundaries |
+| [be-nestjs-structure.mdc](./rules/be-nestjs-structure.mdc) | Modules & layers |
+| [be-prisma.mdc](./rules/be-prisma.mdc) | Prisma / DB |
+| [be-swagger-openapi.mdc](./rules/be-swagger-openapi.mdc) | DTO / OpenAPI |
+| [be-testing.mdc](./rules/be-testing.mdc) | Tests |
+| [be-i18n.mdc](./rules/be-i18n.mdc) | i18n |
+| [be-production.mdc](./rules/be-production.mdc) | Production |
+| [be-quality-gates.mdc](./rules/be-quality-gates.mdc) | lint / test / build |
+
+**Conflict order:** monorepo → structure → Prisma → contract → test → i18n → production.
+
+## Docs index
+
+[docs/README.md](./docs/README.md) → `01-architecture` … `09-monorepo-and-commands`
+
+## Skills index
+
+- [skills/project-architecture/SKILL.md](./skills/project-architecture/SKILL.md)
+- [skills/prisma-patterns/SKILL.md](./skills/prisma-patterns/SKILL.md)
+- [skills/swagger-openapi/SKILL.md](./skills/swagger-openapi/SKILL.md)
+- [skills/testing-factory-aaa/SKILL.md](./skills/testing-factory-aaa/SKILL.md)
+- [skills/i18n-patterns/SKILL.md](./skills/i18n-patterns/SKILL.md)
+- [skills/production-hardening/SKILL.md](./skills/production-hardening/SKILL.md)
+
+## Implementation checklist
+
+1. File in correct package (`apps/api` vs `packages/api` vs `packages/database`)
+2. Layer: controller / service / dto / prisma
+3. DTO in `@repo/api`; factories in tests
+4. Module manifest updated for new domains
+5. quality-gates → reviewer after non-trivial changes
