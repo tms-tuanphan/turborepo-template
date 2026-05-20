@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "id": "blogs",
+  "feFeatureManifest": ".rules/FE/agents/feature/manifests/blogs.json",
+  "beModuleManifest": null,
+  "contractRoot": null,
+  "notes": "FE public blogs; BE module manifest not defined yet"
+}

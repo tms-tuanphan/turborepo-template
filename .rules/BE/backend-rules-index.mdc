@@ -1,12 +1,22 @@
 ---
 description: Chỉ mục backend — agents, rules, docs, skills cho apps/api, packages/api, packages/database
 globs: apps/api/**/*,packages/api/**/*,packages/database/**/*
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Backend — chỉ mục cho agent
 
 Scope: **Turborepo + NestJS + Prisma + `@repo/api` contract**.
+
+## Shared / fullstack
+
+| Resource | When to use |
+| --- | --- |
+| [../shared/shared-rules-index.mdc](../shared/shared-rules-index.mdc) | `@repo/api`, i18n keys, `ApiErrorPayload`, FE↔BE workflows |
+| [../shared/docs/README.md](../shared/docs/README.md) | Contract & mapping docs |
+| [../shared/mappings/](../shared/mappings/) | FE feature ↔ BE module — `pnpm shared:mapping-check` |
+
+Khi task đụng **contract**, **web consumer**, hoặc **đồng bộ i18n** — đọc **shared** trước rule BE thuần.
 
 ## Entrypoints
 
@@ -22,9 +32,10 @@ Scope: **Turborepo + NestJS + Prisma + `@repo/api` contract**.
 ## Monorepo (always)
 
 - API runtime: `apps/api`
-- Contract: `packages/api` → `@repo/api`
+- Contract: `packages/api` → `@repo/api` (shared with FE — [shared index](../shared/shared-rules-index.mdc))
 - Database: `packages/database` → `@repo/database` (when present)
 - Không duplicate DTO giữa app và package
+- Layout đầy đủ: [shared turbo-workspace](../shared/rules/turbo-workspace.mdc)
 
 ## Sub-agents (Core + Extended)
 

@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "id": "your-domain-id",
+  "feFeatureManifest": ".rules/FE/agents/feature/manifests/your-feature.json",
+  "beModuleManifest": ".rules/BE/agents/module/manifests/your-module.json",
+  "contractRoot": "packages/api/src/your-domain",
+  "notes": "Optional context for coordinators"
+}

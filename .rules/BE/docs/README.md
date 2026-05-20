@@ -1,7 +1,8 @@
 # Backend documentation (NestJS + Turborepo)
 
 > Kiến trúc và pattern cho `apps/api`, `packages/api`, `packages/database`.  
-> Rules ngắn (glob): [../rules/](../rules/) — Playbooks: [../skills/](../skills/) — Sub-agents: [../agents/README.md](../agents/README.md)
+> **Fullstack:** [shared docs](../../shared/docs/README.md) — contract với `apps/web`  
+> Rules: [../rules/](../rules/) — Skills: [../skills/](../skills/) — Agents: [../agents/README.md](../agents/README.md)
 
 ---
 

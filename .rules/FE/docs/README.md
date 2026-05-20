@@ -10,7 +10,7 @@
 
 - **Runtime apps** nằm trong `apps/*`
   - **Next.js (FE)**: `apps/web`
-  - (Backend là `apps/api`, xem BE rules nếu cần)
+- **Fullstack (FE ↔ BE)**: [shared rules](../../shared/docs/README.md) — `@repo/api`, i18n keys, errors
 - **Shared packages** nằm trong `packages/*`
   - UI dùng chung: `packages/ui` → import qua `@repo/ui`
 - Internal dependency dùng `workspace:*` trong `package.json` (không deep-import xuyên package)

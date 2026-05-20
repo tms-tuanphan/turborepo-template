@@ -16,6 +16,8 @@ Focus: HTTP contract in `packages/api` — not runtime wiring in `apps/api`.
 
 ## Delegate
 
+- [../../../shared/rules/api-contract.mdc](../../../shared/rules/api-contract.mdc)
+- [../../../shared/skills/api-contract-sync/SKILL.md](../../../shared/skills/api-contract-sync/SKILL.md)
 - [docs/05-api-contract-swagger.md](../../docs/05-api-contract-swagger.md)
 - [rules/be-swagger-openapi.mdc](../../rules/be-swagger-openapi.mdc)
 - [rules/be-nestjs-structure.mdc](../../rules/be-nestjs-structure.mdc)

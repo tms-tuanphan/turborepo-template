@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "id": "links",
+  "feFeatureManifest": null,
+  "beModuleManifest": ".rules/BE/agents/module/manifests/links.json",
+  "contractRoot": "packages/api/src/links",
+  "notes": "BE Links API; add feFeatureManifest when public/admin UI maps here"
+}

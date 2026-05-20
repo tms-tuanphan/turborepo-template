@@ -1,0 +1,73 @@
+---
+alwaysApply: true
+---
+
+# Shared rules — FE ↔ BE (Turborepo)
+
+Scope: **Fullstack contract** giữa `apps/web`, `apps/api`, và shared packages — đặc biệt `@repo/api`.
+
+## Entrypoints
+
+| Resource | When to use |
+| --- | --- |
+| [docs/README.md](./docs/README.md) | **Bắt đầu** — monorepo overview + workflows |
+| [rules/](./rules/) | Glob-triggered shared rules |
+| [skills/](./skills/) | Playbooks: API contract sync, fullstack i18n |
+| [mappings/](./mappings/) | FE feature manifest ↔ BE module manifest |
+
+**Stack-specific:**
+
+- FE: [../FE/frontend-rules-index.mdc](../FE/frontend-rules-index.mdc)
+- BE: [../BE/backend-rules-index.mdc](../BE/backend-rules-index.mdc)
+
+## When to use shared (not chỉ FE hoặc BE)
+
+- Đổi `packages/api` (DTO, `I18nKey`, `ApiErrorPayload`)
+- Endpoint mới xuyên web + api
+- Đồng bộ error keys / messages EN + JA
+- `pnpm build` / contract break ảnh hưởng cả monorepo
+- Map FE feature manifest ↔ BE module manifest
+
+## Workspace (summary)
+
+| Path | Package | Role |
+| --- | --- | --- |
+| `apps/web` | `web` | Next.js UI |
+| `apps/api` | `api` | NestJS API |
+| `packages/api` | `@repo/api` | **Shared contract** (no DB) |
+| `packages/database` | `@repo/database` | Prisma (when present) |
+| `packages/ui` | `@repo/ui` | Shared UI |
+
+## Conflict order
+
+1. **Shared** contract (`@repo/api`, i18n keys, error shape)
+2. **BE** structure / Prisma / Nest layers
+3. **FE** App Router / feature layers / UI
+
+## Shared rules index
+
+| Rule | Topic |
+| --- | --- |
+| [turbo-workspace.mdc](./rules/turbo-workspace.mdc) | Turborepo layout & commands |
+| [api-contract.mdc](./rules/api-contract.mdc) | `@repo/api` ownership |
+| [i18n-contract.mdc](./rules/i18n-contract.mdc) | `I18nKey` + `messages/*.json` |
+| [error-contract.mdc](./rules/error-contract.mdc) | `ApiErrorPayload` |
+| [fullstack-quality-gates.mdc](./rules/fullstack-quality-gates.mdc) | Build order across packages |
+
+## Docs index
+
+[docs/README.md](./docs/README.md) → `01` … `06`
+
+## Skills index
+
+- [skills/api-contract-sync/SKILL.md](./skills/api-contract-sync/SKILL.md)
+- [skills/fullstack-i18n/SKILL.md](./skills/fullstack-i18n/SKILL.md)
+
+## Cross mappings
+
+Validate: `pnpm shared:mapping-check`
+
+## Escalation (fullstack)
+
+- `BREAKING_API` — DTO/route/response change → FE + BE reviewers + human
+- See [BE ESCALATION](../BE/agents/_shared/ESCALATION.md)

@@ -8,7 +8,9 @@ alwaysApply: false
 
 - FE runtime app: `apps/web`
 - Shared UI: `packages/ui` — import via `@repo/ui/*` (no deep cross-package imports)
+- API contract (types/keys): `@repo/api` — see [shared turbo-workspace](../../shared/rules/turbo-workspace.mdc)
 - Internal deps: `workspace:*` in package.json
 - `packages/ui` must remain **UI-only** (no `next/*`, no app wiring)
 
+Full layout: [../../shared/rules/turbo-workspace.mdc](../../shared/rules/turbo-workspace.mdc)  
 Sub-agents: [agents/coordinator/AGENTS.md](../agents/coordinator/AGENTS.md)

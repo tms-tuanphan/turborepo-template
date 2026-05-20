@@ -18,6 +18,8 @@ Focus: **user-facing copy** in Coordinator scope — catalogs and usage sites.
 
 - [../../rules/fe-i18n.mdc](../../rules/fe-i18n.mdc)
 - [../../docs/03-code-organization.md](../../docs/03-code-organization.md) (i18n section if present)
+- [../../../shared/rules/i18n-contract.mdc](../../../shared/rules/i18n-contract.mdc) when API error keys from `I18nKey`
+- [../../../shared/skills/fullstack-i18n/SKILL.md](../../../shared/skills/fullstack-i18n/SKILL.md)
 
 ## Key naming convention
 

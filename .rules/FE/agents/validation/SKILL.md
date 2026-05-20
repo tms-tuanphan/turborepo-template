@@ -20,6 +20,7 @@ Focus: **Zod schemas** and how they connect to forms and Server Actions in scope
 - [../../skills/form-patterns/SKILL.md](../../skills/form-patterns/SKILL.md)
 - [../../rules/fe-import-boundaries.mdc](../../rules/fe-import-boundaries.mdc) (Zod for user input)
 - [../../rules/fe-server-actions.mdc](../../rules/fe-server-actions.mdc)
+- [../../../shared/rules/api-contract.mdc](../../../shared/rules/api-contract.mdc) when Zod must align with `@repo/api` DTOs
 
 ## Procedure
 

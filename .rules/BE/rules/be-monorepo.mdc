@@ -1,15 +1,17 @@
 ---
-description: BE monorepo boundaries — apps/api, packages/api, packages/database, workspace imports
-alwaysApply: true
+description: BE-specific monorepo reminders — full layout in shared turbo-workspace
+globs: apps/api/**/*,packages/api/**/*,packages/database/**/*
+alwaysApply: false
 ---
 
-# BE monorepo
+# BE monorepo (BE scope)
 
-- **Runtime:** `apps/api` (Nest), `apps/web` (Next)
-- **Contract:** `packages/api` (`@repo/api`) — no DB dependency
-- **Database:** `packages/database` (`@repo/database`) — Prisma only here
-- Internal deps: `workspace:*`; no deep cross-package paths
-- `packages/*` must not import from `apps/*`
+Full workspace layout: [../../shared/rules/turbo-workspace.mdc](../../shared/rules/turbo-workspace.mdc)
 
-Detail: [docs/09-monorepo-and-commands.md](../docs/09-monorepo-and-commands.md)  
-Sub-agents: [agents/coordinator/AGENTS.md](../agents/coordinator/AGENTS.md)
+BE reminders:
+
+- DB only in `packages/database`; wire via `@repo/database` in `apps/api`
+- HTTP contract only in `packages/api` — map in services, not controllers
+- Do not duplicate DTOs in `apps/api` when `@repo/api` already defines them
+
+Detail: [../docs/09-monorepo-and-commands.md](../docs/09-monorepo-and-commands.md)

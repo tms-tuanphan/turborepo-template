@@ -1,0 +1,26 @@
+---
+description: Fullstack quality gates — build order when contract or cross-app changes
+globs: apps/**/*,packages/**/*
+alwaysApply: false
+---
+
+# Fullstack quality gates
+
+Run when `packages/api` or cross-app HTTP contract changes.
+
+## Recommended order
+
+| Step | Command | When |
+| --- | --- | --- |
+| 1 | `pnpm --filter @repo/api build` | Any `packages/api` change |
+| 2 | `pnpm --filter api lint` + `test` + `build` | BE touched |
+| 3 | `pnpm --filter web check-types` + `lint` + `build` | FE touched |
+| 4 | `pnpm build` (root) | CI parity / release |
+
+## Agents
+
+- BE: [quality-gates](../BE/agents/quality-gates/SKILL.md) — [COMMAND_POLICY](../BE/agents/_shared/COMMAND_POLICY.md)
+- FE: [quality-gates](../FE/agents/quality-gates/SKILL.md)
+- Both: **reviewer** last on respective diffs
+
+Detail: [docs/06-fullstack-workflows.md](../docs/06-fullstack-workflows.md)

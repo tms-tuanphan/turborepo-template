@@ -1,0 +1,28 @@
+---
+description: Fullstack i18n — I18nKey in @repo/api, translations in apps/web/messages
+globs: packages/api/**/i18n/**,apps/web/messages/**,apps/api/**/*.ts
+alwaysApply: false
+---
+
+# i18n contract (FE + BE)
+
+## Source of truth
+
+- **Keys:** `packages/api/src/common/i18n/keys.ts` → export `I18nKey`
+- **Translations:** `apps/web/messages/en.json`, `ja.json`, `vi.json` (if used)
+- **BE:** throw exceptions / return errors with `I18nKey.*` — not hardcoded EN/VI strings
+- **FE:** map `code` from API to message catalog keys (same dot-notation)
+
+## Adding a key
+
+1. Add to `I18nKey` in `@repo/api`
+2. Add EN + JA (and VI if project uses) under matching path in `messages/*.json`
+3. Use key in BE filter/service and FE UI
+
+## Locale
+
+- BE: `Accept-Language` (or team header) — see [BE docs/07-i18n.md](../BE/docs/07-i18n.md)
+- FE: `[locale]` routing + message file load
+
+Detail: [docs/03-i18n-fe-be.md](../docs/03-i18n-fe-be.md)  
+Skill: [fullstack-i18n](../skills/fullstack-i18n/SKILL.md)

@@ -1,0 +1,27 @@
+---
+description: API error shape — ApiErrorPayload for BE responses and FE consumption
+globs: packages/api/**/http/**,apps/api/**/filters/**,apps/web/**/*
+alwaysApply: false
+---
+
+# Error contract
+
+## Shape (`packages/api`)
+
+`ApiErrorPayload`: `code`, optional `message`, `params`, `details`, `traceId`
+
+- `code` — stable i18n key (prefer `I18nKey`)
+- FE translates `code` (+ `params`) via message catalogs
+- **Never** expose stack traces or Prisma/SQL text to clients
+
+## BE
+
+- Use Nest `HttpException` with key or filter mapping — see `apps/api/src/common/filters/`
+- Map status → default `I18nKey` when needed
+
+## FE
+
+- Parse error JSON; display via `t(code)` or equivalent
+- Do not show raw `message` from server if it duplicates internal errors
+
+Detail: [docs/04-error-handling.md](../docs/04-error-handling.md)

@@ -6,6 +6,15 @@ alwaysApply: true
 
 Scope: **Turborepo + Next.js (App Router) + TypeScript + ShadcnUI + Tailwind**.
 
+## Shared / fullstack
+
+| Resource | When to use |
+| --- | --- |
+| [../shared/shared-rules-index.mdc](../shared/shared-rules-index.mdc) | `@repo/api`, i18n keys, API errors, cross-app changes |
+| [../shared/docs/README.md](../shared/docs/README.md) | Fullstack workflows & contract docs |
+
+When the task touches **API contract**, **error keys**, or **Nest + web** together, read **shared** before FE-only rules.
+
 ## Entrypoints
 
 | Resource | When to use |
@@ -21,6 +30,8 @@ Scope: **Turborepo + Next.js (App Router) + TypeScript + ShadcnUI + Tailwind**.
 
 - FE app: `apps/web`
 - Shared UI: `packages/ui` → import `@repo/ui/*` (no deep cross-package imports)
+- API contract types/keys: `@repo/api` — see [shared](../shared/shared-rules-index.mdc)
+- Full monorepo layout: [shared turbo-workspace](../shared/rules/turbo-workspace.mdc)
 
 ## Sub-agents (15 specialists + coordinator)
 

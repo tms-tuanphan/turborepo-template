@@ -20,16 +20,17 @@ Unverified claims → `hallucination_flags`.
 
 ## Checklist
 
-| Area                    | Source                                                                                                                                           |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Monorepo boundaries     | [rules/be-monorepo.mdc](../../rules/be-monorepo.mdc)                                                                                             |
-| Nest layers             | [rules/be-nestjs-structure.mdc](../../rules/be-nestjs-structure.mdc), [docs/03-layering-and-patterns.md](../../docs/03-layering-and-patterns.md) |
-| Prisma                  | [rules/be-prisma.mdc](../../rules/be-prisma.mdc)                                                                                                 |
-| Swagger / DTO           | [rules/be-swagger-openapi.mdc](../../rules/be-swagger-openapi.mdc)                                                                               |
-| Tests / factories       | [rules/be-testing.mdc](../../rules/be-testing.mdc)                                                                                               |
-| i18n                    | [rules/be-i18n.mdc](../../rules/be-i18n.mdc)                                                                                                     |
-| Production (if in diff) | [rules/be-production.mdc](../../rules/be-production.mdc)                                                                                         |
-| Quality / commands      | [rules/be-quality-gates.mdc](../../rules/be-quality-gates.mdc), [quality-gates](./quality-gates/SKILL.md)                                        |
+| Area                    | Source                                                                                                                                                                              |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Monorepo boundaries     | [rules/be-monorepo.mdc](../../rules/be-monorepo.mdc)                                                                                                                                |
+| Nest layers             | [rules/be-nestjs-structure.mdc](../../rules/be-nestjs-structure.mdc), [docs/03-layering-and-patterns.md](../../docs/03-layering-and-patterns.md)                                    |
+| Prisma                  | [rules/be-prisma.mdc](../../rules/be-prisma.mdc)                                                                                                                                    |
+| Swagger / DTO           | [rules/be-swagger-openapi.mdc](../../rules/be-swagger-openapi.mdc)                                                                                                                  |
+| Tests / factories       | [rules/be-testing.mdc](../../rules/be-testing.mdc)                                                                                                                                  |
+| i18n                    | [rules/be-i18n.mdc](../../rules/be-i18n.mdc)                                                                                                                                        |
+| Shared contract         | [shared api-contract](../../../shared/rules/api-contract.mdc), [i18n-contract](../../../shared/rules/i18n-contract.mdc), [error-contract](../../../shared/rules/error-contract.mdc) |
+| Production (if in diff) | [rules/be-production.mdc](../../rules/be-production.mdc)                                                                                                                            |
+| Quality / commands      | [rules/be-quality-gates.mdc](../../rules/be-quality-gates.mdc), [quality-gates](./quality-gates/SKILL.md)                                                                           |
 
 ## Review procedure
 

@@ -1,0 +1,33 @@
+---
+description: Shared API contract — @repo/api owned by both FE (types) and BE (implementation)
+globs: packages/api/**/*,apps/api/**/*,apps/web/**/*
+alwaysApply: false
+---
+
+# API contract (`@repo/api`)
+
+## Ownership
+
+| Concern | Location |
+| --- | --- |
+| DTO, entities, Swagger metadata | `packages/api` |
+| Nest wiring, services, controllers | `apps/api` |
+| Types / keys for dev | `apps/web` → `"@repo/api": "workspace:*"` (devDep) |
+
+## Rules
+
+- **Do not** duplicate DTOs in `apps/api` or `apps/web` when shared contract exists
+- **Do not** expose raw Prisma models as HTTP contract
+- FE Zod schemas may mirror DTO fields — keep in sync when contract changes
+- Breaking field rename → `BREAKING_API` escalation
+
+## Change workflow
+
+1. Edit `packages/api`
+2. `pnpm --filter @repo/api build`
+3. Update `apps/api` services/controllers
+4. Update FE forms/types if consumer exists
+5. Fullstack quality gates — [fullstack-quality-gates.mdc](./fullstack-quality-gates.mdc)
+
+Detail: [docs/02-api-contract.md](../docs/02-api-contract.md)  
+Skill: [api-contract-sync](../skills/api-contract-sync/SKILL.md)

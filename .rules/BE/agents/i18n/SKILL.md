@@ -11,6 +11,7 @@ Focus: message keys and localized errors — not HTTP routing.
 ## Scope
 
 - [docs/07-i18n.md](../../docs/07-i18n.md)
+- [../../../shared/docs/03-i18n-fe-be.md](../../../shared/docs/03-i18n-fe-be.md)
 - [rules/be-i18n.mdc](../../rules/be-i18n.mdc)
 - Skill: [i18n-patterns](../../skills/i18n-patterns/SKILL.md)
 - Paths: `packages/api/src/common/i18n/**`

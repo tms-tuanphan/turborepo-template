@@ -13,7 +13,8 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "fe:manifest-check": "node .rules/FE/scripts/validate-feature-manifests.mjs",
-    "be:manifest-check": "node .rules/BE/scripts/validate-module-manifests.mjs"
+    "be:manifest-check": "node .rules/BE/scripts/validate-module-manifests.mjs",
+    "shared:mapping-check": "node .rules/shared/scripts/validate-cross-mappings.mjs"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

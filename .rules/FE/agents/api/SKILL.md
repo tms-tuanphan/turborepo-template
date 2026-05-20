@@ -17,6 +17,7 @@ Focus: **server mutations and HTTP entrypoints** in scope.
 
 ## Delegate
 
+- [../../../shared/rules/api-contract.mdc](../../../shared/rules/api-contract.mdc) when `@repo/api` or HTTP contract
 - [../../skills/auth-patterns/SKILL.md](../../skills/auth-patterns/SKILL.md)
 - [../../skills/form-patterns/SKILL.md](../../skills/form-patterns/SKILL.md) — Server Actions, Zod
 - [../../rules/fe-import-boundaries.mdc](../../rules/fe-import-boundaries.mdc)

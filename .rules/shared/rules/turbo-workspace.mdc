@@ -1,0 +1,46 @@
+---
+description: Turborepo workspace — apps, packages, pnpm, turbo tasks (fullstack overview)
+globs: apps/**/*,packages/**/*
+alwaysApply: false
+---
+
+# Turborepo workspace
+
+Single source of truth for monorepo layout. BE/FE-specific rules link here.
+
+## Layout
+
+| Path | Package | Role |
+| --- | --- | --- |
+| `apps/api` | `api` | NestJS runtime |
+| `apps/web` | `web` | Next.js runtime |
+| `packages/api` | `@repo/api` | HTTP contract (DTO, i18n keys, error types) |
+| `packages/database` | `@repo/database` | Prisma (when present) |
+| `packages/ui` | `@repo/ui` | Shared React UI |
+| `packages/eslint-config` | `@repo/eslint-config` | ESLint |
+| `packages/typescript-config` | `@repo/typescript-config` | TS configs |
+| `packages/jest-config` | `@repo/jest-config` | Jest presets |
+
+## Boundaries
+
+- `apps/*` = runtime; `packages/*` = shared libraries
+- `packages/*` **must not** import from `apps/*`
+- `packages/api` **must not** depend on `packages/database`
+- Internal deps: `"@repo/xxx": "workspace:*"`
+
+## Turbo ([turbo.json](../../turbo.json))
+
+- `build` → `dependsOn: ["^build"]` — build dependencies first
+- `dev` — persistent, no cache
+- `lint`, `test`, `test:e2e` — per package
+
+## Root commands
+
+| Command | Purpose |
+| --- | --- |
+| `pnpm dev` | turbo dev |
+| `pnpm build` | turbo build (full graph) |
+| `pnpm lint` | turbo lint |
+| `pnpm test` | turbo test |
+
+Detail: [docs/01-monorepo-overview.md](../docs/01-monorepo-overview.md)
