@@ -42,15 +42,15 @@ Suggest which **core** or **extended** agent the Coordinator should run next. Re
 
 ## Forbidden (unless agent role allows)
 
-| Agent type                                                                                                                              | Forbidden                                                      |
-| --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Scanner, Architecture, Dependency, Controller, Common, Domain, Module, DTO, Prisma, I18N, Performance (readonly), Production (readonly) | Proposing code patches                                         |
-| Bug Reproduction                                                                                                                        | Implementing fixes                                             |
-| Test                                                                                                                                    | Changing production code (only test files when user asked)     |
-| Quality Gates (readonly mode)                                                                                                           | Fixing code; only report command results                       |
-| Quality Gates                                                                                                                           | Commands forbidden in [COMMAND_POLICY.md](./COMMAND_POLICY.md) |
-| Reviewer                                                                                                                                | Re-analyzing full repo; must use patch + cited files only      |
-| Performance                                                                                                                             | Code patches, schema changes, cache implementation             |
+| Agent type                                                                                                                                       | Forbidden                                                      |
+| ------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
+| Scanner, Architecture, Dependency, Controller, Swagger, Common, Domain, Module, DTO, Prisma, I18N, Performance (readonly), Production (readonly) | Proposing code patches                                         |
+| Bug Reproduction                                                                                                                                 | Implementing fixes                                             |
+| Test                                                                                                                                             | Changing production code (only test files when user asked)     |
+| Quality Gates (readonly mode)                                                                                                                    | Fixing code; only report command results                       |
+| Quality Gates                                                                                                                                    | Commands forbidden in [COMMAND_POLICY.md](./COMMAND_POLICY.md) |
+| Reviewer                                                                                                                                         | Re-analyzing full repo; must use patch + cited files only      |
+| Performance                                                                                                                                      | Code patches, schema changes, cache implementation             |
 
 ## Repo Scanner JSON schema
 

@@ -82,6 +82,7 @@ Manifests: [agents/module/manifests/](./agents/module/manifests/) — `pnpm be:m
 - [skills/project-architecture/SKILL.md](./skills/project-architecture/SKILL.md)
 - [skills/prisma-patterns/SKILL.md](./skills/prisma-patterns/SKILL.md)
 - [skills/swagger-openapi/SKILL.md](./skills/swagger-openapi/SKILL.md)
+- [agents/swagger/SKILL.md](./agents/swagger/SKILL.md) — OpenAPI audit / implementation
 - [skills/testing-factory-aaa/SKILL.md](./skills/testing-factory-aaa/SKILL.md)
 - [skills/i18n-patterns/SKILL.md](./skills/i18n-patterns/SKILL.md)
 - [skills/production-hardening/SKILL.md](./skills/production-hardening/SKILL.md)

@@ -47,6 +47,7 @@ Focus: HTTP contract in `packages/api` — not runtime wiring in `apps/api`.
 ## next_agents
 
 - Wiring in app → `controller`
+- Missing `@ApiProperty` / OpenAPI on controllers → `swagger`
 - Persistence shape → `prisma`
 - Review contract → `reviewer`
 

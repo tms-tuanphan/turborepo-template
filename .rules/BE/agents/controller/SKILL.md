@@ -52,6 +52,7 @@ Focus: HTTP **transport** only — not business orchestration.
 
 - Logic in handler → `service`
 - Contract → `dto`
+- OpenAPI gaps → `swagger`
 - Auth boundary → tag `AUTH_BOUNDARY`
 
 ## Forbidden

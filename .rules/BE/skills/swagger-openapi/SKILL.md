@@ -27,10 +27,11 @@ export class LinksController { ... }
 
 ## Bootstrap
 
-- One `DocumentBuilder` in `main.ts`
-- `SWAGGER_ENABLED` or non-production guard
+- `setupSwagger(app)` in `apps/api/src/swagger/setup-swagger.ts`, called from `main.ts`
+- `SWAGGER_ENABLED` / `SWAGGER_PATH`; default enabled when `NODE_ENV !== 'production'`
 
-## Rule & agent
+## Rule & agents
 
 - [be-swagger-openapi.mdc](../../rules/be-swagger-openapi.mdc)
-- Agent: [dto](../../agents/dto/SKILL.md) (core)
+- **swagger** (extended): audit + implementation checklist — [agents/swagger/SKILL.md](../../agents/swagger/SKILL.md)
+- **dto** (core): contract shape; tag `swagger_gaps` → spawn **swagger**

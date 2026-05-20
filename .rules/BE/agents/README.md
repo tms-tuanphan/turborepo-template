@@ -44,6 +44,7 @@ Coordinator spawns **Core** by default. **Extended** only when decision tree, es
 | [architecture](./architecture/SKILL.md)         | Boundary refactor / violation                  |
 | [dependency](./dependency/SKILL.md)             | Import graph / coupling                        |
 | [controller](./controller/SKILL.md)             | HTTP layer in diff                             |
+| [swagger](./swagger/SKILL.md)                   | OpenAPI / `@Api*` metadata, bootstrap          |
 | [common](./common/SKILL.md)                     | `apps/api/src/common/**`                       |
 | [domain](./domain/SKILL.md)                     | Transactions, state machine, pagination policy |
 | [i18n](./i18n/SKILL.md)                         | Message keys / errors                          |
@@ -68,6 +69,7 @@ Details: [WORKFLOW.md](./WORKFLOW.md), [coordinator/AGENTS.md](./coordinator/AGE
 | ------------------- | ------ | ------------------------------------------------------------------------------ |
 | Field mới Links API | Medium | module → dto → service → quality-gates → reviewer                              |
 | Endpoint + DB       | Large  | module → prisma → dto → service → controller → test → quality-gates → reviewer |
+| Swagger / API docs  | Medium | module → swagger → dto \| controller → quality-gates → reviewer                |
 | Bug 500             | Medium | module → bug-reproduction → service \| prisma → quality-gates → reviewer       |
 | Slow API            | Medium | module → performance → prisma \| service → reviewer                            |
 | PR review           | —      | quality-gates → reviewer                                                       |

@@ -15,9 +15,11 @@
 ## Practices
 
 - `@ApiTags` per resource controller.
-- `@ApiBearerAuth` when JWT used.
-- Document non-default status codes with `@ApiResponse`.
-- Swagger off in production unless explicitly enabled via env.
+- Cookie session (this project): `addCookieAuth('session', { name: AUTH_COOKIE_NAME })` + `@ApiCookieAuth('session')` on protected routes.
+- `@ApiBearerAuth` when Authorization header JWT is used instead.
+- Document non-default status codes with `@ApiResponse` / `@ApiUnauthorizedResponse`; reuse `ApiErrorPayloadDto`.
+- Bootstrap: `apps/api/src/swagger/setup-swagger.ts` from `main.ts`.
+- Env: `SWAGGER_ENABLED`, `SWAGGER_PATH` (default `/api/docs`); off in production unless `SWAGGER_ENABLED=true`.
 
 ---
 
@@ -26,4 +28,4 @@
 - Renaming/removing DTO fields or routes → tag `BREAKING_API` escalation.
 - **dto** + **reviewer** agents before merge.
 
-Skill: [swagger-openapi](../skills/swagger-openapi/SKILL.md) · Rule: [be-swagger-openapi.mdc](../rules/be-swagger-openapi.mdc)
+Skill: [swagger-openapi](../skills/swagger-openapi/SKILL.md) · Rule: [be-swagger-openapi.mdc](../rules/be-swagger-openapi.mdc) · Agent: [swagger](../agents/swagger/SKILL.md)

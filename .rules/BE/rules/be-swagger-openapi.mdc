@@ -11,4 +11,5 @@ alwaysApply: false
 - Disable or guard Swagger in production unless required
 
 Detail: [docs/05-api-contract-swagger.md](../docs/05-api-contract-swagger.md)  
-Skill: [skills/swagger-openapi/SKILL.md](../skills/swagger-openapi/SKILL.md)
+Skill: [skills/swagger-openapi/SKILL.md](../skills/swagger-openapi/SKILL.md)  
+Agent: [agents/swagger/SKILL.md](../agents/swagger/SKILL.md)

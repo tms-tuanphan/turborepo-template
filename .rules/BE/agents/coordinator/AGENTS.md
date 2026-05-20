@@ -47,7 +47,7 @@ Rules:
 ## Core vs Extended
 
 **Core (default):** module, service, dto, prisma, quality-gates, reviewer  
-**Extended (on demand):** repo-scanner, architecture, dependency, controller, common, domain, i18n, performance, bug-reproduction, test, production
+**Extended (on demand):** repo-scanner, architecture, dependency, controller, swagger, common, domain, i18n, performance, bug-reproduction, test, production
 
 Registry: [../README.md](../README.md)
 
@@ -96,6 +96,10 @@ User task
 │   └─ prisma → dto → service → controller (parallel dto+controller if disjoint)
 │   └─ test (plan) → implement → quality-gates → reviewer
 │   └─ escalation: DB_MIGRATION if schema
+│
+├─ Swagger / OpenAPI / API docs — MEDIUM
+│   └─ module → swagger (→ dto | controller if gaps span layers)
+│   └─ implement → quality-gates → reviewer
 │
 ├─ Incremental in known module — MEDIUM
 │   └─ module → service | dto | prisma (pick 1–2)
@@ -256,6 +260,20 @@ prompt: |
   Output per output-contract.md.
 ```
 
+### Swagger — extended
+
+```text
+subagent_type: explore
+readonly: true
+description: BE OpenAPI / Swagger audit
+prompt: |
+  Follow .rules/BE/agents/swagger/SKILL.md.
+  Manifest (inline): <paste JSON>
+  Shared findings cache: <paste or none>
+  Task mode: audit only (no code patches).
+  Output per output-contract.md including swagger_audit block.
+```
+
 ### Common — extended
 
 ```text
@@ -354,6 +372,7 @@ May run **in parallel** (same phase, disjoint scope, ≤ `max_parallel`):
 | ------------ | ---------------------------------- |
 | Discovery    | repo-scanner + dependency (narrow) |
 | New endpoint | controller + dto                   |
+| OpenAPI gaps | swagger + dto                      |
 | DB + logic   | service + prisma                   |
 
 Never parallelize **reviewer**. **quality-gates** before **reviewer**, not parallel with reviewer.
