@@ -41,6 +41,18 @@ Only paths listed in `scope`:
 
 - Layer rules: [../../docs/04-feature-module.md](../../docs/04-feature-module.md)
 - Import boundaries: [../../rules/fe-import-boundaries.mdc](../../rules/fe-import-boundaries.mdc)
+- Feature layout: [../../rules/fe-feature-module.mdc](../../rules/fe-feature-module.mdc)
+
+## Suggest next agents (Coordinator)
+
+| Manifest contains                   | Suggest         |
+| ----------------------------------- | --------------- |
+| `scope.routes`                      | route           |
+| `components/` under featureRoot     | component       |
+| `scope.serverActions` or `actions/` | api, validation |
+| `validations/`                      | validation      |
+| User-facing UI                      | i18n            |
+| `hooks/` or filters                 | state           |
 
 ## Output
 

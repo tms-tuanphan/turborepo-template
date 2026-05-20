@@ -1,7 +1,7 @@
 import type { BlogPost } from '@/shared/types/blog';
 import { slugify } from '@/shared/utils/slugify';
 
-import { mockBlogs } from './blogs';
+import { mockBlogs } from './mock-blogs';
 
 const store = new Map<string, BlogPost>();
 let seeded = false;

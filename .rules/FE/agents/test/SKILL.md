@@ -38,9 +38,19 @@ Generate **focused** tests from observable behavior — not exhaustive boilerpla
 
 ## Rules
 
-- Match repo test runner when present (`vitest`, `jest` — detect from package.json)
+- Match repo test runner when present (`vitest`, `jest` — detect from root and `apps/web/package.json`)
 - No `any` in test code
-- If no test infra in repo → status `INSUFFICIENT_CONTEXT` + recommend setup
+- If no test infra in `apps/web` → status `INSUFFICIENT_CONTEXT` and include:
+
+```markdown
+### test_setup_recommendation
+
+- runner: vitest + @testing-library/react (if RTL used elsewhere in monorepo)
+- config_files: [vitest.config.ts, apps/web/package.json scripts]
+- first_targets: [publicApi exports, Zod schemas under validations/]
+```
+
+- Prioritize: Zod schemas, pure lib, then hooks, then Server Actions with mocks
 
 ## Forbidden
 

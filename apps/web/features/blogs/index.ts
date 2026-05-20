@@ -1,5 +1,5 @@
 export { BlogsPage } from './_components/blogs-page';
-export { mockBlogs } from './_data/blogs';
+export { mockBlogs } from '@/shared/data/mock-blogs';
 export {
   createBlogInStore,
   deleteBlogInStore,
@@ -8,6 +8,9 @@ export {
   listAllBlogs,
   listPublishedBlogs,
   updateBlogInStore,
-} from './_data/blogs-store';
-export type { NewBlogPayload } from './_data/blogs-store';
-export { parseBlogFilters, type RawSearchParams } from './_lib/search-params';
+} from '@/shared/data/blogs-store';
+export type { NewBlogPayload } from '@/shared/data/blogs-store';
+export {
+  parseBlogFilters,
+  type RawSearchParams,
+} from '@/shared/utils/parse-blog-filters';

@@ -116,38 +116,47 @@ export function validateBlogFormForSubmit(
   return { success: false, errors: result.error };
 }
 
-/** Server-side payload after FormData is assembled. */
-export const adminBlogSchema = z
-  .object({
-    title: z.string().trim().min(1).max(200),
-    slug: z
-      .string()
-      .trim()
-      .max(120)
-      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
-    content: z.string(),
-    excerpt: z.string().trim().max(200).optional().default(''),
-    tags: z
-      .string()
-      .optional()
-      .default('')
-      .transform((v) => parseTags(v)),
-    category: z.enum(BLOG_CATEGORIES),
-    status: z.enum(BLOG_STATUSES),
-    coverImage: z
-      .string()
-      .refine(isValidCoverImage, { message: 'Invalid cover image' }),
-    scheduledAt: z.string().optional().default(''),
-    primaryKeyword: z.string().trim().max(60).optional().default(''),
-  })
-  .superRefine((data, ctx) => {
-    if (data.status === 'PUBLISHED' && data.content.trim().length === 0) {
-      ctx.addIssue({
-        code: 'custom',
-        message: 'Content is required when publishing',
-        path: ['content'],
-      });
-    }
-  });
+export type AdminBlogServerValidationMessages = {
+  contentRequiredPublish: string;
+  coverInvalid: string;
+};
 
-export type AdminBlogInput = z.infer<typeof adminBlogSchema>;
+/** Server-side payload after FormData is assembled. */
+export function createAdminBlogSchema(
+  messages: AdminBlogServerValidationMessages,
+) {
+  return z
+    .object({
+      title: z.string().trim().min(1).max(200),
+      slug: z
+        .string()
+        .trim()
+        .max(120)
+        .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+      content: z.string(),
+      excerpt: z.string().trim().max(200).optional().default(''),
+      tags: z
+        .string()
+        .optional()
+        .default('')
+        .transform((v) => parseTags(v)),
+      category: z.enum(BLOG_CATEGORIES),
+      status: z.enum(BLOG_STATUSES),
+      coverImage: z
+        .string()
+        .refine(isValidCoverImage, { message: messages.coverInvalid }),
+      scheduledAt: z.string().optional().default(''),
+      primaryKeyword: z.string().trim().max(60).optional().default(''),
+    })
+    .superRefine((data, ctx) => {
+      if (data.status === 'PUBLISHED' && data.content.trim().length === 0) {
+        ctx.addIssue({
+          code: 'custom',
+          message: messages.contentRequiredPublish,
+          path: ['content'],
+        });
+      }
+    });
+}
+
+export type AdminBlogInput = z.infer<ReturnType<typeof createAdminBlogSchema>>;

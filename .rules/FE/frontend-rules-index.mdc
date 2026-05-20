@@ -21,14 +21,26 @@ Scope: **Turborepo + Next.js (App Router) + TypeScript + ShadcnUI + Tailwind**.
 - FE app: `apps/web`
 - Shared UI: `packages/ui` → import `@repo/ui/*` (no deep cross-package imports)
 
+## Sub-agents (15 specialists + coordinator)
+
+Registry: [agents/README.md](./agents/README.md). Task recipes: [agents/coordinator/AGENTS.md](./agents/coordinator/AGENTS.md).
+
+| Agent | Use for |
+| --- | --- |
+| repo-scanner, feature, architecture, dependency | Discovery & scope |
+| route, component, state, api, validation, i18n | Implementation areas |
+| performance, bug-reproduction | Perf & bugs |
+| test, quality-gates | Tests & CI |
+| reviewer | **Last** — patch review |
+
 ## Complex task protocol
 
-For refactors, performance, bugs, or new features:
+For refactors, performance, bugs, new features, forms, or i18n:
 
 1. Read [agents/coordinator/AGENTS.md](./agents/coordinator/AGENTS.md)
 2. Run sub-agents via Task tool with **scoped paths** (feature [manifests](./agents/feature/manifests/))
 3. Follow [_shared/output-contract.md](./agents/_shared/output-contract.md) — cite evidence; use `INSUFFICIENT_CONTEXT` instead of guessing
-4. After implementation: run **reviewer** agent last
+4. After implementation: **quality-gates** (recommended) → **reviewer** last
 
 ## Always apply (summary)
 
@@ -46,7 +58,8 @@ For refactors, performance, bugs, or new features:
 5. Feature public API via `features/<name>/index.ts`
 6. Loading / error / empty states + a11y
 7. Shared UI from `@repo/ui` when cross-app
-8. Reviewer agent after non-trivial changes
+8. Reviewer agent after non-trivial changes; quality-gates before reviewer when feasible
+9. Feature work: [rules/fe-feature-module.mdc](./rules/fe-feature-module.mdc); mutations: [rules/fe-server-actions.mdc](./rules/fe-server-actions.mdc)
 
 ## Docs index
 

@@ -1,0 +1,15 @@
+---
+description: Server Actions and route handlers — validation, auth, revalidation
+globs: apps/web/**/actions/**/*.{ts,tsx},apps/web/app/api/**/*
+alwaysApply: false
+---
+
+# Server Actions & API routes
+
+- `'use server'` at top of action files under `features/*/actions/`
+- Validate input with Zod before mutations (`safeParse`)
+- `revalidatePath` / `revalidateTag` after successful writes
+- Auth checks inside handler (not middleware-only)
+- No secrets in client bundles; safe error messages (i18n keys when applicable)
+- App Router shell: [fe-next-app-router.mdc](./fe-next-app-router.mdc)
+- Agents: [api/SKILL.md](../agents/api/SKILL.md), [validation/SKILL.md](../agents/validation/SKILL.md)

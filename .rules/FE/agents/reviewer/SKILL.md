@@ -20,14 +20,15 @@ If a claim cannot be verified in those files → flag `hallucination_risk`.
 
 ## Checklist
 
-| Area                 | Source                                                               |
-| -------------------- | -------------------------------------------------------------------- |
-| Import boundaries    | [fe-import-boundaries.mdc](../../rules/fe-import-boundaries.mdc)     |
-| i18n                 | [fe-i18n.mdc](../../rules/fe-i18n.mdc)                               |
-| App Router / actions | [fe-next-app-router.mdc](../../rules/fe-next-app-router.mdc)         |
-| UI / a11y            | [web-design-guidelines](../../skills/web-design-guidelines/SKILL.md) |
-| Types / quality      | [fe-quality-gates.mdc](../../rules/fe-quality-gates.mdc)             |
-| No `any`             | strict TS                                                            |
+| Area                 | Source                                                                                                                               |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Import boundaries    | [fe-import-boundaries.mdc](../../rules/fe-import-boundaries.mdc)                                                                     |
+| i18n                 | [fe-i18n.mdc](../../rules/fe-i18n.mdc) — or prior [i18n agent](../i18n/SKILL.md) audit                                               |
+| Validation / Zod     | [validation agent](../validation/SKILL.md) findings if forms in diff                                                                 |
+| App Router / actions | [fe-next-app-router.mdc](../../rules/fe-next-app-router.mdc)                                                                         |
+| UI / a11y            | [web-design-guidelines](../../skills/web-design-guidelines/SKILL.md)                                                                 |
+| Types / quality      | [fe-quality-gates.mdc](../../rules/fe-quality-gates.mdc) — prefer [quality-gates agent](../quality-gates/SKILL.md) run before review |
+| No `any`             | strict TS                                                                                                                            |
 
 ## Review procedure
 

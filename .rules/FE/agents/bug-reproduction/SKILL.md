@@ -33,13 +33,15 @@ Only rank causes you can tie to read files; otherwise `INSUFFICIENT_CONTEXT`.
 
 ## Common FE bug classes
 
-| Class                 | Agents to suggest next   |
-| --------------------- | ------------------------ |
-| Rerender loop         | performance, state       |
-| Server action failure | api                      |
-| Wrong data on page    | feature, route           |
-| Import/runtime error  | dependency, architecture |
-| i18n missing key      | component + fe-i18n      |
+| Class                 | Agents to suggest next    |
+| --------------------- | ------------------------- |
+| Rerender loop         | performance, state        |
+| Server action failure | api, validation           |
+| Form submit / Zod     | validation, api           |
+| Wrong data on page    | feature, route, state     |
+| Import/runtime error  | dependency, architecture  |
+| i18n missing key      | i18n, component           |
+| CI / type error       | quality-gates, dependency |
 
 ## Output
 

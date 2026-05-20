@@ -1,0 +1,15 @@
+---
+description: FE feature module structure — public API, folders, naming
+globs: apps/web/features/**/*
+alwaysApply: false
+---
+
+# Feature module
+
+- Business logic lives under `apps/web/features/<name>/`, not in `app/` pages
+- **Public API:** `features/<name>/index.ts` — export only what other layers need
+- Folders: `components/`, `actions/`, `hooks/`, `validations/`, `types/`, optional `stores/`, `utils/`
+- Never import from other `features/*` (cross-feature)
+- kebab-case files; PascalCase components
+- Detail: [docs/04-feature-module.md](../docs/04-feature-module.md)
+- Scoped analysis: [agents/feature/SKILL.md](../agents/feature/SKILL.md) + [manifests](../agents/feature/manifests/)

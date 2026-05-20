@@ -5,9 +5,8 @@ import {
   AdminBlogsFilterBar,
   AdminBlogsPagination,
   AdminBlogsTable,
+  loadAdminBlogsPage,
 } from '@/features/admin-blogs';
-import { listAllBlogs, parseBlogFilters } from '@/features/blogs';
-import { filterAndPaginateBlogs } from '@/shared/utils/blog-filters';
 import { Button } from '@/components/ui/button';
 import { getMessages, isLocale, type Locale } from '@/shared/i18n';
 
@@ -30,17 +29,8 @@ export default async function AdminBlogsPage({
   const t = messages.admin.blogs;
 
   const raw = await searchParams;
-  const filters = parseBlogFilters(raw);
-  const all = listAllBlogs();
-  const { items, totalPages, currentPage, totalItems } = filterAndPaginateBlogs(
-    all,
-    filters,
-  );
-
-  const hasActiveFilters =
-    filters.search.trim() !== '' ||
-    filters.category !== 'ALL' ||
-    filters.status !== 'ALL';
+  const { items, totalPages, currentPage, totalItems, hasActiveFilters } =
+    loadAdminBlogsPage(raw);
 
   const resetHref = `/${locale}/admin/blogs`;
 

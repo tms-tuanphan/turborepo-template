@@ -10,15 +10,20 @@ import {
   getBlogById,
   getBlogBySlug,
   updateBlogInStore,
-} from '@/features/blogs';
-import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
+} from '@/shared/data/blogs-store';
+import {
+  defaultLocale,
+  getMessages,
+  isLocale,
+  type Locale,
+} from '@/shared/i18n';
 import { type BlogPost, type BlogStatus } from '@/shared/types/blog';
 import { slugify } from '@/shared/utils/slugify';
 
 import { deriveStoredSeo } from '../lib/blog-meta';
 import {
   ADMIN_BLOG_STATUSES,
-  adminBlogSchema,
+  createAdminBlogSchema,
   type AdminBlogInput,
 } from '../validations/blog.schema';
 
@@ -92,7 +97,10 @@ type ParseBlogFormResult =
       fieldErrors?: BlogFormActionState['fieldErrors'];
     };
 
-function parseBlogFormInput(formData: FormData): ParseBlogFormResult {
+function parseBlogFormInput(
+  formData: FormData,
+  locale: Locale,
+): ParseBlogFormResult {
   const intent = pickSubmitIntent(formData);
   const resolved = resolveStatusForSubmit(
     intent,
@@ -112,7 +120,11 @@ function parseBlogFormInput(formData: FormData): ParseBlogFormResult {
     slug,
     status: resolved.status,
   };
-  const parsed = adminBlogSchema.safeParse(raw);
+  const tv = getMessages(locale).admin.blogs.form.validation;
+  const parsed = createAdminBlogSchema({
+    contentRequiredPublish: tv.contentRequiredPublish,
+    coverInvalid: tv.coverInvalid,
+  }).safeParse(raw);
   if (!parsed.success) {
     return {
       ok: false,
@@ -201,7 +213,7 @@ export async function createBlogAction(
   }
   const locale: Locale = localeRaw;
 
-  const parsedInput = parseBlogFormInput(formData);
+  const parsedInput = parseBlogFormInput(formData, locale);
   if (!parsedInput.ok) {
     return {
       ok: false,
@@ -250,7 +262,7 @@ export async function updateBlogAction(
     return { ok: false, formError: 'notFound' };
   }
 
-  const parsedInput = parseBlogFormInput(formData);
+  const parsedInput = parseBlogFormInput(formData, locale);
   if (!parsedInput.ok) {
     return {
       ok: false,

@@ -42,12 +42,13 @@ Suggest which agent the Coordinator should run next, e.g. `performance`, `review
 
 ## Forbidden (unless agent role allows)
 
-| Agent type                                                                            | Forbidden                                                 |
-| ------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| Scanner, Architecture, Dependency, Route, Component, State, API, Performance, Feature | Proposing code patches                                    |
-| Bug Reproduction                                                                      | Implementing fixes                                        |
-| Test                                                                                  | Changing production code (only test files)                |
-| Reviewer                                                                              | Re-analyzing full repo; must use patch + cited files only |
+| Agent type                                                                                                                             | Forbidden                                                 |
+| -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| Scanner, Architecture, Dependency, Route, Component, State, API, Validation, I18N, Performance, Feature, Quality Gates (readonly mode) | Proposing code patches                                    |
+| Bug Reproduction                                                                                                                       | Implementing fixes                                        |
+| Test                                                                                                                                   | Changing production code (only test files)                |
+| Quality Gates (when run allowed)                                                                                                       | Fixing code; only report command results                  |
+| Reviewer                                                                                                                               | Re-analyzing full repo; must use patch + cited files only |
 
 ## Repo Scanner JSON schema
 

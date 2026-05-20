@@ -20,6 +20,7 @@ Focus: **server mutations and HTTP entrypoints** in scope.
 - [../../skills/auth-patterns/SKILL.md](../../skills/auth-patterns/SKILL.md)
 - [../../skills/form-patterns/SKILL.md](../../skills/form-patterns/SKILL.md) — Server Actions, Zod
 - [../../rules/fe-import-boundaries.mdc](../../rules/fe-import-boundaries.mdc)
+- [../../rules/fe-server-actions.mdc](../../rules/fe-server-actions.mdc)
 
 ## Checklist
 
@@ -40,6 +41,12 @@ Focus: **server mutations and HTTP entrypoints** in scope.
 - route_handlers: [{ path, file, auth }]
 - security_issues: []
 ```
+
+## next_agents
+
+- Schema gaps → `validation`
+- Error message keys → `i18n`
+- Session/auth unclear → re-read auth skill + `feature`
 
 ## Forbidden
 

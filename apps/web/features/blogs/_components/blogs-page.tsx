@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Locale, Messages } from '@/shared/i18n';
 
-import { listPublishedBlogs } from '../_data/blogs-store';
+import { listPublishedBlogs } from '@/shared/data/blogs-store';
 import { filterAndPaginateBlogs } from '../_lib/filter-blogs';
 import type { BlogFilters } from '../_types';
 
