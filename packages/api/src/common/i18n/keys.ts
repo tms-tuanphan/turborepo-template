@@ -19,6 +19,11 @@ export const I18nKey = {
       NotFound: 'errors.links.notFound',
       SlugAlreadyExists: 'errors.links.slugAlreadyExists',
     },
+    Auth: {
+      InvalidCredentials: 'errors.auth.invalidCredentials',
+      AccountDisabled: 'errors.auth.accountDisabled',
+      TokenExpired: 'errors.auth.tokenExpired',
+    },
   },
   Validation: {
     Common: {
