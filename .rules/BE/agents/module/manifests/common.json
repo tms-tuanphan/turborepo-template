@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "common",
+  "displayName": "API common (cross-cutting)",
+  "scope": {
+    "moduleRoot": "apps/api/src/common",
+    "contractRoot": "packages/api/src/common",
+    "databaseModels": [],
+    "controllers": [],
+    "services": [],
+    "tests": [
+      "apps/api/src/common/pagination/parse-pagination.spec.ts"
+    ]
+  },
+  "allowedImports": [
+    "packages/api/src/common/**",
+    "@repo/api/**"
+  ],
+  "forbiddenRoots": [
+    "apps/web/**",
+    "apps/api/src/auth/**",
+    "apps/api/src/blogs/**"
+  ],
+  "relatedRules": [
+    ".rules/BE/rules/be-nestjs-structure.mdc",
+    ".rules/BE/rules/be-swagger-openapi.mdc",
+    ".rules/shared/rules/error-contract.mdc"
+  ],
+  "relatedDocs": [
+    ".rules/BE/docs/03-layering-and-patterns.md"
+  ],
+  "notes": "Shared pagination, filters. Domain modules import common helpers; do not add business rules here."
+}

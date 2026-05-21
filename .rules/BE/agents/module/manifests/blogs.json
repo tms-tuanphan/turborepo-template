@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "blogs",
+  "displayName": "Blogs API (Admin CMS)",
+  "scope": {
+    "moduleRoot": "apps/api/src/blogs",
+    "contractRoot": "packages/api/src/blogs",
+    "databaseModels": ["packages/database/prisma/schema.prisma"],
+    "controllers": ["apps/api/src/blogs/admin-blogs.controller.ts"],
+    "services": ["apps/api/src/blogs/blogs.service.ts"],
+    "tests": ["apps/api/src/blogs/blogs.service.spec.ts"]
+  },
+  "allowedImports": [
+    "apps/api/src/prisma/**",
+    "apps/api/src/auth/**",
+    "apps/api/src/common/**",
+    "apps/api/src/common/pagination/**",
+    "packages/api/src/blogs/**",
+    "packages/api/src/common/**",
+    "packages/api/src/common/pagination/**",
+    "@repo/api/**",
+    "@repo/database/**"
+  ],
+  "forbiddenRoots": ["apps/web/**"],
+  "relatedRules": [
+    ".rules/BE/rules/be-nestjs-structure.mdc",
+    ".rules/BE/rules/be-prisma.mdc",
+    ".rules/BE/rules/be-swagger-openapi.mdc",
+    ".rules/shared/rules/error-contract.mdc"
+  ],
+  "relatedDocs": [
+    ".rules/BE/docs/API_ADMIN_BLOGS_DESIGN.md",
+    ".rules/BE/skills/pagination-patterns/SKILL.md",
+    ".rules/shared/skills/admin-blogs-phase1-list/SKILL.md"
+  ],
+  "notes": "Phase 1: GET /api/admin/blogs implemented."
+}

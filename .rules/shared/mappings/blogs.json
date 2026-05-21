@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "id": "blogs",
-  "feFeatureManifest": ".rules/FE/agents/feature/manifests/blogs.json",
-  "beModuleManifest": null,
-  "contractRoot": null,
-  "notes": "FE public blogs; BE module manifest not defined yet"
+  "feFeatureManifest": ".rules/FE/agents/feature/manifests/admin-blogs.json",
+  "beModuleManifest": ".rules/BE/agents/module/manifests/blogs.json",
+  "contractRoot": "packages/api/src/blogs",
+  "notes": "Phase 1 BE: GET /api/admin/blogs (admin list)."
 }

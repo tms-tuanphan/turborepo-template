@@ -1,2 +1,9 @@
-export { PrismaClient, UserRole, UserStatus } from './generated/prisma/client';
-export type { User } from './generated/prisma/client';
+export {
+  PrismaClient,
+  Prisma,
+  UserRole,
+  UserStatus,
+  BlogCategory,
+  BlogStatus,
+} from './generated/prisma/client';
+export type { User, Blog } from './generated/prisma/client';

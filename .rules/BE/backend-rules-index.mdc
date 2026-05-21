@@ -86,6 +86,7 @@ Manifests: [agents/module/manifests/](./agents/module/manifests/) — `pnpm be:m
 - [skills/testing-factory-aaa/SKILL.md](./skills/testing-factory-aaa/SKILL.md)
 - [skills/i18n-patterns/SKILL.md](./skills/i18n-patterns/SKILL.md)
 - [skills/production-hardening/SKILL.md](./skills/production-hardening/SKILL.md)
+- [skills/pagination-patterns/SKILL.md](./skills/pagination-patterns/SKILL.md) — shared `page` / `pageSize` contract
 
 ## Implementation checklist
 

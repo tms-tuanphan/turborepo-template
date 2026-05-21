@@ -80,10 +80,13 @@ Details: [WORKFLOW.md](./WORKFLOW.md), [coordinator/AGENTS.md](./coordinator/AGE
 
 [module/manifests/](./module/manifests/)
 
-| Manifest                                             | Module               |
-| ---------------------------------------------------- | -------------------- |
-| [app.json](./module/manifests/app.json)              | App root controller  |
-| [\_template.json](./module/manifests/_template.json) | Copy for new modules |
+| Manifest                                             | Module                                |
+| ---------------------------------------------------- | ------------------------------------- |
+| [app.json](./module/manifests/app.json)              | App root controller                   |
+| [auth.json](./module/manifests/auth.json)            | Auth API                              |
+| [blogs.json](./module/manifests/blogs.json)          | Admin blogs CMS (phase 1: list)       |
+| [common.json](./module/manifests/common.json)        | Cross-cutting (`pagination`, filters) |
+| [\_template.json](./module/manifests/_template.json) | Copy for new modules                  |
 
 Validate: `pnpm be:manifest-check` (repo root).
 

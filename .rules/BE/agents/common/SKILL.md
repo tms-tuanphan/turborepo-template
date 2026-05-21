@@ -17,6 +17,8 @@ Focus: `apps/api/src/common/**` — shared infrastructure, not domain modules.
 
 - [docs/02-project-structure.md](../../docs/02-project-structure.md)
 - [rules/be-nestjs-structure.mdc](../../rules/be-nestjs-structure.mdc) — `common/` is not a junk drawer
+- Manifest: [manifests/common.json](../module/manifests/common.json)
+- Pagination: [skills/pagination-patterns](../../skills/pagination-patterns/SKILL.md)
 
 ## Checklist
 
@@ -24,6 +26,7 @@ Focus: `apps/api/src/common/**` — shared infrastructure, not domain modules.
 - No domain business rules in common
 - Exception mapping consistent with API error contract
 - Avoid growing common — suggest module-local when domain-specific
+- List `page` / `pageSize`: use [pagination-patterns](../../skills/pagination-patterns/SKILL.md) — do not duplicate parse math in domain services
 
 ## Output
 

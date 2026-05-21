@@ -47,14 +47,15 @@ Only paths in `scope`:
 
 ## Suggest next agents (Coordinator — core-first)
 
-| Manifest / diff contains      | Suggest               |
-| ----------------------------- | --------------------- |
-| `controllers`                 | controller (extended) |
-| `services`                    | service (core)        |
-| `contractRoot` / dto          | dto (core)            |
-| `databaseModels` non-empty    | prisma (core)         |
-| `apps/api/src/common` in diff | common (extended)     |
-| Transaction / state rules     | domain (extended)     |
+| Manifest / diff contains      | Suggest                                                                   |
+| ----------------------------- | ------------------------------------------------------------------------- |
+| `controllers`                 | controller (extended)                                                     |
+| `services`                    | service (core)                                                            |
+| `contractRoot` / dto          | dto (core)                                                                |
+| `databaseModels` non-empty    | prisma (core)                                                             |
+| `apps/api/src/common` in diff | common (extended)                                                         |
+| Transaction / state rules     | domain (extended)                                                         |
+| List `page` / `pageSize`      | common + [pagination-patterns](../../skills/pagination-patterns/SKILL.md) |
 
 ## Output
 

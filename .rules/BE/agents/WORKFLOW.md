@@ -113,6 +113,19 @@ module → dto → service → implement → quality-gates → reviewer
 
 Optional parallel (disjoint files): `dto` + `controller` if both in scope.
 
+### Medium — Admin blogs list (phase 1)
+
+```text
+module → prisma → dto → service → controller
+→ quality-gates → reviewer
+```
+
+- Manifest: `blogs.json`
+- Skill: `.rules/shared/skills/admin-blogs-phase1-list/SKILL.md`
+- Design: `.rules/BE/docs/API_ADMIN_BLOGS_DESIGN.md`
+- Escalation: `DB_MIGRATION`
+- Scope: `GET /api/admin/blogs` only — no CRUD, upload, public API, blog-ai
+
 ### Large (new endpoint + DB)
 
 ```text
