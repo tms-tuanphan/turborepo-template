@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-import { auth } from '@/auth';
+import { getAdminSession } from '@/core/auth/server-session';
 import {
   createBlogInStore,
   deleteBlogInStore,
@@ -56,9 +56,9 @@ function formDataToBlogInput(formData: FormData): Record<string, unknown> {
 }
 
 function resolveAuthor(session: {
-  user?: { name?: string | null; email?: string | null } | null;
+  user: { name: string | null; email: string };
 }): string {
-  return session.user?.name?.trim() || session.user?.email?.trim() || 'Admin';
+  return session.user.name?.trim() || session.user.email.trim() || 'Admin';
 }
 
 function pickSubmitIntent(formData: FormData): SubmitIntent {
@@ -202,7 +202,7 @@ export async function createBlogAction(
   _prev: BlogFormActionState,
   formData: FormData,
 ): Promise<BlogFormActionState> {
-  const session = await auth();
+  const session = await getAdminSession();
   if (!session) {
     return { ok: false, formError: 'unauthorized' };
   }
@@ -241,7 +241,7 @@ export async function updateBlogAction(
   _prev: BlogFormActionState,
   formData: FormData,
 ): Promise<BlogFormActionState> {
-  const session = await auth();
+  const session = await getAdminSession();
   if (!session) {
     return { ok: false, formError: 'unauthorized' };
   }
@@ -297,7 +297,7 @@ export async function deleteBlogAction(formData: FormData): Promise<void> {
   }
   const locale: Locale = localeRaw;
 
-  const session = await auth();
+  const session = await getAdminSession();
   if (!session) {
     redirect(`/${locale}/admin/login`);
   }

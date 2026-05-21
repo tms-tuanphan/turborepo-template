@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { z } from 'zod';
 
-import { auth } from '@/auth';
+import { getAdminSession } from '@/core/auth/server-session';
 
 const SIMULATED_LATENCY_MS = 350;
 
@@ -20,7 +20,7 @@ export function createAiRoute<TSchema extends z.ZodTypeAny>(
   handler: Handler<z.infer<TSchema>>,
 ): (request: Request) => Promise<NextResponse> {
   return async function POST(request: Request) {
-    const session = await auth();
+    const session = await getAdminSession();
     if (!session) {
       return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
     }

@@ -82,10 +82,10 @@ export class AuthController {
   @ApiOperation({ summary: 'Clear session cookie' })
   @ApiOkResponse({ type: LogoutResponseDto })
   logout(@Res({ passthrough: true }) res: Response): LogoutResponseDto {
-    res.clearCookie(this.authService.getCookieName(), {
-      httpOnly: true,
-      path: '/',
-    });
+    res.clearCookie(
+      this.authService.getCookieName(),
+      this.authService.getClearCookieOptions(),
+    );
 
     return { success: true };
   }

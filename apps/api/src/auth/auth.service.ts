@@ -224,6 +224,17 @@ export class AuthService {
     };
   }
 
+  /** Must match set-cookie attributes (except maxAge) so browsers clear the session. */
+  getClearCookieOptions(): {
+    httpOnly: boolean;
+    secure: boolean;
+    sameSite: 'lax';
+    path: string;
+  } {
+    const { httpOnly, secure, sameSite, path } = this.getCookieOptions();
+    return { httpOnly, secure, sameSite, path };
+  }
+
   private toAuthUserDto(user: SafeUser): AuthUserDto {
     return {
       id: user.id,

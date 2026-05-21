@@ -170,6 +170,7 @@
       "notifications": "Notifications",
       "notificationsDisabled": "No new notifications",
       "signOut": "Sign out",
+      "signOutError": "Could not sign out. Please try again.",
       "userFallback": "Admin user",
       "switchToLightMode": "Switch to light mode",
       "switchToDarkMode": "Switch to dark mode"

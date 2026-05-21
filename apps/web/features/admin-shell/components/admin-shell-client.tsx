@@ -75,6 +75,7 @@ export function AdminShellClient({
         navLabel={navLabel}
         collapsed={collapseActive}
         signOutLabel={messages.admin.shell.signOut}
+        signOutErrorLabel={messages.admin.shell.signOutError}
         signOutCallbackUrl={`/${locale}/admin/login`}
       >
         {/** Nav is passed by parent for reuse in desktop + mobile. */}

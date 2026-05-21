@@ -18,6 +18,7 @@ type AdminSidebarProps = {
   navLabel: string;
   collapsed: boolean;
   signOutLabel: string;
+  signOutErrorLabel: string;
   signOutCallbackUrl: string;
   children: React.ReactNode;
 };
@@ -29,21 +30,26 @@ export function AdminSidebar({
   navLabel,
   collapsed,
   signOutLabel,
+  signOutErrorLabel,
   signOutCallbackUrl,
   children,
 }: AdminSidebarProps) {
   const navId = useId();
   const router = useRouter();
   const [signingOut, setSigningOut] = useState(false);
+  const [signOutError, setSignOutError] = useState<string | null>(null);
 
   async function handleSignOut() {
+    setSignOutError(null);
     setSigningOut(true);
     try {
       const result = await logoutAdmin();
       if (result.ok) {
         router.push(signOutCallbackUrl);
         router.refresh();
+        return;
       }
+      setSignOutError(signOutErrorLabel);
     } finally {
       setSigningOut(false);
     }
@@ -79,7 +85,12 @@ export function AdminSidebar({
           {children}
         </nav>
       </AdminSidebarCollapsedProvider>
-      <div className="shrink-0 p-2 mb-5">
+      <div className="shrink-0 space-y-2 p-2 mb-5">
+        {signOutError ? (
+          <p className="text-xs text-destructive" role="alert">
+            {signOutError}
+          </p>
+        ) : null}
         <Button
           type="button"
           variant={collapsed ? 'ghost' : 'outline'}
