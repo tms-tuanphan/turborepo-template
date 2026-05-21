@@ -19,6 +19,10 @@ export const I18nKey = {
       InvalidCredentials: 'errors.auth.invalidCredentials',
       AccountDisabled: 'errors.auth.accountDisabled',
       TokenExpired: 'errors.auth.tokenExpired',
+      EmailAlreadyExists: 'errors.auth.emailAlreadyExists',
+      InvalidResetToken: 'errors.auth.invalidResetToken',
+      WeakPassword: 'errors.auth.weakPassword',
+      RateLimited: 'errors.auth.rateLimited',
     },
   },
   Validation: {

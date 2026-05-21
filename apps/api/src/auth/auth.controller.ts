@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiCookieAuth,
+  ApiConflictResponse,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiOperation,
@@ -24,16 +25,28 @@ import {
   LogoutResponseDto,
   MeResponseDto,
   ApiErrorPayloadDto,
+  RegisterDto,
+  RegisterResponseDto,
+  ForgotPasswordDto,
+  ForgotPasswordResponseDto,
+  ResetPasswordDto,
+  ResetPasswordResponseDto,
+  ChangePasswordDto,
+  ChangePasswordResponseDto,
 } from '@repo/api';
 
 import { Public } from './decorators/public.decorator';
 import { AuthService } from './auth.service';
+import { PasswordResetService } from './password-reset.service';
 import type { AuthenticatedRequest } from './interfaces/authenticated-request.interface';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly passwordResetService: PasswordResetService,
+  ) {}
 
   @Public()
   @Post('login')
@@ -75,6 +88,71 @@ export class AuthController {
     });
 
     return { success: true };
+  }
+
+  @Public()
+  @Post('register')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({
+    summary: 'Register a new sub-admin account',
+    description:
+      'Always creates a user with role `sub_admin`. Public endpoint.',
+  })
+  @ApiOkResponse({ type: RegisterResponseDto })
+  @ApiConflictResponse({
+    description: 'Email already registered',
+    type: ApiErrorPayloadDto,
+  })
+  async register(@Body() dto: RegisterDto): Promise<RegisterResponseDto> {
+    return this.authService.register(dto);
+  }
+
+  @Public()
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Request a password reset email',
+    description:
+      'Always returns success to prevent email enumeration. Rate limited per IP and email.',
+  })
+  @ApiOkResponse({ type: ForgotPasswordResponseDto })
+  async forgotPassword(
+    @Body() dto: ForgotPasswordDto,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<ForgotPasswordResponseDto> {
+    const clientIp = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.passwordResetService.forgotPassword(dto, clientIp);
+  }
+
+  @Public()
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Reset password using a one-time token from email' })
+  @ApiOkResponse({ type: ResetPasswordResponseDto })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid or expired reset token',
+    type: ApiErrorPayloadDto,
+  })
+  async resetPassword(
+    @Body() dto: ResetPasswordDto,
+  ): Promise<ResetPasswordResponseDto> {
+    return this.passwordResetService.resetPassword(dto);
+  }
+
+  @Post('change-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiCookieAuth('session')
+  @ApiOperation({ summary: 'Change password for the authenticated user' })
+  @ApiOkResponse({ type: ChangePasswordResponseDto })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid current password or missing session',
+    type: ApiErrorPayloadDto,
+  })
+  async changePassword(
+    @Body() dto: ChangePasswordDto,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<ChangePasswordResponseDto> {
+    return this.authService.changePassword(req.user.id, dto);
   }
 
   @Get('me')
