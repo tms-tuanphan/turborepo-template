@@ -15,7 +15,9 @@
     "NEXTAUTH_URL",
     "NODE_ENV",
     "CORS_ORIGIN",
-    "PORT"
+    "PORT",
+    "SWAGGER_ENABLED",
+    "SWAGGER_PATH"
   ],
   "tasks": {
     "dev": {
