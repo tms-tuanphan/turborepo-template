@@ -1,15 +1,45 @@
+import {
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_REGEX,
+  resetPasswordRequestSchema,
+  type ResetPasswordRequestInput,
+} from '@repo/shared-validation';
 import { z } from 'zod';
 
-const MIN_PASSWORD_LENGTH = 8;
+import type { Messages } from '@/shared/i18n';
 
-export const adminResetPasswordSchema = z
-  .object({
-    password: z.string().min(MIN_PASSWORD_LENGTH),
-    confirmPassword: z.string().min(1),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'mismatch',
-    path: ['confirmPassword'],
+export type AdminResetPasswordValidationMessages =
+  Messages['admin']['resetPassword'];
+
+export function createAdminResetPasswordSchema(
+  messages: AdminResetPasswordValidationMessages,
+) {
+  return z
+    .object({
+      password: z
+        .string()
+        .min(1, messages.validationPasswordRequired)
+        .min(PASSWORD_MIN_LENGTH, messages.validationPasswordMin)
+        .regex(PASSWORD_REGEX, messages.validationPasswordFormat),
+      confirmPassword: z.string().min(1, messages.validationConfirmRequired),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: messages.validationConfirmMismatch,
+      path: ['confirmPassword'],
+    });
+}
+
+export type AdminResetPasswordInput = z.infer<
+  ReturnType<typeof createAdminResetPasswordSchema>
+>;
+
+/** Body sent to POST /api/session/reset-password (matches BE ResetPasswordDto). */
+export function toResetPasswordRequestBody(
+  token: string,
+  input: Pick<AdminResetPasswordInput, 'password'>,
+): ResetPasswordRequestInput {
+  return resetPasswordRequestSchema.parse({
+    token: token.trim(),
+    newPassword: input.password,
   });
-
-export type AdminResetPasswordInput = z.infer<typeof adminResetPasswordSchema>;
+}

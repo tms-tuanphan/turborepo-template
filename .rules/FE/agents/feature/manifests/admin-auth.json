@@ -28,6 +28,8 @@
   ],
   "relatedDocs": [
     ".rules/FE/docs/04-feature-module.md",
-    ".rules/FE/skills/auth-patterns/SKILL.md"
+    ".rules/FE/skills/auth-patterns/SKILL.md",
+    ".rules/shared/skills/admin-auth-forgot-password-sync/SKILL.md",
+    ".rules/shared/skills/admin-auth-register-sync/SKILL.md"
   ]
 }

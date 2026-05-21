@@ -4,5 +4,5 @@
   "feFeatureManifest": ".rules/FE/agents/feature/manifests/admin-auth.json",
   "beModuleManifest": ".rules/BE/agents/module/manifests/auth.json",
   "contractRoot": "packages/api/src/auth",
-  "notes": "Admin login/register validation via @repo/shared-validation"
+  "notes": "Admin login/register/forgot/reset validation via @repo/shared-validation"
 }

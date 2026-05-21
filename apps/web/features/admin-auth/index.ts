@@ -27,7 +27,9 @@ export {
   adminResetPasswordSuccessPath,
 } from './lib/admin-auth-paths';
 export { useAdminLogin } from './hooks/use-admin-login';
+export { useAdminForgotPassword } from './hooks/use-admin-forgot-password';
 export { useAdminRegister } from './hooks/use-admin-register';
+export { useAdminResetPassword } from './hooks/use-admin-reset-password';
 export {
   mapAuthErrorToMessage,
   getAuthErrorMessage,
@@ -39,7 +41,10 @@ export type {
 export { sanitizeAdminCallbackUrl } from './lib/sanitize-callback-url';
 export {
   adminForgotPasswordSchema,
+  createAdminForgotPasswordSchema,
+  toForgotPasswordRequestBody,
   type AdminForgotPasswordInput,
+  type AdminForgotPasswordValidationMessages,
 } from './validations/forgot-password.schema';
 export {
   createAdminLoginSchema,
@@ -56,6 +61,8 @@ export {
   type AdminRegisterValidationMessages,
 } from './validations/register.schema';
 export {
-  adminResetPasswordSchema,
+  createAdminResetPasswordSchema,
+  toResetPasswordRequestBody,
   type AdminResetPasswordInput,
+  type AdminResetPasswordValidationMessages,
 } from './validations/reset-password.schema';
