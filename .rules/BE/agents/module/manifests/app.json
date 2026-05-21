@@ -12,7 +12,6 @@
   },
   "allowedImports": [
     "apps/api/src/common/**",
-    "apps/api/src/links/**",
     "packages/api/**",
     "@repo/api/**"
   ],

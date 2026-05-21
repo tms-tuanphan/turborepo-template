@@ -82,7 +82,6 @@ Details: [WORKFLOW.md](./WORKFLOW.md), [coordinator/AGENTS.md](./coordinator/AGE
 
 | Manifest                                             | Module               |
 | ---------------------------------------------------- | -------------------- |
-| [links.json](./module/manifests/links.json)          | Links API            |
 | [app.json](./module/manifests/app.json)              | App root controller  |
 | [\_template.json](./module/manifests/_template.json) | Copy for new modules |
 

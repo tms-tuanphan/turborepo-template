@@ -15,10 +15,6 @@ export const I18nKey = {
       BadRequest: 'errors.common.badRequest',
       InternalServerError: 'errors.common.internalServerError',
     },
-    Links: {
-      NotFound: 'errors.links.notFound',
-      SlugAlreadyExists: 'errors.links.slugAlreadyExists',
-    },
     Auth: {
       InvalidCredentials: 'errors.auth.invalidCredentials',
       AccountDisabled: 'errors.auth.accountDisabled',
@@ -31,12 +27,6 @@ export const I18nKey = {
       Min: 'validation.common.min',
       Max: 'validation.common.max',
       InvalidFormat: 'validation.common.invalidFormat',
-    },
-    Links: {
-      SlugRequired: 'validation.links.slug.required',
-      SlugInvalidFormat: 'validation.links.slug.invalidFormat',
-      UrlRequired: 'validation.links.url.required',
-      UrlInvalidFormat: 'validation.links.url.invalidFormat',
     },
   },
 } as const;

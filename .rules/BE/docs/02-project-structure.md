@@ -16,13 +16,10 @@ apps/api/src/
   common/           # filters, guards, pipes, interceptors only
   prisma/           # Nest wrapper for @repo/database (when wired)
   health/
-  links/            # example domain module
-    links.module.ts
-    links.controller.ts
-    links.service.ts
+  auth/             # example domain module
 ```
 
-- One domain = one folder (`links/`, `users/`).
+- One domain = one folder (`auth/`, `users/`).
 - Do not put domain logic in `app.service.ts`.
 - App-specific DTO only when not shared; prefer `packages/api`.
 
@@ -33,9 +30,8 @@ apps/api/src/
 ```text
 packages/api/src/
   entry.ts
-  links/
+  auth/
     dto/
-    entities/
   common/
     i18n/keys.ts
 ```
