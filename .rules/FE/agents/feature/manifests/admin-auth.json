@@ -18,7 +18,9 @@
     "apps/web/shared/**",
     "apps/web/core/**",
     "apps/web/components/ui/**",
-    "@repo/ui/**"
+    "@repo/ui/**",
+    "@repo/api/client",
+    "@repo/shared-validation"
   ],
   "forbiddenRoots": [
     "apps/web/features/blogs",

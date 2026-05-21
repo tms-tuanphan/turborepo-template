@@ -13,6 +13,7 @@ import { adminLoginPath } from '../lib/admin-auth-paths';
 import { getAuthErrorMessage } from '../lib/map-auth-error';
 import {
   createAdminRegisterSchema,
+  toRegisterRequestBody,
   type AdminRegisterInput,
 } from '../validations/register.schema';
 
@@ -50,10 +51,8 @@ export function useAdminRegister({
 
       setIsSubmitting(true);
       try {
-        const result = await registerAdmin({
-          email: data.email,
-          password: data.password,
-        });
+        const body = toRegisterRequestBody(data);
+        const result = await registerAdmin(body);
 
         if (!result.ok) {
           const code = result.error.code;

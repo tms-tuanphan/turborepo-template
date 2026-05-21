@@ -50,6 +50,7 @@ export {
 } from './validations/login.schema';
 export {
   createAdminRegisterSchema,
+  toRegisterRequestBody,
   type AdminRegisterField,
   type AdminRegisterInput,
   type AdminRegisterValidationMessages,

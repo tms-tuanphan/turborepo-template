@@ -61,6 +61,7 @@ Scope: **Fullstack contract** giữa `apps/web`, `apps/api`, và shared packages
 ## Skills index
 
 - [skills/api-contract-sync/SKILL.md](./skills/api-contract-sync/SKILL.md)
+- [skills/admin-auth-register-sync/SKILL.md](./skills/admin-auth-register-sync/SKILL.md)
 - [skills/fullstack-i18n/SKILL.md](./skills/fullstack-i18n/SKILL.md)
 
 ## Cross mappings

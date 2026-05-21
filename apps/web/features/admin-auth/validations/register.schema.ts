@@ -1,4 +1,9 @@
-import { PASSWORD_MIN_LENGTH, PASSWORD_REGEX } from '@repo/shared-validation';
+import {
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_REGEX,
+  registerRequestSchema,
+  type RegisterRequestInput,
+} from '@repo/shared-validation';
 import { z } from 'zod';
 
 import type { Messages } from '@/shared/i18n';
@@ -33,3 +38,13 @@ export type AdminRegisterInput = z.infer<
 >;
 
 export type AdminRegisterField = keyof AdminRegisterInput;
+
+/** Body sent to POST /api/session/register (matches BE registerRequestSchema). */
+export function toRegisterRequestBody(
+  input: Pick<AdminRegisterInput, 'email' | 'password'>,
+): RegisterRequestInput {
+  return registerRequestSchema.parse({
+    email: input.email.trim(),
+    password: input.password,
+  });
+}

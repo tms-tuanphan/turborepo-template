@@ -161,6 +161,7 @@
       "errorMismatch": "Passwords do not match.",
       "errorEmailExists": "This email is already registered.",
       "errorWeakPassword": "Password does not meet the required format",
+      "errorNetwork": "Unable to connect to the server. Please try again.",
       "errorGeneric": "Something went wrong. Please try again."
     },
     "shell": {

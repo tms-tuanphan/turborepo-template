@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@mdxeditor/editor": "^3.52.3",
     "@radix-ui/react-toolbar": "^1.1.7",
+    "@repo/api": "workspace:*",
     "@repo/shared-validation": "workspace:*",
     "@repo/ui": "workspace:*",
     "@tailwindcss/postcss": "^4.2.4",
@@ -34,7 +35,6 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@repo/api": "workspace:*",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/node": "^22.15.3",

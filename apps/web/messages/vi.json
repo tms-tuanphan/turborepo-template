@@ -161,6 +161,7 @@
       "errorMismatch": "Mật khẩu không khớp.",
       "errorEmailExists": "Email đã tồn tại",
       "errorWeakPassword": "Mật khẩu không đúng định dạng",
+      "errorNetwork": "Không thể kết nối máy chủ. Vui lòng thử lại.",
       "errorGeneric": "Đã xảy ra lỗi. Vui lòng thử lại."
     },
     "shell": {

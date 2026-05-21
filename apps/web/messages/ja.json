@@ -161,6 +161,7 @@
       "errorMismatch": "パスワードが一致しません。",
       "errorEmailExists": "このメールアドレスは既に登録されています。",
       "errorWeakPassword": "パスワードの形式が正しくありません",
+      "errorNetwork": "サーバーに接続できません。もう一度お試しください。",
       "errorGeneric": "問題が発生しました。もう一度お試しください。"
     },
     "shell": {
