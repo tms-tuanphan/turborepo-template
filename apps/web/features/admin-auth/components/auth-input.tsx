@@ -14,6 +14,7 @@ type AuthInputProps = {
   placeholder: string;
   value: string;
   onChange: (value: string) => void;
+  onBlur?: () => void;
   icon: LucideIcon;
   disabled?: boolean;
   error?: string | null;
@@ -29,6 +30,7 @@ export function AuthInput({
   placeholder,
   value,
   onChange,
+  onBlur,
   icon: Icon,
   disabled,
   error,
@@ -64,6 +66,7 @@ export function AuthInput({
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          onBlur={onBlur}
           disabled={disabled}
           className={cn('pl-9', showPasswordToggle && 'pr-10')}
           aria-invalid={error ? true : undefined}

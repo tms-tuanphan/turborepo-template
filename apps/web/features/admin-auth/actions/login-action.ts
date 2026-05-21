@@ -11,9 +11,12 @@ import {
   type Locale,
 } from '@/shared/i18n';
 
-import { mapAuthErrorToMessage } from '../lib/map-auth-error';
+import { getAuthErrorMessage } from '../utils/auth-error';
 import { sanitizeAdminCallbackUrl } from '../lib/sanitize-callback-url';
-import { adminLoginSchema } from '../validations/login.schema';
+import {
+  createAdminLoginSchema,
+  mapAdminLoginZodErrors,
+} from '../validations/login.schema';
 
 import type { LoginActionState } from './login-action-state';
 
@@ -50,14 +53,18 @@ export async function loginAdminAction(
   const locale = resolveLocale(formData);
   const messages = getMessages(locale);
   const t = messages.admin.login;
+  const schema = createAdminLoginSchema(t);
 
-  const parsed = adminLoginSchema.safeParse({
+  const parsed = schema.safeParse({
     email: pickString(formData, 'email'),
     password: pickString(formData, 'password'),
   });
 
   if (!parsed.success) {
-    return { ok: false, error: t.errorInvalid };
+    return {
+      ok: false,
+      fieldErrors: mapAdminLoginZodErrors(parsed.error),
+    };
   }
 
   const callbackUrl = sanitizeAdminCallbackUrl(
@@ -65,18 +72,26 @@ export async function loginAdminAction(
     locale,
   );
 
-  const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(parsed.data),
-    cache: 'no-store',
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(parsed.data),
+      cache: 'no-store',
+    });
+  } catch {
+    return {
+      ok: false,
+      error: getAuthErrorMessage('network', messages, 'login'),
+    };
+  }
 
   if (!response.ok) {
     const payload = await parseApiErrorPayload(response);
     return {
       ok: false,
-      error: mapAuthErrorToMessage(payload, messages, 'login'),
+      error: getAuthErrorMessage(payload, messages, 'login'),
     };
   }
 

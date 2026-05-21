@@ -25,16 +25,26 @@ export {
   adminResetPasswordPath,
   adminResetPasswordSuccessPath,
 } from './lib/admin-auth-paths';
-export { mapAuthErrorToMessage } from './lib/map-auth-error';
-export type { AdminAuthMessageSection } from './lib/map-auth-error';
+export { useAdminLogin } from './hooks/use-admin-login';
+export {
+  mapAuthErrorToMessage,
+  getAuthErrorMessage,
+} from './lib/map-auth-error';
+export type {
+  AdminAuthMessageSection,
+  AuthErrorInput,
+} from './lib/map-auth-error';
 export { sanitizeAdminCallbackUrl } from './lib/sanitize-callback-url';
 export {
   adminForgotPasswordSchema,
   type AdminForgotPasswordInput,
 } from './validations/forgot-password.schema';
 export {
-  adminLoginSchema,
+  createAdminLoginSchema,
+  mapAdminLoginZodErrors,
+  type AdminLoginField,
   type AdminLoginInput,
+  type AdminLoginValidationMessages,
 } from './validations/login.schema';
 export {
   adminRegisterSchema,
