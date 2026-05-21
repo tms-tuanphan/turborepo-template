@@ -8,7 +8,7 @@
       "apps/web/app/[locale]/(admin)/admin/(auth)/**"
     ],
     "apiRoutes": [
-      "apps/web/app/api/auth/**"
+      "apps/web/app/api/session/**"
     ],
     "authConfig": [
       "apps/web/auth.ts",

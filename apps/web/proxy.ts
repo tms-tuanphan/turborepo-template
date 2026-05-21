@@ -43,9 +43,14 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const isLogin = afterLocale[1] === 'login' && afterLocale.length === 2;
+  const authSegment = afterLocale[1];
+  const isPublicAuthRoute =
+    authSegment === 'login' ||
+    authSegment === 'forgot-password' ||
+    authSegment === 'reset-password' ||
+    authSegment === 'register';
 
-  if (isLogin) {
+  if (isPublicAuthRoute) {
     return NextResponse.next();
   }
 

@@ -1,9 +1,7 @@
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
 
-import { AdminLoginForm } from '@/features/admin-auth';
-import { AuthFormFallback } from '@/features/admin-auth/components/auth-form-fallback';
+import { AdminResetPasswordSuccess } from '@/features/admin-auth';
 import { redirectIfAdminSession } from '@/features/admin-auth/lib/redirect-if-admin-session';
 import {
   defaultLocale,
@@ -14,21 +12,20 @@ import {
 
 type Params = Promise<{ locale: string }>;
 
-export default async function AdminLoginPage({ params }: { params: Params }) {
+export default async function AdminResetPasswordSuccessPage({
+  params,
+}: {
+  params: Params;
+}) {
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) {
     notFound();
   }
   const locale: Locale = isLocale(rawLocale) ? rawLocale : defaultLocale;
   const cookieStore = await cookies();
-
   redirectIfAdminSession(cookieStore, locale);
 
   const messages = getMessages(locale);
 
-  return (
-    <Suspense fallback={<AuthFormFallback />}>
-      <AdminLoginForm locale={locale} messages={messages} />
-    </Suspense>
-  );
+  return <AdminResetPasswordSuccess locale={locale} messages={messages} />;
 }

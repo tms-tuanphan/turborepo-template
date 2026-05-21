@@ -2,10 +2,15 @@ import { NextResponse } from 'next/server';
 
 const API_BASE_URL = process.env.API_BASE_URL ?? 'http://localhost:3000';
 
-type AuthProxyPath = 'login' | 'logout';
+export type AuthProxyPath =
+  | 'login'
+  | 'logout'
+  | 'register'
+  | 'forgot-password'
+  | 'reset-password';
 
 /**
- * Proxies POST to Nest auth endpoints and forwards Set-Cookie / Clear-Cookie unchanged.
+ * Proxies POST to Nest auth endpoints and forwards Set-Cookie / Clear-Cookie when present.
  * Auth authority remains in NestJS; BFF is transport only.
  */
 export async function proxyAuthPost(
@@ -46,6 +51,5 @@ export async function proxyAuthPost(
 
 function parseSetCookieFallback(header: string | null): string[] {
   if (!header) return [];
-  // Single cookie per header in simple dev responses; split combined headers if needed later.
   return [header];
 }

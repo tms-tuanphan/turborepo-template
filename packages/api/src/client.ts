@@ -21,3 +21,15 @@ export type LoginResponse = {
 export type LogoutResponse = {
   success: boolean;
 };
+
+export type RegisterResponse = {
+  user: AuthUser;
+};
+
+export type ForgotPasswordResponse = {
+  success: boolean;
+};
+
+export type ResetPasswordResponse = {
+  success: boolean;
+};

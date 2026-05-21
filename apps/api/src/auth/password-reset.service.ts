@@ -184,8 +184,9 @@ export class PasswordResetService {
   private buildResetUrl(plainToken: string): string {
     const appUrl =
       this.configService.get<string>('APP_URL') ?? 'http://localhost:3001';
+    const locale = this.configService.get<string>('ADMIN_AUTH_LOCALE') ?? 'vi';
     const base = appUrl.replace(/\/$/, '');
-    return `${base}/forgot-password?token=${encodeURIComponent(plainToken)}`;
+    return `${base}/${locale}/admin/reset-password?token=${encodeURIComponent(plainToken)}`;
   }
 
   private isPasswordStrongEnough(password: string | undefined): boolean {
