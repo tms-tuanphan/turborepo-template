@@ -69,13 +69,15 @@
   "admin": {
     "login": {
       "title": "Admin sign in",
-      "description": "Use the demo credentials from your environment configuration.",
+      "description": "Sign in with your admin account.",
       "emailLabel": "Email",
       "passwordLabel": "Password",
       "submit": "Sign in",
       "submitting": "Signing in…",
       "errorInvalid": "Please enter a valid email and password.",
-      "errorCredentials": "Invalid email or password."
+      "errorCredentials": "Invalid email or password.",
+      "errorAccountDisabled": "This account has been disabled.",
+      "errorGeneric": "Something went wrong. Please try again."
     },
     "shell": {
       "brand": "Admin",

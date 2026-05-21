@@ -1,11 +1,15 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { auth } from '@/auth';
+import { getAuthCookieName } from '@/core/auth/session-cookie';
 import { defaultLocale, isLocale, locales } from '@/shared/i18n';
 
 const PUBLIC_FILE = /\.(.*)$/;
 
-const authProxy = auth((request) => {
+/**
+ * Admin route guard: cookie presence only (no JWT decode/verify).
+ * Authentication authority remains in NestJS.
+ */
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (
@@ -45,7 +49,9 @@ const authProxy = auth((request) => {
     return NextResponse.next();
   }
 
-  if (!request.auth) {
+  const hasSession = request.cookies.has(getAuthCookieName());
+
+  if (!hasSession) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = `/${locale}/admin/login`;
     loginUrl.searchParams.set('callbackUrl', pathname);
@@ -53,10 +59,6 @@ const authProxy = auth((request) => {
   }
 
   return NextResponse.next();
-});
-
-export async function proxy(request: NextRequest) {
-  return authProxy(request, {} as never);
 }
 
 export const config = {

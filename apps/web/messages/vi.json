@@ -69,13 +69,15 @@
   "admin": {
     "login": {
       "title": "Đăng nhập quản trị",
-      "description": "Dùng tài khoản demo đã cấu hình trong biến môi trường.",
+      "description": "Đăng nhập bằng tài khoản quản trị của bạn.",
       "emailLabel": "Email",
       "passwordLabel": "Mật khẩu",
       "submit": "Đăng nhập",
       "submitting": "Đang đăng nhập…",
       "errorInvalid": "Vui lòng nhập email và mật khẩu hợp lệ.",
-      "errorCredentials": "Email hoặc mật khẩu không đúng."
+      "errorCredentials": "Email hoặc mật khẩu không đúng.",
+      "errorAccountDisabled": "Tài khoản này đã bị vô hiệu hóa.",
+      "errorGeneric": "Đã xảy ra lỗi. Vui lòng thử lại."
     },
     "shell": {
       "brand": "Quản trị",

@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -15,6 +14,8 @@ import {
 import { Input } from '@/components/ui/input';
 import type { Messages } from '@/shared/i18n';
 
+import { loginAdmin } from '../lib/auth-api';
+import { mapAuthErrorToMessage } from '../lib/map-auth-error';
 import { sanitizeAdminCallbackUrl } from '../lib/sanitize-callback-url';
 import { adminLoginSchema } from '../validations/login.schema';
 
@@ -51,21 +52,15 @@ export function AdminLoginForm({ locale, messages }: AdminLoginFormProps) {
 
     setPending(true);
     try {
-      const result = await signIn('credentials', {
-        email: parsed.data.email,
-        password: parsed.data.password,
-        redirect: false,
-      });
+      const result = await loginAdmin(parsed.data);
 
-      if (result?.error) {
-        setError(t.errorCredentials);
+      if (!result.ok) {
+        setError(mapAuthErrorToMessage(result.error, messages));
         return;
       }
 
-      if (result?.ok) {
-        router.push(callbackUrl);
-        router.refresh();
-      }
+      router.push(callbackUrl);
+      router.refresh();
     } finally {
       setPending(false);
     }

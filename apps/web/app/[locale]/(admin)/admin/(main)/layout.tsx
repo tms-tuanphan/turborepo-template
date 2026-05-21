@@ -1,8 +1,9 @@
+import { cookies } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 
 import { Toaster } from '@/components/ui/sonner';
+import { hasAdminSessionCookie } from '@/core/auth/session-cookie';
 import { AdminShell } from '@/features/admin-shell';
-import { auth } from '@/auth';
 import { getMessages, isLocale } from '@/shared/i18n';
 
 type Params = Promise<{ locale: string }>;
@@ -19,8 +20,9 @@ export default async function AdminMainLayout({
     notFound();
   }
   const locale = rawLocale;
-  const session = await auth();
-  if (!session) {
+  const cookieStore = await cookies();
+
+  if (!hasAdminSessionCookie(cookieStore)) {
     const loginPath = `/${locale}/admin/login`;
     redirect(
       `${loginPath}?callbackUrl=${encodeURIComponent(`/${locale}/admin`)}`,
@@ -33,8 +35,8 @@ export default async function AdminMainLayout({
     <AdminShell
       locale={locale}
       messages={messages}
-      userEmail={session.user?.email ?? null}
-      userName={session.user?.name ?? null}
+      userEmail={null}
+      userName={null}
     >
       {children}
       <Toaster richColors position="top-right" />

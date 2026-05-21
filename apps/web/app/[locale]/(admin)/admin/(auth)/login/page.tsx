@@ -1,9 +1,10 @@
+import { cookies } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
-import { AdminLoginForm } from '@/features/admin-auth';
-import { auth } from '@/auth';
 import { Skeleton } from '@/components/ui/skeleton';
+import { hasAdminSessionCookie } from '@/core/auth/session-cookie';
+import { AdminLoginForm } from '@/features/admin-auth';
 import {
   defaultLocale,
   getMessages,
@@ -31,9 +32,9 @@ export default async function AdminLoginPage({ params }: { params: Params }) {
     notFound();
   }
   const locale: Locale = isLocale(rawLocale) ? rawLocale : defaultLocale;
-  const session = await auth();
+  const cookieStore = await cookies();
 
-  if (session) {
+  if (hasAdminSessionCookie(cookieStore)) {
     redirect(`/${locale}/admin`);
   }
 

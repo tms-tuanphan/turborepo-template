@@ -69,13 +69,15 @@
   "admin": {
     "login": {
       "title": "管理者ログイン",
-      "description": "環境変数に設定したデモ用の認証情報でサインインしてください。",
+      "description": "管理者アカウントでサインインしてください。",
       "emailLabel": "メールアドレス",
       "passwordLabel": "パスワード",
       "submit": "サインイン",
       "submitting": "サインイン中…",
       "errorInvalid": "有効なメールアドレスとパスワードを入力してください。",
-      "errorCredentials": "メールアドレスまたはパスワードが正しくありません。"
+      "errorCredentials": "メールアドレスまたはパスワードが正しくありません。",
+      "errorAccountDisabled": "このアカウントは無効になっています。",
+      "errorGeneric": "問題が発生しました。もう一度お試しください。"
     },
     "shell": {
       "brand": "管理",
