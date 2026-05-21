@@ -1,6 +1,5 @@
 export {
   forgotPasswordAdmin,
-  loginAdmin,
   logoutAdmin,
   registerAdmin,
   resetPasswordAdmin,

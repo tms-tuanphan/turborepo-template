@@ -2,20 +2,19 @@
 
 import { Lock, Mail } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useActionState, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import type { Messages } from '@/shared/i18n';
 
-import { loginAdmin } from '../lib/auth-api';
+import { loginAdminAction } from '../actions/login-action';
+import { initialLoginActionState } from '../actions/login-action-state';
 import {
   adminForgotPasswordPath,
   adminRegisterPath,
 } from '../lib/admin-auth-paths';
-import { mapAuthErrorToMessage } from '../lib/map-auth-error';
 import { sanitizeAdminCallbackUrl } from '../lib/sanitize-callback-url';
-import { adminLoginSchema } from '../validations/login.schema';
 import { AuthCard } from './auth-card';
 import { AuthInput } from './auth-input';
 
@@ -25,46 +24,22 @@ type AdminLoginFormProps = {
 };
 
 export function AdminLoginForm({ locale, messages }: AdminLoginFormProps) {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const t = messages.admin.login;
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [pending, setPending] = useState(false);
+  const [state, formAction, pending] = useActionState(
+    loginAdminAction,
+    initialLoginActionState,
+  );
 
   const callbackUrl = sanitizeAdminCallbackUrl(
     searchParams.get('callbackUrl'),
     locale,
   );
 
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-
-    const parsed = adminLoginSchema.safeParse({ email, password });
-    if (!parsed.success) {
-      const first = parsed.error.issues[0]?.message ?? t.errorInvalid;
-      setError(first);
-      return;
-    }
-
-    setPending(true);
-    try {
-      const result = await loginAdmin(parsed.data);
-
-      if (!result.ok) {
-        setError(mapAuthErrorToMessage(result.error, messages, 'login'));
-        return;
-      }
-
-      router.push(callbackUrl);
-      router.refresh();
-    } finally {
-      setPending(false);
-    }
-  }
+  const formError = state.ok ? null : (state.error ?? t.errorGeneric);
 
   return (
     <AuthCard
@@ -82,7 +57,9 @@ export function AdminLoginForm({ locale, messages }: AdminLoginFormProps) {
         </p>
       }
     >
-      <form className="space-y-4" onSubmit={onSubmit} noValidate>
+      <form className="space-y-4" action={formAction} noValidate>
+        <input type="hidden" name="locale" value={locale} />
+        <input type="hidden" name="callbackUrl" value={callbackUrl} />
         <AuthInput
           id="admin-email"
           name="email"
@@ -120,9 +97,9 @@ export function AdminLoginForm({ locale, messages }: AdminLoginFormProps) {
             autoComplete="current-password"
           />
         </div>
-        {error ? (
+        {formError ? (
           <p className="text-sm text-destructive" role="alert">
-            {error}
+            {formError}
           </p>
         ) : null}
         <Button type="submit" className="w-full" size="lg" disabled={pending}>

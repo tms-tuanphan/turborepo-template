@@ -6,9 +6,13 @@ export { AdminResetPasswordForm } from './components/admin-reset-password-form';
 export { AdminResetPasswordSuccess } from './components/admin-reset-password-success';
 export { AuthCard } from './components/auth-card';
 export { AuthInput } from './components/auth-input';
+export { loginAdminAction } from './actions/login-action';
+export {
+  initialLoginActionState,
+  type LoginActionState,
+} from './actions/login-action-state';
 export {
   forgotPasswordAdmin,
-  loginAdmin,
   logoutAdmin,
   registerAdmin,
   resetPasswordAdmin,

@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 
+import { getSetCookieHeaders } from '@/core/auth/upstream-set-cookie';
+
 const API_BASE_URL = process.env.API_BASE_URL ?? 'http://localhost:3000';
 
 export type AuthProxyPath =
@@ -37,19 +39,9 @@ export async function proxyAuthPost(
     response.headers.set('x-request-id', traceId);
   }
 
-  const setCookies =
-    typeof upstream.headers.getSetCookie === 'function'
-      ? upstream.headers.getSetCookie()
-      : parseSetCookieFallback(upstream.headers.get('set-cookie'));
-
-  for (const cookie of setCookies) {
+  for (const cookie of getSetCookieHeaders(upstream)) {
     response.headers.append('Set-Cookie', cookie);
   }
 
   return response;
-}
-
-function parseSetCookieFallback(header: string | null): string[] {
-  if (!header) return [];
-  return [header];
 }
