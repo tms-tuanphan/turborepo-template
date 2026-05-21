@@ -8,9 +8,22 @@
 
 - Schema, migrate, seed, `prisma generate` → **only** `packages/database` (`@repo/database`).
 - `apps/api` injects client via `PrismaService` wrapper — **no** second `PrismaClient`.
-- `DATABASE_URL` required at runtime.
+- `DATABASE_URL` in `apps/api/.env` only (Nest + Prisma). Root `.env` is for Docker (`POSTGRES_*`).
+- Local dev: `docker compose up -d` (root `.env`) then API on `localhost:5433`.
 
 After schema change: edit schema → migrate (human) → generate → update services/DTOs.
+
+### Local commands (monorepo root)
+
+```bash
+docker compose up -d
+pnpm --filter @repo/database db:generate
+pnpm --filter @repo/database db:migrate
+pnpm --filter @repo/database db:seed
+pnpm --filter @repo/database db:studio
+```
+
+Reset dev database: `docker compose down -v` then migrate again, or `pnpm exec prisma migrate reset` in `packages/database`.
 
 ---
 

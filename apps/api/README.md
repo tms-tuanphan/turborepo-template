@@ -1,5 +1,24 @@
 # With-NestJs | API
 
+## Local development (PostgreSQL in Docker)
+
+```bash
+# From repository root
+cp .env.example .env
+docker compose up -d
+cp apps/api/.env.example apps/api/.env
+
+pnpm --filter @repo/database db:generate
+pnpm --filter @repo/database db:migrate
+pnpm --filter @repo/database db:seed   # optional
+
+pnpm run dev
+```
+
+- **Env:** root `.env` = Docker only · `apps/api/.env` = API + `DATABASE_URL` (see `.env.example` in each folder).
+- Prisma schema and migrations live in `packages/database`.
+- Stop DB: `docker compose down` · Reset data: `docker compose down -v`
+
 ## Getting Started
 
 First, run the development server:
