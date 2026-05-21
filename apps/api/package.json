@@ -23,6 +23,7 @@
     "@nestjs/platform-express": "^11.1.11",
     "@nestjs/swagger": "^11.2.0",
     "@repo/api": "workspace:*",
+    "@repo/shared-validation": "workspace:*",
     "@prisma/adapter-pg": "^7.0.0",
     "@repo/database": "workspace:*",
     "pg": "^8.13.3",

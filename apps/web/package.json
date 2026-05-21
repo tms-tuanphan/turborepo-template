@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@mdxeditor/editor": "^3.52.3",
     "@radix-ui/react-toolbar": "^1.1.7",
+    "@repo/shared-validation": "workspace:*",
     "@repo/ui": "workspace:*",
     "@tailwindcss/postcss": "^4.2.4",
     "class-variance-authority": "^0.7.1",

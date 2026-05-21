@@ -53,6 +53,9 @@ importers:
       '@repo/database':
         specifier: workspace:*
         version: link:../../packages/database
+      '@repo/shared-validation':
+        specifier: workspace:*
+        version: link:../../packages/shared-validation
       bcrypt:
         specifier: ^5.1.1
         version: 5.1.1
@@ -162,6 +165,9 @@ importers:
       '@radix-ui/react-toolbar':
         specifier: ^1.1.7
         version: 1.1.11(@types/react-dom@19.1.1)(@types/react@19.1.0)(react-dom@19.2.0)(react@19.2.0)
+      '@repo/shared-validation':
+        specifier: workspace:*
+        version: link:../../packages/shared-validation
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -360,6 +366,25 @@ importers:
       typescript:
         specifier: ^5.8.2
         version: 5.8.2
+
+  packages/shared-validation:
+    dependencies:
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^22.10.7
+        version: 22.19.3
+      typescript:
+        specifier: 5.5.4
+        version: 5.5.4
 
   packages/typescript-config: {}
 
@@ -11914,6 +11939,7 @@ packages:
   /typescript@5.5.4:
     resolution: {integrity: sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==}
     engines: {node: '>=14.17'}
+    hasBin: true
 
   /typescript@5.8.2:
     resolution: {integrity: sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==}

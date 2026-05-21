@@ -19,6 +19,8 @@ import {
 } from '@repo/api';
 import { UserStatus } from '@repo/database';
 
+import { isValidPassword } from '@repo/shared-validation';
+
 import { PrismaService } from '../prisma/prisma.service';
 
 import {
@@ -30,7 +32,6 @@ import { generateResetToken, hashResetToken } from './utils/reset-token.util';
 
 const BCRYPT_ROUNDS = 10;
 const RESET_TOKEN_TTL_MS = 60 * 60 * 1000;
-const MIN_PASSWORD_LENGTH = 8;
 
 @Injectable()
 export class PasswordResetService {
@@ -118,7 +119,7 @@ export class PasswordResetService {
     const token = dto.token?.trim();
     const newPassword = dto.newPassword;
 
-    if (!token || !this.isPasswordStrongEnough(newPassword)) {
+    if (!token || !isValidPassword(newPassword)) {
       throw new BadRequestException(I18nKey.Errors.Auth.WeakPassword);
     }
 
@@ -187,11 +188,5 @@ export class PasswordResetService {
     const locale = this.configService.get<string>('ADMIN_AUTH_LOCALE') ?? 'vi';
     const base = appUrl.replace(/\/$/, '');
     return `${base}/${locale}/admin/reset-password?token=${encodeURIComponent(plainToken)}`;
-  }
-
-  private isPasswordStrongEnough(password: string | undefined): boolean {
-    return (
-      typeof password === 'string' && password.length >= MIN_PASSWORD_LENGTH
-    );
   }
 }

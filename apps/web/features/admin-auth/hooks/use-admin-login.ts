@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useActionState, useEffect, useTransition } from 'react';
+import { useActionState, useEffect, useMemo, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 
 import type { Messages } from '@/shared/i18n';
@@ -26,7 +26,11 @@ export function useAdminLogin({
   callbackUrl,
 }: UseAdminLoginOptions) {
   const t = messages.admin.login;
-  const schema = createAdminLoginSchema(t);
+  const schema = useMemo(() => createAdminLoginSchema(t), [t]);
+  const resolver = useMemo(
+    () => zodResolver(schema, undefined, { mode: 'sync' }),
+    [schema],
+  );
 
   const [state, formAction] = useActionState(
     loginAdminAction,
@@ -35,7 +39,7 @@ export function useAdminLogin({
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<AdminLoginInput>({
-    resolver: zodResolver(schema),
+    resolver,
     defaultValues: { email: '', password: '' },
     mode: 'onBlur',
   });
@@ -65,18 +69,23 @@ export function useAdminLogin({
   const globalError =
     !state.ok && state.error && !hasFieldErrors ? state.error : null;
 
-  const onSubmit = form.handleSubmit((data) => {
-    clearErrors();
-    const formData = new FormData();
-    formData.set('locale', locale);
-    formData.set('callbackUrl', callbackUrl);
-    formData.set('email', data.email);
-    formData.set('password', data.password);
+  const onSubmit = form.handleSubmit(
+    (data) => {
+      clearErrors();
+      const formData = new FormData();
+      formData.set('locale', locale);
+      formData.set('callbackUrl', callbackUrl);
+      formData.set('email', data.email);
+      formData.set('password', data.password);
 
-    startTransition(() => {
-      formAction(formData);
-    });
-  });
+      startTransition(() => {
+        formAction(formData);
+      });
+    },
+    () => {
+      /* Client validation failed — field errors are already set by RHF */
+    },
+  );
 
   const isSubmitting = isPending || form.formState.isSubmitting;
 

@@ -22,6 +22,11 @@ import {
   type RegisterResponseDto,
 } from '@repo/api';
 
+import {
+  isValidPassword,
+  registerRequestSchema,
+} from '@repo/shared-validation';
+
 import { PrismaService } from '../prisma/prisma.service';
 
 import type { JwtPayload } from './interfaces/jwt-payload.interface';
@@ -37,7 +42,6 @@ const userSelect = {
 type SafeUser = Pick<User, keyof typeof userSelect>;
 
 const BCRYPT_ROUNDS = 10;
-const MIN_PASSWORD_LENGTH = 8;
 
 @Injectable()
 export class AuthService {
@@ -90,11 +94,16 @@ export class AuthService {
   }
 
   async register(dto: RegisterDto): Promise<RegisterResponseDto> {
-    const email = dto.email.trim().toLowerCase();
+    const parsed = registerRequestSchema.safeParse({
+      email: dto.email,
+      password: dto.password,
+    });
 
-    if (!email || !this.isPasswordStrongEnough(dto.password)) {
+    if (!parsed.success) {
       throw new BadRequestException(I18nKey.Errors.Auth.WeakPassword);
     }
+
+    const email = parsed.data.email.trim().toLowerCase();
 
     const existing = await this.prisma.user.findUnique({
       where: { email },
@@ -105,7 +114,10 @@ export class AuthService {
       throw new ConflictException(I18nKey.Errors.Auth.EmailAlreadyExists);
     }
 
-    const hashedPassword = await bcrypt.hash(dto.password, BCRYPT_ROUNDS);
+    const hashedPassword = await bcrypt.hash(
+      parsed.data.password as string,
+      BCRYPT_ROUNDS,
+    );
 
     const user = await this.prisma.user.create({
       data: {
@@ -137,7 +149,7 @@ export class AuthService {
     userId: string,
     dto: ChangePasswordDto,
   ): Promise<ChangePasswordResponseDto> {
-    if (!this.isPasswordStrongEnough(dto.newPassword)) {
+    if (!isValidPassword(dto.newPassword)) {
       throw new BadRequestException(I18nKey.Errors.Auth.WeakPassword);
     }
 
@@ -245,11 +257,5 @@ export class AuthService {
 
   private mapRole(role: UserRole): AuthUserRole {
     return role === 'sub_admin' ? 'sub_admin' : 'admin';
-  }
-
-  private isPasswordStrongEnough(password: string | undefined): boolean {
-    return (
-      typeof password === 'string' && password.length >= MIN_PASSWORD_LENGTH
-    );
   }
 }

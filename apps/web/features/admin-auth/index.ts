@@ -6,6 +6,7 @@ export { AdminResetPasswordForm } from './components/admin-reset-password-form';
 export { AdminResetPasswordSuccess } from './components/admin-reset-password-success';
 export { AuthCard } from './components/auth-card';
 export { AuthInput } from './components/auth-input';
+export { AuthErrorAlert } from './components/auth-error-alert';
 export { loginAdminAction } from './actions/login-action';
 export {
   initialLoginActionState,
@@ -26,6 +27,7 @@ export {
   adminResetPasswordSuccessPath,
 } from './lib/admin-auth-paths';
 export { useAdminLogin } from './hooks/use-admin-login';
+export { useAdminRegister } from './hooks/use-admin-register';
 export {
   mapAuthErrorToMessage,
   getAuthErrorMessage,
@@ -47,8 +49,10 @@ export {
   type AdminLoginValidationMessages,
 } from './validations/login.schema';
 export {
-  adminRegisterSchema,
+  createAdminRegisterSchema,
+  type AdminRegisterField,
   type AdminRegisterInput,
+  type AdminRegisterValidationMessages,
 } from './validations/register.schema';
 export {
   adminResetPasswordSchema,

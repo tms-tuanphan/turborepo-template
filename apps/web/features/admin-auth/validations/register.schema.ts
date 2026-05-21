@@ -1,16 +1,35 @@
+import { PASSWORD_MIN_LENGTH, PASSWORD_REGEX } from '@repo/shared-validation';
 import { z } from 'zod';
 
-const MIN_PASSWORD_LENGTH = 8;
+import type { Messages } from '@/shared/i18n';
 
-export const adminRegisterSchema = z
-  .object({
-    email: z.string().trim().min(1).email(),
-    password: z.string().min(MIN_PASSWORD_LENGTH),
-    confirmPassword: z.string().min(1),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'mismatch',
-    path: ['confirmPassword'],
-  });
+export type AdminRegisterValidationMessages = Messages['admin']['register'];
 
-export type AdminRegisterInput = z.infer<typeof adminRegisterSchema>;
+export function createAdminRegisterSchema(
+  messages: AdminRegisterValidationMessages,
+) {
+  return z
+    .object({
+      email: z
+        .string()
+        .trim()
+        .min(1, messages.validationEmailRequired)
+        .email(messages.validationEmailInvalid),
+      password: z
+        .string()
+        .min(1, messages.validationPasswordRequired)
+        .min(PASSWORD_MIN_LENGTH, messages.validationPasswordMin)
+        .regex(PASSWORD_REGEX, messages.validationPasswordFormat),
+      confirmPassword: z.string().min(1, messages.validationConfirmRequired),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: messages.validationConfirmMismatch,
+      path: ['confirmPassword'],
+    });
+}
+
+export type AdminRegisterInput = z.infer<
+  ReturnType<typeof createAdminRegisterSchema>
+>;
+
+export type AdminRegisterField = keyof AdminRegisterInput;
