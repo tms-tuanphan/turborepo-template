@@ -2,10 +2,12 @@ import {
   Catch,
   HttpException,
   HttpStatus,
+  Logger,
   type ArgumentsHost,
   type ExceptionFilter,
 } from '@nestjs/common';
 import { I18nKey, type ApiErrorPayload } from '@repo/api';
+import { Prisma } from '@repo/database';
 import { randomUUID } from 'node:crypto';
 
 type RequestLike = {
@@ -50,6 +52,8 @@ function defaultCodeForStatus(status: number): string {
 
 @Catch()
 export class ApiExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger(ApiExceptionFilter.name);
+
   catch(exception: unknown, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const req = ctx.getRequest<RequestLike>();
@@ -59,6 +63,10 @@ export class ApiExceptionFilter implements ExceptionFilter {
       headerToString(req?.headers?.['x-request-id']) ??
       headerToString(req?.headers?.['x-correlation-id']);
     const traceId = traceIdHeader ?? randomUUID();
+
+    if (!(exception instanceof HttpException)) {
+      this.logUnhandledException(exception, traceId);
+    }
 
     const status =
       exception instanceof HttpException
@@ -100,11 +108,34 @@ export class ApiExceptionFilter implements ExceptionFilter {
       };
     }
 
-    // Unknown error
+    // Unknown error (Prisma schema drift, etc.)
     return {
       code: I18nKey.Errors.Common.InternalServerError,
       traceId,
+      ...(process.env.NODE_ENV !== 'production' &&
+      exception instanceof Prisma.PrismaClientKnownRequestError
+        ? {
+            message: `[${exception.code}] ${exception.message}`,
+          }
+        : {}),
     };
+  }
+
+  private logUnhandledException(exception: unknown, traceId: string): void {
+    if (exception instanceof Prisma.PrismaClientKnownRequestError) {
+      this.logger.error(
+        `[${traceId}] Prisma ${exception.code}: ${exception.message}`,
+        exception.stack,
+      );
+      if (exception.code === 'P2021') {
+        this.logger.error(
+          `[${traceId}] Hint: run pnpm --filter @repo/database db:migrate`,
+        );
+      }
+      return;
+    }
+
+    this.logger.error(`[${traceId}] Unhandled exception`, exception);
   }
 
   private extractMessage(response: unknown): string | undefined {
