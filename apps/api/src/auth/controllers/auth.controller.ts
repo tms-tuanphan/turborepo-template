@@ -35,10 +35,10 @@ import {
   ChangePasswordResponseDto,
 } from '@repo/api';
 
-import { Public } from './decorators/public.decorator';
-import { AuthService } from './auth.service';
-import { PasswordResetService } from './password-reset.service';
-import type { AuthenticatedRequest } from './interfaces/authenticated-request.interface';
+import { Public } from '../decorators/public.decorator';
+import { AuthService } from '../services/auth.service';
+import { PasswordResetService } from '../services/password-reset.service';
+import type { AuthenticatedRequest } from '../interfaces/authenticated-request.interface';
 
 @ApiTags('Auth')
 @Controller('auth')

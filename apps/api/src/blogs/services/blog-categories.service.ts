@@ -12,9 +12,9 @@ import {
   type UpdateBlogCategoryDto,
 } from '@repo/api';
 
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 
-import { isValidBlogSlug, normalizeBlogSlug } from './blogs-slug.util';
+import { isValidBlogSlug, normalizeBlogSlug } from '../utils/blogs-slug.util';
 
 @Injectable()
 export class BlogCategoriesService {

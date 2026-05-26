@@ -27,9 +27,9 @@ import {
   registerRequestSchema,
 } from '@repo/shared-validation';
 
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 
-import type { JwtPayload } from './interfaces/jwt-payload.interface';
+import type { JwtPayload } from '../interfaces/jwt-payload.interface';
 
 const userSelect = {
   id: true,

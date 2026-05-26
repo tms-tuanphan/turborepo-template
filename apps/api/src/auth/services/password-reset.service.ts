@@ -21,14 +21,14 @@ import { UserStatus } from '@repo/database';
 
 import { isValidPassword } from '@repo/shared-validation';
 
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 
 import {
   PASSWORD_RESET_MAILER,
   type PasswordResetMailer,
-} from './mail/password-reset-mailer.interface';
-import { ForgotPasswordRateLimiter } from './utils/forgot-password-rate-limiter';
-import { generateResetToken, hashResetToken } from './utils/reset-token.util';
+} from '../mail/password-reset-mailer.interface';
+import { ForgotPasswordRateLimiter } from '../utils/forgot-password-rate-limiter';
+import { generateResetToken, hashResetToken } from '../utils/reset-token.util';
 
 const BCRYPT_ROUNDS = 10;
 const RESET_TOKEN_TTL_MS = 60 * 60 * 1000;

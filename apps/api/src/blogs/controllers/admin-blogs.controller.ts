@@ -35,9 +35,9 @@ import {
   UpdateAdminBlogDto,
 } from '@repo/api';
 
-import { Roles } from '../auth/decorators/roles.decorator';
-import type { AuthenticatedRequest } from '../auth/interfaces/authenticated-request.interface';
-import { BlogsService } from './blogs.service';
+import { Roles } from '../../auth/decorators/roles.decorator';
+import type { AuthenticatedRequest } from '../../auth/interfaces/authenticated-request.interface';
+import { BlogsService } from '../services/blogs.service';
 
 @ApiTags('Admin Blogs')
 @Controller('admin/blogs')

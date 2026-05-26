@@ -29,8 +29,8 @@ import {
   UpdateBlogCategoryDto,
 } from '@repo/api';
 
-import { Roles } from '../auth/decorators/roles.decorator';
-import { BlogCategoriesService } from './blog-categories.service';
+import { Roles } from '../../auth/decorators/roles.decorator';
+import { BlogCategoriesService } from '../services/blog-categories.service';
 
 @ApiTags('Admin Blog Categories')
 @Controller('admin/blog-categories')

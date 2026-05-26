@@ -16,10 +16,24 @@ apps/api/src/
   common/           # filters, guards, pipes, interceptors only
   prisma/           # Nest wrapper for @repo/database (when wired)
   health/
-  auth/             # example domain module
+  auth/             # domain module (layered)
+  blogs/            # domain module (layered)
 ```
 
-- One domain = one folder (`auth/`, `users/`).
+Example domain layout (`blogs/`):
+
+```text
+blogs/
+  controllers/
+  services/         # *.service.ts + colocated *.spec.ts
+  mappers/
+  utils/
+  blogs.module.ts
+```
+
+DTO contract stays in `packages/api/src/blogs/dto/` — not under `apps/api`.
+
+- One domain = one folder (`auth/`, `blogs/`).
 - Do not put domain logic in `app.service.ts`.
 - App-specific DTO only when not shared; prefer `packages/api`.
 

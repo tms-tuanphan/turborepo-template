@@ -27,17 +27,17 @@ import {
   buildPaginatedListResult,
   parsePaginationQuery,
   resolvePaginationSlice,
-} from '../common/pagination/parse-pagination';
-import { PrismaService } from '../prisma/prisma.service';
-import type { AuthenticatedUser } from '../auth/interfaces/authenticated-user.interface';
+} from '../../common/pagination/parse-pagination';
+import { PrismaService } from '../../prisma/prisma.service';
+import type { AuthenticatedUser } from '../../auth/interfaces/authenticated-user.interface';
 
 import {
   detailSelect,
   listSelect,
   toBlogDetailDto,
   toBlogListItemDto,
-} from './blogs.mapper';
-import { isValidBlogSlug, normalizeBlogSlug } from './blogs-slug.util';
+} from '../mappers/blogs.mapper';
+import { isValidBlogSlug, normalizeBlogSlug } from '../utils/blogs-slug.util';
 
 export type ParsedAdminBlogListQuery = {
   search: string;

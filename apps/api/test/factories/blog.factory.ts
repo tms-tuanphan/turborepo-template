@@ -1,6 +1,6 @@
 import { BlogStatus } from '@repo/database';
 
-import type { BlogDetailRow } from '../../src/blogs/blogs.mapper';
+import type { BlogDetailRow } from '../../src/blogs/mappers/blogs.mapper';
 
 /**
  * Factory for Blog Prisma rows used in blogs service tests.

@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 
-import { AdminBlogCategoriesController } from './admin-blog-categories.controller';
-import { AdminBlogsController } from './admin-blogs.controller';
-import { BlogCategoriesService } from './blog-categories.service';
-import { BlogsService } from './blogs.service';
+import { AdminBlogCategoriesController } from './controllers/admin-blog-categories.controller';
+import { AdminBlogsController } from './controllers/admin-blogs.controller';
+import { BlogCategoriesService } from './services/blog-categories.service';
+import { BlogsService } from './services/blogs.service';
 
 @Module({
   controllers: [AdminBlogsController, AdminBlogCategoriesController],

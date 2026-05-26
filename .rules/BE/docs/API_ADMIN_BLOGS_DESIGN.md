@@ -224,9 +224,13 @@ packages/api/src/blogs/dto/admin-blog-list-response.dto.ts
 
 ```text
 apps/api/src/blogs/blogs.module.ts
-apps/api/src/blogs/admin-blogs.controller.ts
-apps/api/src/blogs/blogs.service.ts
-apps/api/src/blogs/blogs.service.spec.ts
+apps/api/src/blogs/controllers/admin-blogs.controller.ts
+apps/api/src/blogs/controllers/admin-blog-categories.controller.ts
+apps/api/src/blogs/services/blogs.service.ts
+apps/api/src/blogs/services/blog-categories.service.ts
+apps/api/src/blogs/mappers/blogs.mapper.ts
+apps/api/src/blogs/utils/blogs-slug.util.ts
+apps/api/src/blogs/services/blogs.service.spec.ts
 ```
 
 ---

@@ -7,14 +7,14 @@
     "contractRoot": "packages/api/src/blogs",
     "databaseModels": ["packages/database/prisma/schema.prisma"],
     "controllers": [
-      "apps/api/src/blogs/admin-blogs.controller.ts",
-      "apps/api/src/blogs/admin-blog-categories.controller.ts"
+      "apps/api/src/blogs/controllers/admin-blogs.controller.ts",
+      "apps/api/src/blogs/controllers/admin-blog-categories.controller.ts"
     ],
     "services": [
-      "apps/api/src/blogs/blogs.service.ts",
-      "apps/api/src/blogs/blog-categories.service.ts"
+      "apps/api/src/blogs/services/blogs.service.ts",
+      "apps/api/src/blogs/services/blog-categories.service.ts"
     ],
-    "tests": ["apps/api/src/blogs/blogs.service.spec.ts"]
+    "tests": ["apps/api/src/blogs/services/blogs.service.spec.ts"]
   },
   "allowedImports": [
     "apps/api/src/prisma/**",
@@ -39,5 +39,5 @@
     ".rules/BE/skills/pagination-patterns/SKILL.md",
     ".rules/shared/skills/admin-blogs-phase1-list/SKILL.md"
   ],
-  "notes": "List + CRUD blogs; admin blog-categories CRUD (admin mutate). Schema: PUBLISHED/UNPUBLISHED, BlogCategory table, no tags."
+  "notes": "Layered layout: controllers/, services/, mappers/, utils/. DTO contract in packages/api only."
 }
