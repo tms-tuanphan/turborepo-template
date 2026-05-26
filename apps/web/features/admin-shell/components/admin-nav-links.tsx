@@ -5,6 +5,7 @@ import {
   LayoutDashboardIcon,
   PackageIcon,
   SparklesIcon,
+  TagsIcon,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -62,6 +63,7 @@ export function AdminNavLinks({ locale, messages }: AdminNavLinksProps) {
 
   const introHref = `/${locale}/admin`;
   const blogsHref = `/${locale}/admin/blogs`;
+  const blogCategoriesHref = `/${locale}/admin/blog-categories`;
   const productsHref = `/${locale}/admin/products`;
   const aiHref = `/${locale}/admin/ai-driven-development`;
 
@@ -69,6 +71,9 @@ export function AdminNavLinks({ locale, messages }: AdminNavLinksProps) {
 
   const blogActive =
     pathname === blogsHref || pathname.startsWith(`${blogsHref}/`);
+  const blogCategoriesActive =
+    pathname === blogCategoriesHref ||
+    pathname.startsWith(`${blogCategoriesHref}/`);
   const productsActive =
     pathname === productsHref || pathname.startsWith(`${productsHref}/`);
   const aiActive = pathname === aiHref || pathname.startsWith(`${aiHref}/`);
@@ -100,6 +105,15 @@ export function AdminNavLinks({ locale, messages }: AdminNavLinksProps) {
               label={t.blog}
               icon={BookOpenIcon}
               active={blogActive}
+              collapsed={collapsed}
+            />
+          </li>
+          <li>
+            <NavLinkRow
+              href={blogCategoriesHref}
+              label={t.blogCategories}
+              icon={TagsIcon}
+              active={blogCategoriesActive}
               collapsed={collapsed}
             />
           </li>

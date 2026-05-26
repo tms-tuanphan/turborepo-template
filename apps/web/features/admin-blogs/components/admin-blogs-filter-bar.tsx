@@ -11,18 +11,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { BLOG_CATEGORIES, BLOG_STATUSES } from '@/shared/types/blog';
 import type { Messages } from '@/shared/i18n';
 
 import { useAdminBlogFilters } from '../hooks/use-admin-blog-filters';
+import { resolveCategoryNameKey } from '../lib/resolve-category-label';
+import type { AdminBlogCategoryOption } from '../types/admin-blog';
+import { ADMIN_FILTER_STATUSES } from '../types/admin-blog';
 
 const SEARCH_DEBOUNCE_MS = 300;
 
 type AdminBlogsFilterBarProps = {
   messages: Messages;
+  categories: AdminBlogCategoryOption[];
 };
 
-export function AdminBlogsFilterBar({ messages }: AdminBlogsFilterBarProps) {
+export function AdminBlogsFilterBar({
+  messages,
+  categories,
+}: AdminBlogsFilterBarProps) {
   const { search, category, status, setSearch, setCategory, setStatus } =
     useAdminBlogFilters();
   const [draft, setDraft] = useState(search);
@@ -57,12 +63,7 @@ export function AdminBlogsFilterBar({ messages }: AdminBlogsFilterBarProps) {
         />
       </div>
 
-      <Select
-        value={category}
-        onValueChange={(value) =>
-          setCategory(value as (typeof BLOG_CATEGORIES)[number] | 'ALL')
-        }
-      >
+      <Select value={category} onValueChange={setCategory}>
         <SelectTrigger
           aria-label={t.categoryLabel}
           className="h-10 w-full text-sm"
@@ -71,9 +72,9 @@ export function AdminBlogsFilterBar({ messages }: AdminBlogsFilterBarProps) {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="ALL">{tc.ALL}</SelectItem>
-          {BLOG_CATEGORIES.map((cat) => (
-            <SelectItem key={cat} value={cat}>
-              {tc[cat]}
+          {categories.map((cat) => (
+            <SelectItem key={cat.id} value={cat.slug}>
+              {resolveCategoryNameKey(messages, cat.nameKey)}
             </SelectItem>
           ))}
         </SelectContent>
@@ -82,7 +83,7 @@ export function AdminBlogsFilterBar({ messages }: AdminBlogsFilterBarProps) {
       <Select
         value={status}
         onValueChange={(value) =>
-          setStatus(value as (typeof BLOG_STATUSES)[number] | 'ALL')
+          setStatus(value as (typeof ADMIN_FILTER_STATUSES)[number])
         }
       >
         <SelectTrigger
@@ -93,17 +94,9 @@ export function AdminBlogsFilterBar({ messages }: AdminBlogsFilterBarProps) {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="ALL">{ts.allStatuses}</SelectItem>
-          {BLOG_STATUSES.map((s) => (
+          {ADMIN_FILTER_STATUSES.filter((s) => s !== 'ALL').map((s) => (
             <SelectItem key={s} value={s}>
-              {s === 'DRAFT'
-                ? ts.draft
-                : s === 'REVIEWING'
-                  ? ts.reviewing
-                  : s === 'SCHEDULED'
-                    ? ts.scheduled
-                    : s === 'PUBLISHED'
-                      ? ts.published
-                      : ts.archived}
+              {s === 'PUBLISHED' ? ts.published : ts.unpublished}
             </SelectItem>
           ))}
         </SelectContent>

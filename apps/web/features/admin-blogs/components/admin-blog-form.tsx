@@ -11,10 +11,13 @@ import {
 } from 'react';
 import { toast } from 'sonner';
 
-import type { BlogPost } from '@/shared/types/blog';
 import type { Locale, Messages } from '@/shared/i18n';
 
 import { createBlogAction, updateBlogAction } from '../actions/blog-actions';
+import type {
+  AdminBlogCategoryOption,
+  AdminBlogPost,
+} from '../types/admin-blog';
 import {
   initialBlogFormActionState,
   type BlogFormActionState,
@@ -41,17 +44,18 @@ type AdminBlogFormProps = {
   mode: 'create' | 'edit';
   locale: Locale;
   messages: Messages;
-  initial?: BlogPost;
+  categories: AdminBlogCategoryOption[];
+  initial?: AdminBlogPost;
 };
 
 export function AdminBlogForm({
   mode,
   locale,
   messages,
+  categories,
   initial,
 }: AdminBlogFormProps) {
   const t = messages.admin.blogs.form;
-  const tc = messages.blogs.categories;
   const tActions = messages.admin.blogs.actions;
   const tv = t.validation;
 
@@ -66,6 +70,7 @@ export function AdminBlogForm({
     mode,
     postId: initial?.id,
     initial,
+    categories,
     validationMessages: {
       titleRequired: tv.titleRequired,
       titleMax: tv.titleMax,
@@ -92,7 +97,7 @@ export function AdminBlogForm({
   const excerpt = watch('excerpt');
   const content = watch('content');
   const status = watch('status');
-  const category = watch('category');
+  const categoryId = watch('categoryId');
   const coverImage = watch('coverImage');
 
   const editorRef = useRef<MDXEditorMethods | null>(null);
@@ -125,7 +130,7 @@ export function AdminBlogForm({
               | 'content'
               | 'excerpt'
               | 'status'
-              | 'category'
+              | 'categoryId'
               | 'coverImage'
               | 'slug',
             {
@@ -329,19 +334,20 @@ export function AdminBlogForm({
         sidebar={
           <AdminBlogSidebar
             messages={t}
-            categoryMessages={tc}
+            i18n={messages}
+            categories={categories}
             status={status}
             onStatusChange={(v) => setValue('status', v, { shouldDirty: true })}
-            category={category ?? 'IT_PARTNERSHIP'}
-            onCategoryChange={(v) =>
-              setValue('category', v, { shouldDirty: true })
+            categoryId={categoryId}
+            onCategoryIdChange={(v) =>
+              setValue('categoryId', v, { shouldDirty: true })
             }
             coverImage={coverImage}
             onCoverImageChange={(v) =>
               setValue('coverImage', v, { shouldDirty: true })
             }
             statusError={formState.errors.status?.message}
-            categoryError={formState.errors.category?.message}
+            categoryError={formState.errors.categoryId?.message}
             coverError={coverError}
           />
         }

@@ -1,41 +1,47 @@
-import { listAllBlogs } from '@/shared/data/blogs-store';
-import type { BlogFilters } from '@/shared/types/blog';
-import { filterAndPaginateBlogs } from '@/shared/utils/blog-filters';
-import {
-  parseBlogFilters,
-  type RawSearchParams,
-} from '@/shared/utils/parse-blog-filters';
+import { listAdminBlogs } from './admin-blogs-api';
+import { parseAdminBlogFilters, type RawSearchParams } from './parse-admin-blog-filters';
+import type { AdminBlogFilters, AdminBlogListItem } from '../types/admin-blog';
 
 export type AdminBlogsPageData = {
-  items: ReturnType<typeof filterAndPaginateBlogs>['items'];
+  items: AdminBlogListItem[];
   totalPages: number;
   currentPage: number;
   totalItems: number;
-  filters: BlogFilters;
+  filters: AdminBlogFilters;
   hasActiveFilters: boolean;
 };
 
-export function loadAdminBlogsPage(
+export async function loadAdminBlogsPage(
   rawSearchParams: RawSearchParams,
-): AdminBlogsPageData {
-  const filters = parseBlogFilters(rawSearchParams);
-  const all = listAllBlogs();
-  const { items, totalPages, currentPage, totalItems } = filterAndPaginateBlogs(
-    all,
-    filters,
-  );
+): Promise<AdminBlogsPageData> {
+  const filters = parseAdminBlogFilters(rawSearchParams);
 
-  const hasActiveFilters =
-    filters.search.trim() !== '' ||
-    filters.category !== 'ALL' ||
-    filters.status !== 'ALL';
+  try {
+    const result = await listAdminBlogs(filters);
+    const hasActiveFilters =
+      filters.search.trim() !== '' ||
+      filters.category !== 'ALL' ||
+      filters.status !== 'ALL';
 
-  return {
-    items,
-    totalPages,
-    currentPage,
-    totalItems,
-    filters,
-    hasActiveFilters,
-  };
+    return {
+      items: result.items,
+      totalPages: result.totalPages,
+      currentPage: result.currentPage,
+      totalItems: result.totalItems,
+      filters,
+      hasActiveFilters,
+    };
+  } catch {
+    return {
+      items: [],
+      totalPages: 1,
+      currentPage: 1,
+      totalItems: 0,
+      filters,
+      hasActiveFilters:
+        filters.search.trim() !== '' ||
+        filters.category !== 'ALL' ||
+        filters.status !== 'ALL',
+    };
+  }
 }

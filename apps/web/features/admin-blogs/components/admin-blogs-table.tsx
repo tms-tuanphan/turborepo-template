@@ -1,13 +1,15 @@
 import Link from 'next/link';
 
-import type { BlogPost } from '@/shared/types/blog';
 import type { Locale, Messages } from '@/shared/i18n';
+
+import { resolveCategoryNameKey } from '../lib/resolve-category-label';
+import type { AdminBlogListItem } from '../types/admin-blog';
 
 import { AdminBlogRowActions } from './admin-blog-row-actions';
 import { AdminBlogStatusBadge } from './admin-blog-status-badge';
 
 type AdminBlogsTableProps = {
-  blogs: BlogPost[];
+  blogs: AdminBlogListItem[];
   messages: Messages;
   locale: Locale;
 };
@@ -28,7 +30,6 @@ export function AdminBlogsTable({
   locale,
 }: AdminBlogsTableProps) {
   const t = messages.admin.blogs;
-  const tc = messages.blogs.categories;
 
   if (blogs.length === 0) {
     return (
@@ -97,7 +98,7 @@ export function AdminBlogsTable({
                   {post.author}
                 </td>
                 <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
-                  {tc[post.category]}
+                  {resolveCategoryNameKey(messages, post.category.nameKey)}
                 </td>
                 <td className="whitespace-nowrap px-4 py-3">
                   <AdminBlogStatusBadge

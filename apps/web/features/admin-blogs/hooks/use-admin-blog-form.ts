@@ -4,9 +4,10 @@ import { useCallback, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import type { FieldErrors } from 'react-hook-form';
 
-import type { BlogCategory, BlogPost } from '@/shared/types/blog';
 import { slugify } from '@/shared/utils/slugify';
 
+import type { AdminBlogCategoryOption, AdminBlogPost } from '../types/admin-blog';
+import { apiStatusToFormStatus } from '../types/admin-blog';
 import {
   type BlogFormValidationMessages,
   type BlogPostFormInput,
@@ -19,23 +20,22 @@ const AUTOSAVE_MS = 30_000;
 export type UseAdminBlogFormOptions = {
   mode: 'create' | 'edit';
   postId?: string;
-  initial?: BlogPost;
+  initial?: AdminBlogPost;
+  categories: AdminBlogCategoryOption[];
   validationMessages: BlogFormValidationMessages;
 };
 
-function toFormStatus(
-  status: BlogPost['status'] | undefined,
-): BlogPostFormInput['status'] {
-  return status === 'PUBLISHED' ? 'PUBLISHED' : 'DRAFT';
-}
-
-function buildDefaultValues(initial?: BlogPost): BlogPostFormInput {
+function buildDefaultValues(
+  initial: AdminBlogPost | undefined,
+  categories: AdminBlogCategoryOption[],
+): BlogPostFormInput {
+  const defaultCategoryId = categories[0]?.id ?? '';
   return {
     title: initial?.title ?? '',
     excerpt: initial?.description ?? '',
     content: initial?.content ?? '',
-    status: toFormStatus(initial?.status),
-    category: initial?.category ?? 'IT_PARTNERSHIP',
+    status: apiStatusToFormStatus(initial?.status ?? 'UNPUBLISHED'),
+    categoryId: initial?.category.id ?? defaultCategoryId,
     coverImage: initial?.coverImage ?? '',
     slug: initial?.slug ?? '',
   };
@@ -74,6 +74,7 @@ export function useAdminBlogForm({
   mode,
   postId,
   initial,
+  categories,
   validationMessages,
 }: UseAdminBlogFormOptions) {
   const submitIntentRef = useRef<SubmitIntent>('draft');
@@ -81,7 +82,7 @@ export function useAdminBlogForm({
   const autosaveKey = storageKey(mode, postId);
 
   const form = useForm<BlogPostFormInput>({
-    defaultValues: buildDefaultValues(initial),
+    defaultValues: buildDefaultValues(initial, categories),
     mode: 'onBlur',
   });
 
@@ -93,11 +94,14 @@ export function useAdminBlogForm({
       const raw = localStorage.getItem(autosaveKey);
       if (!raw) return;
       const parsed = JSON.parse(raw) as BlogPostFormInput;
-      reset({ ...buildDefaultValues(), ...parsed });
+      reset({
+        ...buildDefaultValues(undefined, categories),
+        ...parsed,
+      });
     } catch {
       /* ignore corrupt draft */
     }
-  }, [autosaveKey, initial, mode, reset]);
+  }, [autosaveKey, categories, initial, mode, reset]);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -176,10 +180,8 @@ export function useAdminBlogForm({
       fd.set('content', data.content);
       fd.set('excerpt', data.excerpt ?? '');
       fd.set('status', data.status);
-      fd.set('category', data.category ?? 'IT_PARTNERSHIP');
+      fd.set('categoryId', data.categoryId);
       fd.set('coverImage', data.coverImage ?? '');
-      fd.set('tags', '');
-      fd.set('scheduledAt', '');
       fd.set('primaryKeyword', '');
       if (extras.postId) fd.set('id', extras.postId);
       return fd;
@@ -204,7 +206,3 @@ export function useAdminBlogForm({
 }
 
 export type AdminBlogFormFieldErrors = FieldErrors<BlogPostFormInput>;
-
-export function mapCategory(value: BlogCategory | undefined): BlogCategory {
-  return value ?? 'IT_PARTNERSHIP';
-}

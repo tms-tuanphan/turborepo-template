@@ -58,7 +58,10 @@
       "ALL": "All",
       "IT_PARTNERSHIP": "IT Partnership Insight",
       "DAAS": "DAAS Insight",
-      "AI": "AI Insight"
+      "AI": "AI Insight",
+      "it_partnership": "IT Partnership Insight",
+      "daas": "DAAS Insight",
+      "ai": "AI Insight"
     },
     "pagination": {
       "previous": "Previous",
@@ -181,6 +184,7 @@
         "intro": "Introduction",
         "resources": "Resources",
         "blog": "Blog",
+        "blogCategories": "Categories",
         "products": "Products",
         "aiDriven": "AI Driven Development"
       },
@@ -212,7 +216,7 @@
     },
     "blogs": {
       "pageTitle": "Blog posts",
-      "pageDescription": "Manage and review blog content (demo data).",
+      "pageDescription": "Manage and review blog posts from the API.",
       "newPageTitle": "Create article",
       "newPageDescription": "Write in Markdown and configure metadata before publishing.",
       "editPageTitle": "Edit article",
@@ -246,6 +250,7 @@
         "reviewing": "Reviewing",
         "scheduled": "Scheduled",
         "published": "Published",
+        "unpublished": "Draft",
         "archived": "Archived",
         "allStatuses": "All statuses"
       },
@@ -405,6 +410,52 @@
       },
       "emptyTitle": "No blog posts",
       "emptyDescription": "There are no posts to display yet."
+    },
+    "blogCategories": {
+      "pageTitle": "Blog categories",
+      "pageDescription": "Manage categories used by admin blog posts.",
+      "readOnlyHint": "You can view categories. Only admins can create or edit them.",
+      "empty": "No categories yet.",
+      "confirmDelete": "Delete this category? This cannot be undone.",
+      "columns": {
+        "slug": "Slug",
+        "nameKey": "Name key",
+        "label": "Display name",
+        "sortOrder": "Order",
+        "updated": "Updated",
+        "actions": "Actions"
+      },
+      "fields": {
+        "slug": "Slug",
+        "slugHint": "Lowercase letters, numbers, and hyphens only.",
+        "nameKey": "i18n name key",
+        "sortOrder": "Sort order"
+      },
+      "dialog": {
+        "createTitle": "Create category",
+        "editTitle": "Edit category"
+      },
+      "actions": {
+        "create": "Create category",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save",
+        "saving": "Saving…",
+        "cancel": "Cancel"
+      },
+      "toast": {
+        "created": "Category created.",
+        "updated": "Category updated.",
+        "deleted": "Category deleted."
+      },
+      "errors": {
+        "unauthorized": "You must be signed in.",
+        "forbidden": "Only admins can change categories.",
+        "conflict": "This slug is already in use.",
+        "inUse": "Cannot delete: blogs still use this category.",
+        "notFound": "Category not found.",
+        "invalid": "Invalid request."
+      }
     }
   },
   "footer": {

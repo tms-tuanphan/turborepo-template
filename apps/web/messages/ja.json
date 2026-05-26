@@ -58,7 +58,10 @@
       "ALL": "すべて",
       "IT_PARTNERSHIP": "IT パートナーシップ",
       "DAAS": "DAAS インサイト",
-      "AI": "AI インサイト"
+      "AI": "AI インサイト",
+      "it_partnership": "IT パートナーシップ",
+      "daas": "DAAS インサイト",
+      "ai": "AI インサイト"
     },
     "pagination": {
       "previous": "前へ",
@@ -181,6 +184,7 @@
         "intro": "紹介",
         "resources": "リソース",
         "blog": "ブログ",
+        "blogCategories": "カテゴリ",
         "products": "製品",
         "aiDriven": "AI Driven Development"
       },
@@ -212,7 +216,7 @@
     },
     "blogs": {
       "pageTitle": "ブログ記事",
-      "pageDescription": "ブログコンテンツの確認（デモデータ）",
+      "pageDescription": "API からブログ記事を管理します。",
       "newPageTitle": "記事を作成",
       "newPageDescription": "Markdownで執筆し、公開前にメタデータを設定します。",
       "editPageTitle": "記事を編集",
@@ -246,6 +250,7 @@
         "reviewing": "レビュー中",
         "scheduled": "予約済み",
         "published": "公開中",
+        "unpublished": "下書き",
         "archived": "アーカイブ",
         "allStatuses": "すべてのステータス"
       },
@@ -405,6 +410,52 @@
       },
       "emptyTitle": "ブログ記事がありません",
       "emptyDescription": "表示する記事はまだありません。"
+    },
+    "blogCategories": {
+      "pageTitle": "ブログカテゴリ",
+      "pageDescription": "管理ブログで使うカテゴリを管理します。",
+      "readOnlyHint": "閲覧のみ可能です。作成・編集は管理者のみです。",
+      "empty": "カテゴリがありません。",
+      "confirmDelete": "このカテゴリを削除しますか？元に戻せません。",
+      "columns": {
+        "slug": "スラッグ",
+        "nameKey": "名前キー",
+        "label": "表示名",
+        "sortOrder": "順序",
+        "updated": "更新日",
+        "actions": "操作"
+      },
+      "fields": {
+        "slug": "スラッグ",
+        "slugHint": "小文字・数字・ハイフンのみ。",
+        "nameKey": "i18n 名前キー",
+        "sortOrder": "並び順"
+      },
+      "dialog": {
+        "createTitle": "カテゴリを作成",
+        "editTitle": "カテゴリを編集"
+      },
+      "actions": {
+        "create": "カテゴリを作成",
+        "edit": "編集",
+        "delete": "削除",
+        "save": "保存",
+        "saving": "保存中…",
+        "cancel": "キャンセル"
+      },
+      "toast": {
+        "created": "カテゴリを作成しました。",
+        "updated": "カテゴリを更新しました。",
+        "deleted": "カテゴリを削除しました。"
+      },
+      "errors": {
+        "unauthorized": "サインインが必要です。",
+        "forbidden": "カテゴリの変更は管理者のみ可能です。",
+        "conflict": "このスラッグは既に使用されています。",
+        "inUse": "削除できません：このカテゴリを使用している記事があります。",
+        "notFound": "カテゴリが見つかりません。",
+        "invalid": "無効なリクエストです。"
+      }
     }
   },
   "footer": {

@@ -1,17 +1,14 @@
 {
-  "id": "admin-blogs",
-  "displayName": "Admin Blogs CMS",
+  "id": "admin-blog-categories",
+  "displayName": "Admin Blog Categories",
   "scope": {
-    "featureRoot": "apps/web/features/admin-blogs",
-    "publicApi": "apps/web/features/admin-blogs/index.ts",
+    "featureRoot": "apps/web/features/admin-blog-categories",
+    "publicApi": "apps/web/features/admin-blog-categories/index.ts",
     "routes": [
-      "apps/web/app/[locale]/(admin)/admin/(main)/blogs/**"
-    ],
-    "apiRoutes": [
-      "apps/web/app/api/admin/blog-ai/**"
+      "apps/web/app/[locale]/(admin)/admin/(main)/blog-categories/**"
     ],
     "serverActions": [
-      "apps/web/features/admin-blogs/actions/**"
+      "apps/web/features/admin-blog-categories/actions/**"
     ]
   },
   "allowedImports": [
@@ -24,7 +21,8 @@
   ],
   "forbiddenRoots": [
     "apps/web/features/blogs",
-    "apps/web/features/admin-auth"
+    "apps/web/features/admin-auth",
+    "apps/web/features/admin-blogs"
   ],
   "relatedDocs": [
     ".rules/FE/docs/04-feature-module.md",

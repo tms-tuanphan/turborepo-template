@@ -5,14 +5,14 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import type { BlogStatus } from '@/shared/types/blog';
+import type { AdminBlogStatus } from '../../validations/blog.schema';
 
 import { AdminBlogDocumentStatus } from './admin-blog-document-status';
 
 type AdminBlogEditorHeaderProps = {
   listHref: string;
   backLabel: string;
-  status: BlogStatus;
+  status: AdminBlogStatus;
   statusLabel: string;
   saved?: boolean;
   savedLabel?: string;

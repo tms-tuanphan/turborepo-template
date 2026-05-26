@@ -33,3 +33,84 @@ export type ForgotPasswordResponse = {
 export type ResetPasswordResponse = {
   success: boolean;
 };
+
+export type BlogApiStatus = 'PUBLISHED' | 'UNPUBLISHED';
+
+export type BlogCategorySummary = {
+  id: string;
+  slug: string;
+  nameKey: string;
+};
+
+export type BlogSeoSummary = {
+  metaTitle: string;
+  metaDescription: string;
+  primaryKeyword?: string;
+};
+
+export type BlogListItem = {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  category: BlogCategorySummary;
+  status: BlogApiStatus;
+  coverImage: string;
+  author: string;
+  views: number;
+  publishedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  seo: BlogSeoSummary;
+};
+
+export type BlogDetail = BlogListItem & {
+  content: string;
+};
+
+export type AdminBlogListResponse = {
+  items: BlogListItem[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+};
+
+export type BlogCategory = {
+  id: string;
+  slug: string;
+  nameKey: string;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreateBlogCategoryBody = {
+  slug: string;
+  nameKey: string;
+  sortOrder?: number;
+};
+
+export type UpdateBlogCategoryBody = {
+  slug?: string;
+  nameKey?: string;
+  sortOrder?: number;
+};
+
+export type CreateAdminBlogBody = {
+  title: string;
+  slug: string;
+  content: string;
+  description: string;
+  categoryId: string;
+  status: BlogApiStatus;
+  coverImage: string;
+  primaryKeyword?: string;
+};
+
+export type UpdateAdminBlogBody = Partial<CreateAdminBlogBody> & {
+  primaryKeyword?: string | null;
+};
+
+export type AdminBlogCheckSlugResponse = {
+  available: boolean;
+};

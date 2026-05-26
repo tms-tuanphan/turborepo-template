@@ -3,10 +3,10 @@
 import { CheckIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import type { BlogStatus } from '@/shared/types/blog';
+import type { AdminBlogStatus } from '../../validations/blog.schema';
 
 type AdminBlogDocumentStatusProps = {
-  status: BlogStatus;
+  status: AdminBlogStatus;
   statusLabel: string;
   saved?: boolean;
   savedLabel?: string;
@@ -33,9 +33,6 @@ export function AdminBlogDocumentStatus({
             'size-1.5 shrink-0 rounded-full',
             status === 'PUBLISHED' && 'bg-emerald-500',
             status === 'DRAFT' && 'bg-amber-500',
-            status === 'REVIEWING' && 'bg-sky-500',
-            status === 'SCHEDULED' && 'bg-violet-500',
-            status === 'ARCHIVED' && 'bg-zinc-400',
           )}
           aria-hidden
         />

@@ -22,6 +22,9 @@ const SECTION_RESOLVERS: Record<string, SectionResolver> = {
     }
     return items;
   },
+  'blog-categories': (messages) => [
+    { label: messages.admin.blogCategories.pageTitle },
+  ],
   products: (messages) => [
     { label: messages.admin.productsPlaceholder.pageTitle },
   ],

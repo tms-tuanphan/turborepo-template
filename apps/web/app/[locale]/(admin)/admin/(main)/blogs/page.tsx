@@ -5,6 +5,7 @@ import {
   AdminBlogsFilterBar,
   AdminBlogsPagination,
   AdminBlogsTable,
+  listAdminBlogCategories,
   loadAdminBlogsPage,
 } from '@/features/admin-blogs';
 import { Button } from '@/components/ui/button';
@@ -29,8 +30,13 @@ export default async function AdminBlogsPage({
   const t = messages.admin.blogs;
 
   const raw = await searchParams;
+  const [pageData, categories] = await Promise.all([
+    loadAdminBlogsPage(raw),
+    listAdminBlogCategories().catch(() => []),
+  ]);
+
   const { items, totalPages, currentPage, totalItems, hasActiveFilters } =
-    loadAdminBlogsPage(raw);
+    pageData;
 
   const resetHref = `/${locale}/admin/blogs`;
 
@@ -42,7 +48,7 @@ export default async function AdminBlogsPage({
         </Button>
       </div>
 
-      <AdminBlogsFilterBar messages={messages} />
+      <AdminBlogsFilterBar messages={messages} categories={categories} />
 
       {items.length === 0 && hasActiveFilters ? (
         <div

@@ -3,24 +3,24 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useTransition } from 'react';
 
-import type { BlogCategory, BlogStatus } from '@/shared/types/blog';
+import type { AdminFilterStatus } from '../types/admin-blog';
 
 type Changes = {
   search?: string;
-  category?: BlogCategory | 'ALL';
-  status?: BlogStatus | 'ALL';
+  category?: string;
+  status?: AdminFilterStatus;
   pageNo?: number;
 };
 
 type Result = {
   search: string;
-  category: BlogCategory | 'ALL';
-  status: BlogStatus | 'ALL';
+  category: string;
+  status: AdminFilterStatus;
   pageNo: number;
   isPending: boolean;
   setSearch: (value: string) => void;
-  setCategory: (value: BlogCategory | 'ALL') => void;
-  setStatus: (value: BlogStatus | 'ALL') => void;
+  setCategory: (value: string) => void;
+  setStatus: (value: AdminFilterStatus) => void;
   setPage: (value: number) => void;
 };
 
@@ -31,10 +31,13 @@ export function useAdminBlogFilters(): Result {
   const [isPending, startTransition] = useTransition();
 
   const search = searchParams.get('search') ?? '';
-  const categoryRaw = searchParams.get('category') ?? 'ALL';
-  const category = categoryRaw as BlogCategory | 'ALL';
+  const category = searchParams.get('category') ?? 'ALL';
   const statusRaw = searchParams.get('status') ?? 'ALL';
-  const status = statusRaw as BlogStatus | 'ALL';
+  const status = (
+    statusRaw === 'DRAFT'
+      ? 'UNPUBLISHED'
+      : (statusRaw as AdminFilterStatus)
+  ) as AdminFilterStatus;
   const pageNo = Number(searchParams.get('pageNo') ?? '1') || 1;
 
   const update = useCallback(

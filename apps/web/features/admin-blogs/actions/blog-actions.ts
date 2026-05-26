@@ -3,24 +3,25 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+import { isAdminApiConflict } from '@/core/api/fetch-admin-api';
 import { getAdminSession } from '@/core/auth/server-session';
-import {
-  createBlogInStore,
-  deleteBlogInStore,
-  getBlogById,
-  getBlogBySlug,
-  updateBlogInStore,
-} from '@/shared/data/blogs-store';
 import {
   defaultLocale,
   getMessages,
   isLocale,
   type Locale,
 } from '@/shared/i18n';
-import { type BlogPost, type BlogStatus } from '@/shared/types/blog';
 import { slugify } from '@/shared/utils/slugify';
 
+import {
+  checkAdminBlogSlug,
+  createAdminBlog,
+  deleteAdminBlog,
+  getAdminBlogById,
+  updateAdminBlog,
+} from '../lib/admin-blogs-api';
 import { deriveStoredSeo } from '../lib/blog-meta';
+import { formStatusToApiStatus } from '../types/admin-blog';
 import {
   ADMIN_BLOG_STATUSES,
   createAdminBlogSchema,
@@ -46,19 +47,11 @@ function formDataToBlogInput(formData: FormData): Record<string, unknown> {
     slug: pickString(formData, 'slug'),
     content: pickString(formData, 'content'),
     excerpt: pickString(formData, 'excerpt'),
-    tags: pickString(formData, 'tags'),
-    category: pickString(formData, 'category'),
+    categoryId: pickString(formData, 'categoryId'),
     status: pickString(formData, 'status'),
     coverImage: pickString(formData, 'coverImage'),
-    scheduledAt: pickString(formData, 'scheduledAt'),
     primaryKeyword: pickString(formData, 'primaryKeyword'),
   };
-}
-
-function resolveAuthor(session: {
-  user: { name: string | null; email: string };
-}): string {
-  return session.user.name?.trim() || session.user.email.trim() || 'Admin';
 }
 
 function pickSubmitIntent(formData: FormData): SubmitIntent {
@@ -72,7 +65,7 @@ function pickSubmitIntent(formData: FormData): SubmitIntent {
 function resolveStatusForSubmit(
   intent: SubmitIntent,
   sidebarStatus: string,
-): { status: BlogStatus } | { error: BlogFormFormError } {
+): { status: AdminBlogInput['status'] } | { error: BlogFormFormError } {
   switch (intent) {
     case 'draft':
       return { status: 'DRAFT' };
@@ -82,7 +75,7 @@ function resolveStatusForSubmit(
       if (!(ADMIN_BLOG_STATUSES as readonly string[]).includes(sidebarStatus)) {
         return { error: 'invalid' };
       }
-      return { status: sidebarStatus as BlogStatus };
+      return { status: sidebarStatus as AdminBlogInput['status'] };
     }
     case 'schedule':
       return { error: 'invalid' };
@@ -138,64 +131,35 @@ function parseBlogFormInput(
   return { ok: true, data };
 }
 
-function toBlogPayload(
-  data: AdminBlogInput,
-  ctx: { author: string; existing?: BlogPost },
-): Omit<BlogPost, 'id' | 'createdAt' | 'updatedAt'> {
-  const existing = ctx.existing;
-  const today = new Date().toISOString().slice(0, 10);
-
-  const {
-    description: derivedDescription,
-    metaTitle,
-    metaDescription,
-  } = deriveStoredSeo(data.title, data.content);
+function toApiBlogBody(data: AdminBlogInput) {
+  const { description: derivedDescription } = deriveStoredSeo(
+    data.title,
+    data.content,
+  );
 
   const description =
     data.excerpt.trim().length > 0 ? data.excerpt.trim() : derivedDescription;
 
-  const publishedAt =
-    data.status === 'PUBLISHED' ? (existing?.publishedAt ?? today) : null;
-
-  const scheduledAtRaw = data.scheduledAt.trim();
-  const scheduledAt =
-    data.status === 'SCHEDULED' && scheduledAtRaw.length > 0
-      ? new Date(scheduledAtRaw).toISOString()
-      : null;
-
-  const seo = {
-    metaTitle,
-    metaDescription:
-      data.excerpt.trim().length > 0
-        ? data.excerpt.trim().slice(0, 160)
-        : metaDescription,
+  return {
+    title: data.title,
+    slug: data.slug,
+    content: data.content,
+    description,
+    categoryId: data.categoryId,
+    status: formStatusToApiStatus(data.status),
+    coverImage: data.coverImage,
     ...(data.primaryKeyword.trim().length > 0
       ? { primaryKeyword: data.primaryKeyword.trim() }
       : {}),
   };
-
-  return {
-    slug: data.slug,
-    title: data.title,
-    description,
-    content: data.content,
-    category: data.category,
-    tags: data.tags.length > 0 ? data.tags : (existing?.tags ?? []),
-    status: data.status,
-    coverImage: data.coverImage,
-    author: ctx.author,
-    views: existing?.views ?? 0,
-    publishedAt,
-    scheduledAt,
-    seo,
-  };
 }
 
-function isSlugTaken(slug: string, excludeId: string | undefined): boolean {
-  const hit = getBlogBySlug(slug);
-  if (!hit) return false;
-  if (excludeId && hit.id === excludeId) return false;
-  return true;
+async function isSlugTaken(
+  slug: string,
+  excludeId: string | undefined,
+): Promise<boolean> {
+  const result = await checkAdminBlogSlug(slug, excludeId);
+  return !result.available;
 }
 
 export async function createBlogAction(
@@ -224,17 +188,39 @@ export async function createBlogAction(
 
   const { data } = parsedInput;
 
-  if (isSlugTaken(data.slug, undefined)) {
-    return { ok: false, formError: 'slugTaken' };
+  try {
+    if (await isSlugTaken(data.slug, undefined)) {
+      return { ok: false, formError: 'slugTaken' };
+    }
+
+    const body = toApiBlogBody(data);
+    const created = await createAdminBlog({
+      title: body.title,
+      slug: body.slug,
+      content: body.content,
+      description: body.description,
+      categoryId: body.categoryId,
+      status: body.status,
+      coverImage: body.coverImage,
+      primaryKeyword: body.primaryKeyword,
+    });
+
+    revalidatePath(`/${locale}/admin/blogs`);
+    redirect(`/${locale}/admin/blogs/${created.id}/edit`);
+  } catch (error) {
+    if (
+      error &&
+      typeof error === 'object' &&
+      'digest' in error &&
+      String((error as { digest?: string }).digest).startsWith('NEXT_REDIRECT')
+    ) {
+      throw error;
+    }
+    if (isAdminApiConflict(error)) {
+      return { ok: false, formError: 'slugTaken' };
+    }
+    return { ok: false, formError: 'invalid' };
   }
-
-  const author = resolveAuthor(session);
-  const payload = toBlogPayload(data, { author });
-  const id = createBlogInStore(payload);
-
-  revalidatePath(`/${locale}/admin/blogs`);
-  revalidatePath(`/${locale}/resources/blogs`);
-  redirect(`/${locale}/admin/blogs/${id}/edit`);
 }
 
 export async function updateBlogAction(
@@ -257,7 +243,7 @@ export async function updateBlogAction(
     return { ok: false, formError: 'invalid' };
   }
 
-  const existing = getBlogById(id);
+  const existing = await getAdminBlogById(id);
   if (!existing) {
     return { ok: false, formError: 'notFound' };
   }
@@ -273,21 +259,34 @@ export async function updateBlogAction(
 
   const { data } = parsedInput;
 
-  if (isSlugTaken(data.slug, id)) {
-    return { ok: false, formError: 'slugTaken' };
-  }
+  try {
+    if (await isSlugTaken(data.slug, id)) {
+      return { ok: false, formError: 'slugTaken' };
+    }
 
-  const author = resolveAuthor(session);
-  const payload = toBlogPayload(data, { author, existing });
-  const ok = updateBlogInStore(id, payload);
-  if (!ok) {
+    const body = toApiBlogBody(data);
+    await updateAdminBlog(id, {
+      title: body.title,
+      slug: body.slug,
+      content: body.content,
+      description: body.description,
+      categoryId: body.categoryId,
+      status: body.status,
+      coverImage: body.coverImage,
+      ...(body.primaryKeyword !== undefined
+        ? { primaryKeyword: body.primaryKeyword }
+        : {}),
+    });
+
+    revalidatePath(`/${locale}/admin/blogs`);
+    revalidatePath(`/${locale}/admin/blogs/${id}/edit`);
+    return { ok: true };
+  } catch (error) {
+    if (isAdminApiConflict(error)) {
+      return { ok: false, formError: 'slugTaken' };
+    }
     return { ok: false, formError: 'notFound' };
   }
-
-  revalidatePath(`/${locale}/admin/blogs`);
-  revalidatePath(`/${locale}/admin/blogs/${id}/edit`);
-  revalidatePath(`/${locale}/resources/blogs`);
-  return { ok: true };
 }
 
 export async function deleteBlogAction(formData: FormData): Promise<void> {
@@ -304,10 +303,13 @@ export async function deleteBlogAction(formData: FormData): Promise<void> {
 
   const id = pickString(formData, 'id');
   if (id) {
-    deleteBlogInStore(id);
+    try {
+      await deleteAdminBlog(id);
+    } catch {
+      /* still redirect to list */
+    }
   }
 
   revalidatePath(`/${locale}/admin/blogs`);
-  revalidatePath(`/${locale}/resources/blogs`);
   redirect(`/${locale}/admin/blogs`);
 }

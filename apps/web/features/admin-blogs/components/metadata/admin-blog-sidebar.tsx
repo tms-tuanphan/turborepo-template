@@ -8,9 +8,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import { BLOG_CATEGORIES, type BlogCategory } from '@/shared/types/blog';
 import type { Messages } from '@/shared/i18n';
 
+import { resolveCategoryNameKey } from '../../lib/resolve-category-label';
+import type { AdminBlogCategoryOption } from '../../types/admin-blog';
 import {
   ADMIN_BLOG_STATUSES,
   type AdminBlogStatus,
@@ -19,15 +20,15 @@ import { editorPanelClass } from '../editor/editor-panel-styles';
 import { AdminBlogCoverSection } from './admin-blog-cover-section';
 
 type BlogFormMessages = Messages['admin']['blogs']['form'];
-type CategoryMessages = Messages['blogs']['categories'];
 
 type AdminBlogSidebarProps = {
   messages: BlogFormMessages;
-  categoryMessages: CategoryMessages;
+  i18n: Messages;
+  categories: AdminBlogCategoryOption[];
   status: AdminBlogStatus;
   onStatusChange: (value: AdminBlogStatus) => void;
-  category: BlogCategory;
-  onCategoryChange: (value: BlogCategory) => void;
+  categoryId: string;
+  onCategoryIdChange: (value: string) => void;
   coverImage: string;
   onCoverImageChange: (value: string) => void;
   statusError?: string;
@@ -51,11 +52,12 @@ function SidebarCard({
 
 export function AdminBlogSidebar({
   messages,
-  categoryMessages,
+  i18n,
+  categories,
   status,
   onStatusChange,
-  category,
-  onCategoryChange,
+  categoryId,
+  onCategoryIdChange,
   coverImage,
   onCoverImageChange,
   statusError,
@@ -95,10 +97,7 @@ export function AdminBlogSidebar({
 
       <SidebarCard>
         <span className="text-sm font-medium">{t.categoryLabel}</span>
-        <Select
-          value={category}
-          onValueChange={(v) => onCategoryChange(v as BlogCategory)}
-        >
+        <Select value={categoryId} onValueChange={onCategoryIdChange}>
           <SelectTrigger
             aria-label={t.categoryLabel}
             aria-invalid={Boolean(categoryError)}
@@ -106,9 +105,9 @@ export function AdminBlogSidebar({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {BLOG_CATEGORIES.map((c) => (
-              <SelectItem key={c} value={c}>
-                {categoryMessages[c]}
+            {categories.map((c) => (
+              <SelectItem key={c.id} value={c.id}>
+                {resolveCategoryNameKey(i18n, c.nameKey)}
               </SelectItem>
             ))}
           </SelectContent>

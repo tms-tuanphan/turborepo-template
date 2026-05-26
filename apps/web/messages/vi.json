@@ -58,7 +58,10 @@
       "ALL": "Tất cả",
       "IT_PARTNERSHIP": "IT Partnership Insight",
       "DAAS": "DAAS Insight",
-      "AI": "AI Insight"
+      "AI": "AI Insight",
+      "it_partnership": "IT Partnership Insight",
+      "daas": "DAAS Insight",
+      "ai": "AI Insight"
     },
     "pagination": {
       "previous": "Trước",
@@ -181,6 +184,7 @@
         "intro": "Giới thiệu",
         "resources": "Tài nguyên",
         "blog": "Blog",
+        "blogCategories": "Danh mục",
         "products": "Sản phẩm",
         "aiDriven": "AI Driven Development"
       },
@@ -212,7 +216,7 @@
     },
     "blogs": {
       "pageTitle": "Danh sách bài blog",
-      "pageDescription": "Xem nội dung blog (dữ liệu demo).",
+      "pageDescription": "Quản lý bài viết blog qua API.",
       "newPageTitle": "Tạo bài viết",
       "newPageDescription": "Soạn Markdown và cấu hình metadata trước khi xuất bản.",
       "editPageTitle": "Sửa bài viết",
@@ -246,6 +250,7 @@
         "reviewing": "Đang duyệt",
         "scheduled": "Đã lên lịch",
         "published": "Đã đăng",
+        "unpublished": "Nháp",
         "archived": "Lưu trữ",
         "allStatuses": "Mọi trạng thái"
       },
@@ -406,6 +411,52 @@
       },
       "emptyTitle": "Chưa có bài viết",
       "emptyDescription": "Hiện không có bài viết nào để hiển thị."
+    },
+    "blogCategories": {
+      "pageTitle": "Danh mục blog",
+      "pageDescription": "Quản lý danh mục dùng cho bài viết admin.",
+      "readOnlyHint": "Bạn chỉ xem được danh mục. Chỉ admin mới tạo hoặc sửa.",
+      "empty": "Chưa có danh mục.",
+      "confirmDelete": "Xóa danh mục này? Không thể hoàn tác.",
+      "columns": {
+        "slug": "Slug",
+        "nameKey": "Khóa i18n",
+        "label": "Tên hiển thị",
+        "sortOrder": "Thứ tự",
+        "updated": "Cập nhật",
+        "actions": "Thao tác"
+      },
+      "fields": {
+        "slug": "Slug",
+        "slugHint": "Chữ thường, số và dấu gạch ngang.",
+        "nameKey": "Khóa tên i18n",
+        "sortOrder": "Thứ tự sắp xếp"
+      },
+      "dialog": {
+        "createTitle": "Tạo danh mục",
+        "editTitle": "Sửa danh mục"
+      },
+      "actions": {
+        "create": "Tạo danh mục",
+        "edit": "Sửa",
+        "delete": "Xóa",
+        "save": "Lưu",
+        "saving": "Đang lưu…",
+        "cancel": "Hủy"
+      },
+      "toast": {
+        "created": "Đã tạo danh mục.",
+        "updated": "Đã cập nhật danh mục.",
+        "deleted": "Đã xóa danh mục."
+      },
+      "errors": {
+        "unauthorized": "Bạn cần đăng nhập.",
+        "forbidden": "Chỉ admin mới được thay đổi danh mục.",
+        "conflict": "Slug này đã được dùng.",
+        "inUse": "Không thể xóa: vẫn còn bài viết dùng danh mục này.",
+        "notFound": "Không tìm thấy danh mục.",
+        "invalid": "Yêu cầu không hợp lệ."
+      }
     }
   },
   "footer": {
