@@ -1,9 +1,6 @@
 import { z } from 'zod';
 
-import {
-  ADMIN_FORM_STATUSES,
-  type AdminFormStatus,
-} from '../types/admin-blog';
+import { ADMIN_FORM_STATUSES, type AdminFormStatus } from '../types/admin-blog';
 
 export const ADMIN_BLOG_STATUSES = ADMIN_FORM_STATUSES;
 

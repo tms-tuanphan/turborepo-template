@@ -1,7 +1,13 @@
 'use client';
 
 import { PencilIcon, PlusIcon, Trash2Icon } from 'lucide-react';
-import { useActionState, useCallback, useEffect, useState, useTransition } from 'react';
+import {
+  useActionState,
+  useCallback,
+  useEffect,
+  useState,
+  useTransition,
+} from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -100,7 +106,9 @@ export function AdminBlogCategoriesClient({
       return;
     }
     if (actionState.ok && dialogMode) {
-      toast.success(dialogMode === 'create' ? t.toast.created : t.toast.updated);
+      toast.success(
+        dialogMode === 'create' ? t.toast.created : t.toast.updated,
+      );
       closeDialog();
     }
   }, [actionState, closeDialog, dialogMode, t.errors, t.toast]);
@@ -127,7 +135,9 @@ export function AdminBlogCategoriesClient({
     startDeleteTransition(async () => {
       const result = await deleteCategoryAction(fd);
       if (!result.ok) {
-        toast.error(formErrorText(result.formError, t.errors) ?? t.errors.invalid);
+        toast.error(
+          formErrorText(result.formError, t.errors) ?? t.errors.invalid,
+        );
         return;
       }
       toast.success(t.toast.deleted);
@@ -233,7 +243,9 @@ export function AdminBlogCategoriesClient({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {dialogMode === 'edit' ? t.dialog.editTitle : t.dialog.createTitle}
+              {dialogMode === 'edit'
+                ? t.dialog.editTitle
+                : t.dialog.createTitle}
             </DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-2">
@@ -245,7 +257,9 @@ export function AdminBlogCategoriesClient({
                 onChange={(e) => setSlug(e.target.value)}
                 placeholder="it-partnership"
               />
-              <p className="text-xs text-muted-foreground">{t.fields.slugHint}</p>
+              <p className="text-xs text-muted-foreground">
+                {t.fields.slugHint}
+              </p>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="cat-nameKey">{t.fields.nameKey}</Label>

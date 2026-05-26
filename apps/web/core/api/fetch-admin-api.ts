@@ -67,7 +67,10 @@ export async function fetchAdminApi<T>(
   }
 
   if (!response.ok) {
-    throw new AdminApiError(response.status, body as ApiErrorPayload | undefined);
+    throw new AdminApiError(
+      response.status,
+      body as ApiErrorPayload | undefined,
+    );
   }
 
   return body as T;

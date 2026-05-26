@@ -34,9 +34,7 @@ export function useAdminBlogFilters(): Result {
   const category = searchParams.get('category') ?? 'ALL';
   const statusRaw = searchParams.get('status') ?? 'ALL';
   const status = (
-    statusRaw === 'DRAFT'
-      ? 'UNPUBLISHED'
-      : (statusRaw as AdminFilterStatus)
+    statusRaw === 'DRAFT' ? 'UNPUBLISHED' : (statusRaw as AdminFilterStatus)
   ) as AdminFilterStatus;
   const pageNo = Number(searchParams.get('pageNo') ?? '1') || 1;
 

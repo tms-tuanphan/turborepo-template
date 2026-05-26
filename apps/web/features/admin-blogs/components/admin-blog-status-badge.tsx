@@ -14,8 +14,7 @@ export function AdminBlogStatusBadge({
   messages,
 }: AdminBlogStatusBadgeProps) {
   const t = messages.admin.blogs.status;
-  const label =
-    status === 'PUBLISHED' ? t.published : t.unpublished;
+  const label = status === 'PUBLISHED' ? t.published : t.unpublished;
 
   return (
     <Badge

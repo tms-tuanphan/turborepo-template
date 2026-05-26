@@ -6,13 +6,23 @@ import type {
   BlogSeoSummary,
 } from '@repo/api/client';
 
-export type { BlogApiStatus, BlogCategorySummary, BlogDetail, BlogListItem, BlogSeoSummary };
+export type {
+  BlogApiStatus,
+  BlogCategorySummary,
+  BlogDetail,
+  BlogListItem,
+  BlogSeoSummary,
+};
 
 /** Form sidebar status labels (maps to API via DRAFT → UNPUBLISHED). */
 export const ADMIN_FORM_STATUSES = ['DRAFT', 'PUBLISHED'] as const;
 export type AdminFormStatus = (typeof ADMIN_FORM_STATUSES)[number];
 
-export const ADMIN_FILTER_STATUSES = ['ALL', 'PUBLISHED', 'UNPUBLISHED'] as const;
+export const ADMIN_FILTER_STATUSES = [
+  'ALL',
+  'PUBLISHED',
+  'UNPUBLISHED',
+] as const;
 export type AdminFilterStatus = (typeof ADMIN_FILTER_STATUSES)[number];
 
 export type AdminBlogCategoryOption = BlogCategorySummary;

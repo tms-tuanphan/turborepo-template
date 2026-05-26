@@ -32,7 +32,9 @@ function normalizeStatus(raw: string): AdminFilterStatus {
   return 'ALL';
 }
 
-export function parseAdminBlogFilters(params: RawSearchParams): AdminBlogFilters {
+export function parseAdminBlogFilters(
+  params: RawSearchParams,
+): AdminBlogFilters {
   const parsed = filtersSchema.safeParse({
     search: pickFirst(params.search) ?? '',
     category: pickFirst(params.category) ?? 'ALL',

@@ -1,5 +1,8 @@
 import { listAdminBlogs } from './admin-blogs-api';
-import { parseAdminBlogFilters, type RawSearchParams } from './parse-admin-blog-filters';
+import {
+  parseAdminBlogFilters,
+  type RawSearchParams,
+} from './parse-admin-blog-filters';
 import type { AdminBlogFilters, AdminBlogListItem } from '../types/admin-blog';
 
 export type AdminBlogsPageData = {

@@ -6,7 +6,10 @@ import type { FieldErrors } from 'react-hook-form';
 
 import { slugify } from '@/shared/utils/slugify';
 
-import type { AdminBlogCategoryOption, AdminBlogPost } from '../types/admin-blog';
+import type {
+  AdminBlogCategoryOption,
+  AdminBlogPost,
+} from '../types/admin-blog';
 import { apiStatusToFormStatus } from '../types/admin-blog';
 import {
   type BlogFormValidationMessages,
