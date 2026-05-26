@@ -29,13 +29,12 @@ export type { I18nKeyValue } from './common/i18n/keys';
 export type { ApiErrorPayload, ApiErrorDetails } from './common/http/api-error';
 
 export {
-  BLOG_CATEGORIES,
   BLOG_STATUSES,
   BLOG_FILTER_CATEGORY_ALL,
   BLOG_FILTER_STATUS_ALL,
-  type BlogCategory,
   type BlogStatus,
 } from './blogs/dto/blog-list-item.dto';
+export { BlogCategorySummaryDto } from './blogs/dto/blog-category-summary.dto';
 export { BlogSeoSummaryDto } from './blogs/dto/blog-seo-summary.dto';
 export { BlogListItemDto } from './blogs/dto/blog-list-item.dto';
 export {
@@ -43,3 +42,11 @@ export {
   BLOG_LIST_DEFAULT_PAGE_SIZE,
 } from './blogs/dto/admin-blog-list-query.dto';
 export { AdminBlogListResponseDto } from './blogs/dto/admin-blog-list-response.dto';
+export { BlogDetailDto } from './blogs/dto/blog-detail.dto';
+export { CreateAdminBlogDto } from './blogs/dto/create-admin-blog.dto';
+export { UpdateAdminBlogDto } from './blogs/dto/update-admin-blog.dto';
+export { AdminBlogCheckSlugQueryDto } from './blogs/dto/admin-blog-check-slug-query.dto';
+export { AdminBlogCheckSlugResponseDto } from './blogs/dto/admin-blog-check-slug-response.dto';
+export { BlogCategoryDto } from './blogs/dto/blog-category.dto';
+export { CreateBlogCategoryDto } from './blogs/dto/create-blog-category.dto';
+export { UpdateBlogCategoryDto } from './blogs/dto/update-blog-category.dto';

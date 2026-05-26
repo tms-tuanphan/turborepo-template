@@ -1,17 +1,26 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { BlogCategory, BlogStatus, Prisma } from '@repo/database';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { BlogStatus, Prisma } from '@repo/database';
 
 import {
-  BLOG_CATEGORIES,
   BLOG_FILTER_CATEGORY_ALL,
   BLOG_FILTER_STATUS_ALL,
   BLOG_LIST_DEFAULT_PAGE_SIZE,
   BLOG_STATUSES,
   I18nKey,
   PaginationQueryDto,
+  type AdminBlogCheckSlugQueryDto,
+  type AdminBlogCheckSlugResponseDto,
   type AdminBlogListQueryDto,
   type AdminBlogListResponseDto,
+  type BlogDetailDto,
   type BlogListItemDto,
+  type CreateAdminBlogDto,
+  type UpdateAdminBlogDto,
 } from '@repo/api';
 
 import {
@@ -20,35 +29,33 @@ import {
   resolvePaginationSlice,
 } from '../common/pagination/parse-pagination';
 import { PrismaService } from '../prisma/prisma.service';
+import type { AuthenticatedUser } from '../auth/interfaces/authenticated-user.interface';
 
-const listSelect = {
-  id: true,
-  slug: true,
-  title: true,
-  description: true,
-  category: true,
-  tags: true,
-  status: true,
-  coverImage: true,
-  author: true,
-  views: true,
-  publishedAt: true,
-  scheduledAt: true,
-  createdAt: true,
-  updatedAt: true,
-  seoMetaTitle: true,
-  seoMetaDescription: true,
-  seoPrimaryKeyword: true,
-} satisfies Prisma.BlogSelect;
-
-type BlogListRow = Prisma.BlogGetPayload<{ select: typeof listSelect }>;
+import {
+  detailSelect,
+  listSelect,
+  toBlogDetailDto,
+  toBlogListItemDto,
+} from './blogs.mapper';
+import { isValidBlogSlug, normalizeBlogSlug } from './blogs-slug.util';
 
 export type ParsedAdminBlogListQuery = {
   search: string;
-  category: typeof BLOG_FILTER_CATEGORY_ALL | BlogCategory;
+  categorySlug: typeof BLOG_FILTER_CATEGORY_ALL | string;
   status: typeof BLOG_FILTER_STATUS_ALL | BlogStatus;
   page: number;
   pageSize: number;
+};
+
+type BlogWriteInput = {
+  title: string;
+  slug: string;
+  content: string;
+  description: string;
+  categoryId: string;
+  status: BlogStatus;
+  coverImage: string;
+  primaryKeyword: string | null;
 };
 
 @Injectable()
@@ -61,13 +68,10 @@ export class BlogsService {
     const search =
       typeof raw.search === 'string' ? raw.search.trim().slice(0, 120) : '';
 
-    const categoryRaw = raw.category ?? BLOG_FILTER_CATEGORY_ALL;
-    if (
-      categoryRaw !== BLOG_FILTER_CATEGORY_ALL &&
-      !(BLOG_CATEGORIES as readonly string[]).includes(categoryRaw as string)
-    ) {
-      throw new BadRequestException(I18nKey.Errors.Common.BadRequest);
-    }
+    const categorySlug =
+      typeof raw.category === 'string' && raw.category.trim().length > 0
+        ? raw.category.trim()
+        : BLOG_FILTER_CATEGORY_ALL;
 
     const statusRaw = raw.status ?? BLOG_FILTER_STATUS_ALL;
     if (
@@ -86,7 +90,7 @@ export class BlogsService {
 
     return {
       search,
-      category: categoryRaw,
+      categorySlug,
       status: statusRaw,
       page,
       pageSize,
@@ -97,7 +101,7 @@ export class BlogsService {
     rawQuery: AdminBlogListQueryDto,
   ): Promise<AdminBlogListResponseDto> {
     const query = this.parseAdminBlogListQuery(rawQuery);
-    const where = this.buildAdminListWhere(query);
+    const where = await this.buildAdminListWhere(query);
     const orderBy: Prisma.BlogOrderByWithRelationInput = {
       updatedAt: 'desc',
     };
@@ -117,19 +121,138 @@ export class BlogsService {
     });
 
     return buildPaginatedListResult(
-      rows.map((row) => this.toListItemDto(row)) as BlogListItemDto[],
+      rows.map((row) => toBlogListItemDto(row)) as BlogListItemDto[],
       slice,
       totalItems as number,
     );
   }
 
-  private buildAdminListWhere(
+  async findAdminById(id: string): Promise<BlogDetailDto> {
+    const row = await this.prisma.blog.findFirst({
+      where: { id, deletedAt: null },
+      select: detailSelect,
+    });
+    if (!row) {
+      throw new NotFoundException(I18nKey.Errors.Common.NotFound);
+    }
+    return toBlogDetailDto(row);
+  }
+
+  async checkSlug(
+    query: AdminBlogCheckSlugQueryDto,
+  ): Promise<AdminBlogCheckSlugResponseDto> {
+    const slug = this.resolveSlug(query.slug);
+    const excludeId =
+      typeof query.excludeId === 'string' ? query.excludeId.trim() : '';
+    const taken = await this.isSlugTaken(slug, excludeId || undefined);
+    return { available: !taken };
+  }
+
+  async createAdmin(
+    dto: CreateAdminBlogDto,
+    user: AuthenticatedUser,
+  ): Promise<BlogDetailDto> {
+    const input = await this.parseCreateDto(dto);
+    if (await this.isSlugTaken(input.slug)) {
+      throw new ConflictException(I18nKey.Errors.Common.Conflict);
+    }
+
+    const author = user.email.trim() || 'Admin';
+    const publishedAt = this.resolvePublishedAt(null, input.status);
+
+    const row = await this.prisma.blog.create({
+      data: {
+        slug: input.slug,
+        title: input.title,
+        description: input.description,
+        content: input.content,
+        categoryId: input.categoryId,
+        status: input.status,
+        coverImage: input.coverImage,
+        author,
+        publishedAt,
+        seoMetaTitle: input.title.slice(0, 60),
+        seoMetaDescription: input.description.slice(0, 160),
+        seoPrimaryKeyword: input.primaryKeyword,
+      },
+      select: detailSelect,
+    });
+
+    return toBlogDetailDto(row);
+  }
+
+  async updateAdmin(
+    id: string,
+    dto: UpdateAdminBlogDto,
+  ): Promise<BlogDetailDto> {
+    const existing = await this.prisma.blog.findFirst({
+      where: { id, deletedAt: null },
+    });
+    if (!existing) {
+      throw new NotFoundException(I18nKey.Errors.Common.NotFound);
+    }
+
+    const merged = await this.mergeUpdate(existing, dto);
+    if (await this.isSlugTaken(merged.slug, id)) {
+      throw new ConflictException(I18nKey.Errors.Common.Conflict);
+    }
+
+    const publishedAt = this.resolvePublishedAt(
+      existing.publishedAt,
+      merged.status,
+      existing.status,
+    );
+
+    const row = await this.prisma.blog.update({
+      where: { id },
+      data: {
+        slug: merged.slug,
+        title: merged.title,
+        description: merged.description,
+        content: merged.content,
+        categoryId: merged.categoryId,
+        status: merged.status,
+        coverImage: merged.coverImage,
+        publishedAt,
+        seoMetaTitle: merged.title.slice(0, 60),
+        seoMetaDescription: merged.description.slice(0, 160),
+        seoPrimaryKeyword: merged.primaryKeyword,
+      },
+      select: detailSelect,
+    });
+
+    return toBlogDetailDto(row);
+  }
+
+  async softDeleteAdmin(id: string): Promise<void> {
+    const existing = await this.prisma.blog.findFirst({
+      where: { id, deletedAt: null },
+      select: { id: true },
+    });
+    if (!existing) {
+      throw new NotFoundException(I18nKey.Errors.Common.NotFound);
+    }
+
+    await this.prisma.blog.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
+  }
+
+  private async buildAdminListWhere(
     query: ParsedAdminBlogListQuery,
-  ): Prisma.BlogWhereInput {
+  ): Promise<Prisma.BlogWhereInput> {
     const and: Prisma.BlogWhereInput[] = [{ deletedAt: null }];
 
-    if (query.category !== BLOG_FILTER_CATEGORY_ALL) {
-      and.push({ category: query.category });
+    if (query.categorySlug !== BLOG_FILTER_CATEGORY_ALL) {
+      const category = await this.prisma.blogCategory.findUnique({
+        where: { slug: query.categorySlug },
+        select: { id: true },
+      });
+      if (!category) {
+        throw new BadRequestException(I18nKey.Errors.Common.BadRequest);
+      }
+      and.push({ categoryId: category.id });
     }
 
     if (query.status !== BLOG_FILTER_STATUS_ALL) {
@@ -138,49 +261,192 @@ export class BlogsService {
 
     if (query.search.length > 0) {
       const search = query.search;
-      const tagTokens = search.split(/\s+/).filter(Boolean);
-      const or: Prisma.BlogWhereInput[] = [
-        { title: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } },
-        { slug: { contains: search, mode: 'insensitive' } },
-        { author: { contains: search, mode: 'insensitive' } },
-      ];
-
-      for (const token of tagTokens) {
-        or.push({ tags: { has: token } });
-      }
-
-      and.push({ OR: or });
+      and.push({
+        OR: [
+          { title: { contains: search, mode: 'insensitive' } },
+          { description: { contains: search, mode: 'insensitive' } },
+          { slug: { contains: search, mode: 'insensitive' } },
+          { author: { contains: search, mode: 'insensitive' } },
+        ],
+      });
     }
 
     return { AND: and };
   }
 
-  private toListItemDto(row: BlogListRow): BlogListItemDto {
-    const seo: BlogListItemDto['seo'] = {
-      metaTitle: row.seoMetaTitle,
-      metaDescription: row.seoMetaDescription,
-    };
-    if (row.seoPrimaryKeyword) {
-      seo.primaryKeyword = row.seoPrimaryKeyword;
-    }
+  private async parseCreateDto(
+    dto: CreateAdminBlogDto,
+  ): Promise<BlogWriteInput> {
+    const title = this.requireTrimmedString(dto.title, 'title', 200);
+    const slug = this.resolveSlug(dto.slug);
+    const content = typeof dto.content === 'string' ? dto.content : '';
+    const description = this.trimOptional(dto.description, 200);
+    const categoryId = await this.resolveCategoryId(dto.categoryId);
+    const status = this.parseStatus(dto.status);
+    const coverImage = typeof dto.coverImage === 'string' ? dto.coverImage : '';
+    const primaryKeyword =
+      this.trimOptional(dto.primaryKeyword ?? '', 60) || null;
+
+    this.assertWriteRules({ content, status });
 
     return {
-      id: row.id,
-      slug: row.slug,
-      title: row.title,
-      description: row.description,
-      category: row.category,
-      tags: row.tags,
-      status: row.status,
-      coverImage: row.coverImage,
-      author: row.author,
-      views: row.views,
-      publishedAt: row.publishedAt?.toISOString() ?? null,
-      scheduledAt: row.scheduledAt?.toISOString() ?? null,
-      createdAt: row.createdAt.toISOString(),
-      updatedAt: row.updatedAt.toISOString(),
-      seo,
+      title,
+      slug,
+      content,
+      description,
+      categoryId,
+      status,
+      coverImage,
+      primaryKeyword,
     };
+  }
+
+  private async mergeUpdate(
+    existing: {
+      title: string;
+      slug: string;
+      content: string;
+      description: string;
+      categoryId: string;
+      status: BlogStatus;
+      coverImage: string;
+      seoPrimaryKeyword: string | null;
+    },
+    dto: UpdateAdminBlogDto,
+  ): Promise<BlogWriteInput> {
+    const title =
+      dto.title !== undefined
+        ? this.requireTrimmedString(dto.title, 'title', 200)
+        : existing.title;
+    const slug =
+      dto.slug !== undefined ? this.resolveSlug(dto.slug) : existing.slug;
+    const content = dto.content !== undefined ? dto.content : existing.content;
+    const description =
+      dto.description !== undefined
+        ? this.trimOptional(dto.description, 200)
+        : existing.description;
+    const categoryId =
+      dto.categoryId !== undefined
+        ? await this.resolveCategoryId(dto.categoryId)
+        : existing.categoryId;
+    const status =
+      dto.status !== undefined ? this.parseStatus(dto.status) : existing.status;
+    const coverImage =
+      dto.coverImage !== undefined ? dto.coverImage : existing.coverImage;
+    const primaryKeyword =
+      dto.primaryKeyword !== undefined
+        ? this.trimOptional(dto.primaryKeyword ?? '', 60) || null
+        : existing.seoPrimaryKeyword;
+
+    this.assertWriteRules({ content, status });
+
+    return {
+      title,
+      slug,
+      content,
+      description,
+      categoryId,
+      status,
+      coverImage,
+      primaryKeyword,
+    };
+  }
+
+  private assertWriteRules(input: {
+    content: string;
+    status: BlogStatus;
+  }): void {
+    if (
+      input.status === BlogStatus.PUBLISHED &&
+      input.content.trim().length === 0
+    ) {
+      throw new BadRequestException(I18nKey.Errors.Common.BadRequest);
+    }
+  }
+
+  private resolvePublishedAt(
+    existingPublishedAt: Date | null,
+    nextStatus: BlogStatus,
+    previousStatus?: BlogStatus,
+  ): Date | null {
+    if (nextStatus === BlogStatus.PUBLISHED) {
+      if (
+        previousStatus !== undefined &&
+        previousStatus !== BlogStatus.PUBLISHED
+      ) {
+        return existingPublishedAt ?? new Date();
+      }
+      return existingPublishedAt ?? new Date();
+    }
+    return existingPublishedAt;
+  }
+
+  private resolveSlug(raw: string): string {
+    const slug = normalizeBlogSlug(raw);
+    if (!isValidBlogSlug(slug)) {
+      throw new BadRequestException(I18nKey.Errors.Common.BadRequest);
+    }
+    return slug;
+  }
+
+  private async isSlugTaken(
+    slug: string,
+    excludeId?: string,
+  ): Promise<boolean> {
+    const row = await this.prisma.blog.findFirst({
+      where: {
+        slug,
+        deletedAt: null,
+        ...(excludeId ? { NOT: { id: excludeId } } : {}),
+      },
+      select: { id: true },
+    });
+    return row !== null;
+  }
+
+  private async resolveCategoryId(categoryId: unknown): Promise<string> {
+    if (typeof categoryId !== 'string' || categoryId.trim().length === 0) {
+      throw new BadRequestException(I18nKey.Errors.Common.BadRequest);
+    }
+    const row = await this.prisma.blogCategory.findUnique({
+      where: { id: categoryId.trim() },
+      select: { id: true },
+    });
+    if (!row) {
+      throw new BadRequestException(I18nKey.Errors.Common.BadRequest);
+    }
+    return row.id;
+  }
+
+  private parseStatus(value: unknown): BlogStatus {
+    if (
+      typeof value === 'string' &&
+      (BLOG_STATUSES as readonly string[]).includes(value)
+    ) {
+      return value as BlogStatus;
+    }
+    throw new BadRequestException(I18nKey.Errors.Common.BadRequest);
+  }
+
+  private requireTrimmedString(
+    value: unknown,
+    _field: string,
+    maxLen: number,
+  ): string {
+    if (typeof value !== 'string') {
+      throw new BadRequestException(I18nKey.Errors.Common.BadRequest);
+    }
+    const trimmed = value.trim();
+    if (trimmed.length === 0 || trimmed.length > maxLen) {
+      throw new BadRequestException(I18nKey.Errors.Common.BadRequest);
+    }
+    return trimmed;
+  }
+
+  private trimOptional(value: unknown, maxLen: number): string {
+    if (typeof value !== 'string') {
+      return '';
+    }
+    return value.trim().slice(0, maxLen);
   }
 }

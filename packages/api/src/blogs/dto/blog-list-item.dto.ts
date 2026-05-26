@@ -1,18 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
+import { BlogCategorySummaryDto } from './blog-category-summary.dto';
 import { BlogSeoSummaryDto } from './blog-seo-summary.dto';
 
-export const BLOG_CATEGORIES = ['IT_PARTNERSHIP', 'DAAS', 'AI'] as const;
-
-export type BlogCategory = (typeof BLOG_CATEGORIES)[number];
-
-export const BLOG_STATUSES = [
-  'DRAFT',
-  'REVIEWING',
-  'SCHEDULED',
-  'PUBLISHED',
-  'ARCHIVED',
-] as const;
+export const BLOG_STATUSES = ['PUBLISHED', 'UNPUBLISHED'] as const;
 
 export type BlogStatus = (typeof BLOG_STATUSES)[number];
 
@@ -32,11 +23,8 @@ export class BlogListItemDto {
   @ApiProperty()
   description!: string;
 
-  @ApiProperty({ enum: BLOG_CATEGORIES })
-  category!: BlogCategory;
-
-  @ApiProperty({ type: [String] })
-  tags!: string[];
+  @ApiProperty({ type: () => BlogCategorySummaryDto })
+  category!: BlogCategorySummaryDto;
 
   @ApiProperty({ enum: BLOG_STATUSES })
   status!: BlogStatus;
@@ -52,9 +40,6 @@ export class BlogListItemDto {
 
   @ApiPropertyOptional({ type: String, format: 'date-time', nullable: true })
   publishedAt!: string | null;
-
-  @ApiPropertyOptional({ type: String, format: 'date-time', nullable: true })
-  scheduledAt!: string | null;
 
   @ApiProperty({ type: String, format: 'date-time' })
   createdAt!: string;

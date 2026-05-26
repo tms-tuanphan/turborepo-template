@@ -3,7 +3,18 @@
 Version: 1.0  
 Architecture: Next.js (FE) · NestJS (BE) · PostgreSQL · Prisma
 
-Scope: Admin CMS for blog posts. **Phase 1 = list only** (`GET /api/admin/blogs`). Later phases: detail, CRUD, upload, public API.
+Scope: Admin CMS for blog posts.
+
+**Implemented (BE):**
+
+- `GET /api/admin/blogs` — list
+- `GET /api/admin/blogs/check-slug`, `GET :id`, `POST`, `PATCH :id`, `DELETE :id` (soft delete)
+- `GET /api/admin/blog-categories` — list categories (`nameKey` for FE i18n)
+- `POST|PATCH|DELETE /api/admin/blog-categories` — **admin role only**; delete returns `409` if blogs exist
+
+**Schema:** `BlogStatus` = `PUBLISHED` | `UNPUBLISHED`; `BlogCategory` table (`slug`, `nameKey`); no `tags`, no `scheduledAt`.
+
+**Later:** upload-cover, public API, views counter.
 
 FE reference: `apps/web/features/admin-blogs`, `loadAdminBlogsPage`, `BlogPost` in `apps/web/shared/types/blog.ts`.
 
@@ -188,12 +199,12 @@ Phase 1: `@Roles('admin', 'sub_admin')` on controller.
 
 ## Later phases
 
-| Phase | Endpoints                                                     |
-| ----- | ------------------------------------------------------------- |
-| 2     | `GET :id`, `POST`, `PATCH :id`, `GET check-slug`, soft delete |
-| 3     | `POST upload-cover`                                           |
-| 4     | Public `GET /blogs`, `GET /blogs/:slug`                       |
-| 5     | Cron `SCHEDULED`, views counter                               |
+| Phase | Endpoints                                      |
+| ----- | ---------------------------------------------- |
+| 2     | Done — blog CRUD + check-slug + categories API |
+| 3     | `POST upload-cover`                            |
+| 4     | Public `GET /blogs`, `GET /blogs/:slug`        |
+| 5     | Views counter                                  |
 
 ---
 

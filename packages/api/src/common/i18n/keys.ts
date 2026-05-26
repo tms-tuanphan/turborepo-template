@@ -15,6 +15,9 @@ export const I18nKey = {
       BadRequest: 'errors.common.badRequest',
       InternalServerError: 'errors.common.internalServerError',
     },
+    Blogs: {
+      CategoryInUse: 'errors.blogs.categoryInUse',
+    },
     Auth: {
       InvalidCredentials: 'errors.auth.invalidCredentials',
       AccountDisabled: 'errors.auth.accountDisabled',

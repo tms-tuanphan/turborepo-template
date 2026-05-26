@@ -42,18 +42,21 @@ model PasswordResetToken {
   @@index([expiresAt])
 }
 
-enum BlogCategory {
-  IT_PARTNERSHIP
-  DAAS
-  AI
+enum BlogStatus {
+  PUBLISHED
+  UNPUBLISHED
 }
 
-enum BlogStatus {
-  DRAFT
-  REVIEWING
-  SCHEDULED
-  PUBLISHED
-  ARCHIVED
+model BlogCategory {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  nameKey   String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  blogs     Blog[]
+
+  @@map("blog_categories")
 }
 
 model Blog {
@@ -62,14 +65,13 @@ model Blog {
   title              String
   description        String       @default("")
   content            String       @default("")
-  category           BlogCategory
-  tags               String[]
-  status             BlogStatus   @default(DRAFT)
+  categoryId         String
+  category           BlogCategory @relation(fields: [categoryId], references: [id])
+  status             BlogStatus   @default(UNPUBLISHED)
   coverImage         String       @default("")
   author             String       @default("")
   views              Int          @default(0)
   publishedAt        DateTime?
-  scheduledAt        DateTime?
   seoMetaTitle       String       @default("")
   seoMetaDescription String       @default("")
   seoPrimaryKeyword  String?
@@ -78,5 +80,5 @@ model Blog {
   updatedAt          DateTime     @updatedAt
 
   @@index([status, updatedAt])
-  @@index([category])
+  @@index([categoryId])
 }

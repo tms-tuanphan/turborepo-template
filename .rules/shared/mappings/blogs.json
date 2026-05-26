@@ -4,5 +4,5 @@
   "feFeatureManifest": ".rules/FE/agents/feature/manifests/admin-blogs.json",
   "beModuleManifest": ".rules/BE/agents/module/manifests/blogs.json",
   "contractRoot": "packages/api/src/blogs",
-  "notes": "Phase 1 BE: GET /api/admin/blogs (admin list)."
+  "notes": "BE: list + blog CRUD + check-slug + blog-categories CRUD (admin mutate). Schema: PUBLISHED/UNPUBLISHED, BlogCategory table, no tags. FE handoff: wire admin-blogs to API; load categories; i18n nameKey."
 }

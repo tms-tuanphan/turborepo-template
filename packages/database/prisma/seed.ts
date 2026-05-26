@@ -2,7 +2,6 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import * as bcrypt from 'bcrypt';
 
 import {
-  BlogCategory,
   BlogStatus,
   PrismaClient,
   UserRole,
@@ -17,6 +16,27 @@ if (!connectionString) {
 const prisma = new PrismaClient({
   adapter: new PrismaPg({ connectionString }),
 });
+
+const DEFAULT_CATEGORIES = [
+  {
+    id: 'cat_it_partnership',
+    slug: 'it-partnership',
+    nameKey: 'blogs.categories.it_partnership',
+    sortOrder: 1,
+  },
+  {
+    id: 'cat_daas',
+    slug: 'daas',
+    nameKey: 'blogs.categories.daas',
+    sortOrder: 2,
+  },
+  {
+    id: 'cat_ai',
+    slug: 'ai',
+    nameKey: 'blogs.categories.ai',
+    sortOrder: 3,
+  },
+] as const;
 
 async function main(): Promise<void> {
   const email = process.env.ADMIN_SEED_EMAIL;
@@ -48,6 +68,22 @@ async function main(): Promise<void> {
 
   console.log(`[seed] Admin user ready: ${email}`);
 
+  for (const cat of DEFAULT_CATEGORIES) {
+    await prisma.blogCategory.upsert({
+      where: { slug: cat.slug },
+      update: {
+        nameKey: cat.nameKey,
+        sortOrder: cat.sortOrder,
+      },
+      create: {
+        id: cat.id,
+        slug: cat.slug,
+        nameKey: cat.nameKey,
+        sortOrder: cat.sortOrder,
+      },
+    });
+  }
+
   const demoPosts = [
     {
       slug: 'optimise-roi-software-development',
@@ -55,8 +91,7 @@ async function main(): Promise<void> {
         'Optimise ROI in software development: Why is quality the most economical investment?',
       description:
         'Choosing a technology partner is a strategic decision focused on long-term TCO.',
-      category: BlogCategory.IT_PARTNERSHIP,
-      tags: ['roi', 'tco', 'quality'],
+      categoryId: 'cat_it_partnership',
       status: BlogStatus.PUBLISHED,
       coverImage: 'https://picsum.photos/seed/dxodx-1/1200/630',
       author: 'Demo Author',
@@ -66,8 +101,7 @@ async function main(): Promise<void> {
       slug: 'event-driven-architecture-ecommerce',
       title: 'Event-Driven Architecture for high-load e-commerce',
       description: 'How EDA helps systems survive peak sale seasons.',
-      category: BlogCategory.IT_PARTNERSHIP,
-      tags: ['eda', 'ecommerce'],
+      categoryId: 'cat_it_partnership',
       status: BlogStatus.PUBLISHED,
       coverImage: 'https://picsum.photos/seed/dxodx-2/1200/630',
       author: 'Demo Author',
@@ -77,9 +111,8 @@ async function main(): Promise<void> {
       slug: 'draft-ai-roadmap',
       title: 'AI roadmap draft',
       description: 'Work in progress on AI strategy.',
-      category: BlogCategory.AI,
-      tags: ['ai', 'draft'],
-      status: BlogStatus.DRAFT,
+      categoryId: 'cat_ai',
+      status: BlogStatus.UNPUBLISHED,
       coverImage: '',
       author: 'Demo Author',
       publishedAt: null,
@@ -92,8 +125,7 @@ async function main(): Promise<void> {
       update: {
         title: post.title,
         description: post.description,
-        category: post.category,
-        tags: [...post.tags],
+        categoryId: post.categoryId,
         status: post.status,
         coverImage: post.coverImage,
         author: post.author,
@@ -106,8 +138,7 @@ async function main(): Promise<void> {
         title: post.title,
         description: post.description,
         content: '# Demo content\n\nSeeded for local development.',
-        category: post.category,
-        tags: [...post.tags],
+        categoryId: post.categoryId,
         status: post.status,
         coverImage: post.coverImage,
         author: post.author,

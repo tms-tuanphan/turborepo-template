@@ -6,8 +6,14 @@
     "moduleRoot": "apps/api/src/blogs",
     "contractRoot": "packages/api/src/blogs",
     "databaseModels": ["packages/database/prisma/schema.prisma"],
-    "controllers": ["apps/api/src/blogs/admin-blogs.controller.ts"],
-    "services": ["apps/api/src/blogs/blogs.service.ts"],
+    "controllers": [
+      "apps/api/src/blogs/admin-blogs.controller.ts",
+      "apps/api/src/blogs/admin-blog-categories.controller.ts"
+    ],
+    "services": [
+      "apps/api/src/blogs/blogs.service.ts",
+      "apps/api/src/blogs/blog-categories.service.ts"
+    ],
     "tests": ["apps/api/src/blogs/blogs.service.spec.ts"]
   },
   "allowedImports": [
@@ -33,5 +39,5 @@
     ".rules/BE/skills/pagination-patterns/SKILL.md",
     ".rules/shared/skills/admin-blogs-phase1-list/SKILL.md"
   ],
-  "notes": "Phase 1: GET /api/admin/blogs implemented."
+  "notes": "List + CRUD blogs; admin blog-categories CRUD (admin mutate). Schema: PUBLISHED/UNPUBLISHED, BlogCategory table, no tags."
 }
