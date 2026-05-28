@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import type { Locale, Messages } from '@/shared/i18n';
 
-import { resolveCategoryNameKey } from '../lib/resolve-category-label';
+import { resolveCategoryLabel } from '../lib/resolve-category-label';
 import type { AdminBlogListItem } from '../types/admin-blog';
 
 import { AdminBlogRowActions } from './admin-blog-row-actions';
@@ -98,7 +98,7 @@ export function AdminBlogsTable({
                   {post.author}
                 </td>
                 <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
-                  {resolveCategoryNameKey(messages, post.category.nameKey)}
+                  {resolveCategoryLabel(post.category.displayName)}
                 </td>
                 <td className="whitespace-nowrap px-4 py-3">
                   <AdminBlogStatusBadge

@@ -418,18 +418,12 @@
       "empty": "No categories yet.",
       "confirmDelete": "Delete this category? This cannot be undone.",
       "columns": {
-        "slug": "Slug",
-        "nameKey": "Name key",
-        "label": "Display name",
-        "sortOrder": "Order",
+        "displayName": "Display name",
         "updated": "Updated",
         "actions": "Actions"
       },
       "fields": {
-        "slug": "Slug",
-        "slugHint": "Lowercase letters, numbers, and hyphens only.",
-        "nameKey": "i18n name key",
-        "sortOrder": "Sort order"
+        "displayName": "Display name"
       },
       "dialog": {
         "createTitle": "Create category",
@@ -451,7 +445,7 @@
       "errors": {
         "unauthorized": "You must be signed in.",
         "forbidden": "Only admins can change categories.",
-        "conflict": "This slug is already in use.",
+        "conflict": "This category already exists.",
         "inUse": "Cannot delete: blogs still use this category.",
         "notFound": "Category not found.",
         "invalid": "Invalid request."

@@ -20,21 +20,15 @@ const prisma = new PrismaClient({
 const DEFAULT_CATEGORIES = [
   {
     id: 'cat_it_partnership',
-    slug: 'it-partnership',
-    nameKey: 'blogs.categories.it_partnership',
-    sortOrder: 1,
+    displayName: 'IT Partnership Insight',
   },
   {
     id: 'cat_daas',
-    slug: 'daas',
-    nameKey: 'blogs.categories.daas',
-    sortOrder: 2,
+    displayName: 'DAAS Insight',
   },
   {
     id: 'cat_ai',
-    slug: 'ai',
-    nameKey: 'blogs.categories.ai',
-    sortOrder: 3,
+    displayName: 'AI Insight',
   },
 ] as const;
 
@@ -70,16 +64,13 @@ async function main(): Promise<void> {
 
   for (const cat of DEFAULT_CATEGORIES) {
     await prisma.blogCategory.upsert({
-      where: { slug: cat.slug },
+      where: { id: cat.id },
       update: {
-        nameKey: cat.nameKey,
-        sortOrder: cat.sortOrder,
+        displayName: cat.displayName,
       },
       create: {
         id: cat.id,
-        slug: cat.slug,
-        nameKey: cat.nameKey,
-        sortOrder: cat.sortOrder,
+        displayName: cat.displayName,
       },
     });
   }

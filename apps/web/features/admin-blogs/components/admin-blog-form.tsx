@@ -334,7 +334,6 @@ export function AdminBlogForm({
         sidebar={
           <AdminBlogSidebar
             messages={t}
-            i18n={messages}
             categories={categories}
             status={status}
             onStatusChange={(v) => setValue('status', v, { shouldDirty: true })}

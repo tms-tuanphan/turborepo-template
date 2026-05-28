@@ -42,7 +42,7 @@ export function CategoryDeleteDialog({
         <div className="grid gap-2 py-2">
           {category ? (
             <div className="rounded-md border bg-muted/30 px-3 py-2 font-mono text-xs">
-              {category.slug}
+              {category.displayName}
             </div>
           ) : null}
         </div>

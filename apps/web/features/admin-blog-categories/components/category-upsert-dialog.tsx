@@ -16,7 +16,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -37,7 +36,6 @@ type CategoryUpsertDialogProps = {
   open: boolean;
   mode: DialogMode;
   messages: Messages;
-  initialSortOrder: number;
   category: BlogCategory | null;
   pending?: boolean;
   serverFieldErrors?: Record<string, string[] | undefined>;
@@ -50,7 +48,6 @@ export function CategoryUpsertDialog({
   open,
   mode,
   messages,
-  initialSortOrder,
   category,
   pending,
   serverFieldErrors,
@@ -63,18 +60,14 @@ export function CategoryUpsertDialog({
   const defaultValues = useMemo<BlogCategoryFormInput>(() => {
     if (mode === 'edit' && category) {
       return {
-        slug: category.slug,
-        nameKey: category.nameKey,
-        sortOrder: category.sortOrder,
+        displayName: category.displayName,
       };
     }
 
     return {
-      slug: '',
-      nameKey: 'blogs.categories.',
-      sortOrder: initialSortOrder,
+      displayName: '',
     };
-  }, [category, initialSortOrder, mode]);
+  }, [category, mode]);
 
   const form = useForm<BlogCategoryFormInput>({
     resolver: zodResolver(
@@ -94,7 +87,7 @@ export function CategoryUpsertDialog({
     for (const [field, messages] of Object.entries(serverFieldErrors)) {
       const message = messages?.[0];
       if (!message) continue;
-      if (field === 'slug' || field === 'nameKey' || field === 'sortOrder') {
+      if (field === 'displayName') {
         form.setError(field, { type: 'server', message });
       }
     }
@@ -124,49 +117,14 @@ export function CategoryUpsertDialog({
               </div>
             ) : null}
 
-            <FormField<BlogCategoryFormInput, 'slug'>
+            <FormField<BlogCategoryFormInput, 'displayName'>
               control={form.control}
-              name="slug"
+              name="displayName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t.fields.slug}</FormLabel>
+                  <FormLabel>{t.fields.displayName}</FormLabel>
                   <FormControl>
                     <Input {...field} />
-                  </FormControl>
-                  <FormDescription>{t.fields.slugHint}</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField<BlogCategoryFormInput, 'nameKey'>
-              control={form.control}
-              name="nameKey"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t.fields.nameKey}</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField<BlogCategoryFormInput, 'sortOrder'>
-              control={form.control}
-              name="sortOrder"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t.fields.sortOrder}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      min={0}
-                      max={9999}
-                      value={String(field.value ?? 0)}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

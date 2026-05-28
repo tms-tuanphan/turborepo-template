@@ -17,14 +17,14 @@ export const BLOG_LIST_DEFAULT_PAGE_SIZE = 9;
  * Extends {@link PaginationQueryDto}. Swagger shows global defaults;
  * service applies {@link BLOG_LIST_DEFAULT_PAGE_SIZE} via `parsePaginationQuery` options.
  *
- * `category` is a category slug or `ALL`.
+ * `category` is a category id or `ALL`.
  */
 export class AdminBlogListQueryDto extends PaginationQueryDto {
   @ApiPropertyOptional({ default: '' })
   search?: string;
 
   @ApiPropertyOptional({
-    description: 'Category slug or ALL',
+    description: 'Category id or ALL',
     default: BLOG_FILTER_CATEGORY_ALL,
   })
   category?: string;

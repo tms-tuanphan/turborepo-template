@@ -1,2 +1,2 @@
 -- CreateIndex
-CREATE INDEX "Blog_status_updatedAt_idx" ON "Blog"("status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "Blog_status_updatedAt_idx" ON "Blog"("status", "updatedAt");

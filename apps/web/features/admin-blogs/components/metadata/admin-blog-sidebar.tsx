@@ -10,7 +10,7 @@ import {
 import { cn } from '@/lib/utils';
 import type { Messages } from '@/shared/i18n';
 
-import { resolveCategoryNameKey } from '../../lib/resolve-category-label';
+import { resolveCategoryLabel } from '../../lib/resolve-category-label';
 import type { AdminBlogCategoryOption } from '../../types/admin-blog';
 import {
   ADMIN_BLOG_STATUSES,
@@ -23,7 +23,6 @@ type BlogFormMessages = Messages['admin']['blogs']['form'];
 
 type AdminBlogSidebarProps = {
   messages: BlogFormMessages;
-  i18n: Messages;
   categories: AdminBlogCategoryOption[];
   status: AdminBlogStatus;
   onStatusChange: (value: AdminBlogStatus) => void;
@@ -52,7 +51,6 @@ function SidebarCard({
 
 export function AdminBlogSidebar({
   messages,
-  i18n,
   categories,
   status,
   onStatusChange,
@@ -107,7 +105,7 @@ export function AdminBlogSidebar({
           <SelectContent>
             {categories.map((c) => (
               <SelectItem key={c.id} value={c.id}>
-                {resolveCategoryNameKey(i18n, c.nameKey)}
+                {resolveCategoryLabel(c.displayName)}
               </SelectItem>
             ))}
           </SelectContent>

@@ -49,9 +49,7 @@ enum BlogStatus {
 
 model BlogCategory {
   id        String   @id @default(cuid())
-  slug      String   @unique
-  nameKey   String
-  sortOrder Int      @default(0)
+  displayName String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   blogs     Blog[]

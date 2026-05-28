@@ -8,8 +8,7 @@ import type {
 
 const categorySelect = {
   id: true,
-  slug: true,
-  nameKey: true,
+  displayName: true,
 } satisfies Prisma.BlogCategorySelect;
 
 const detailSelect = {
@@ -62,13 +61,11 @@ export { detailSelect, listSelect };
 
 export function toCategorySummaryDto(row: {
   id: string;
-  slug: string;
-  nameKey: string;
+  displayName: string;
 }): BlogCategorySummaryDto {
   return {
     id: row.id,
-    slug: row.slug,
-    nameKey: row.nameKey,
+    displayName: row.displayName,
   };
 }
 

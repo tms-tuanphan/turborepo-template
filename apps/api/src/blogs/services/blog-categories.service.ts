@@ -14,36 +14,22 @@ import {
 
 import { PrismaService } from '../../prisma/prisma.service';
 
-import { isValidBlogSlug, normalizeBlogSlug } from '../utils/blogs-slug.util';
-
 @Injectable()
 export class BlogCategoriesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll(): Promise<BlogCategoryDto[]> {
     const rows = await this.prisma.blogCategory.findMany({
-      orderBy: [{ sortOrder: 'asc' }, { slug: 'asc' }],
+      orderBy: [{ displayName: 'asc' }],
     });
     return rows.map((row) => this.toDto(row));
   }
 
   async create(dto: CreateBlogCategoryDto): Promise<BlogCategoryDto> {
-    const slug = this.resolveCategorySlug(dto.slug);
-    const nameKey = this.requireTrimmedString(dto.nameKey, 120);
-    const sortOrder =
-      typeof dto.sortOrder === 'number' && Number.isFinite(dto.sortOrder)
-        ? Math.trunc(dto.sortOrder)
-        : 0;
-
-    const existing = await this.prisma.blogCategory.findUnique({
-      where: { slug },
-    });
-    if (existing) {
-      throw new ConflictException(I18nKey.Errors.Common.Conflict);
-    }
+    const displayName = this.requireTrimmedString(dto.displayName, 120);
 
     const row = await this.prisma.blogCategory.create({
-      data: { slug, nameKey, sortOrder },
+      data: { displayName },
     });
     return this.toDto(row);
   }
@@ -59,29 +45,11 @@ export class BlogCategoriesService {
       throw new NotFoundException(I18nKey.Errors.Common.NotFound);
     }
 
-    const slug =
-      dto.slug !== undefined
-        ? this.resolveCategorySlug(dto.slug)
-        : existing.slug;
-
-    if (slug !== existing.slug) {
-      const taken = await this.prisma.blogCategory.findUnique({
-        where: { slug },
-      });
-      if (taken) {
-        throw new ConflictException(I18nKey.Errors.Common.Conflict);
-      }
-    }
-
     const row = await this.prisma.blogCategory.update({
       where: { id },
       data: {
-        slug,
-        ...(dto.nameKey !== undefined
-          ? { nameKey: this.requireTrimmedString(dto.nameKey, 120) }
-          : {}),
-        ...(dto.sortOrder !== undefined && Number.isFinite(dto.sortOrder)
-          ? { sortOrder: Math.trunc(dto.sortOrder) }
+        ...(dto.displayName !== undefined
+          ? { displayName: this.requireTrimmedString(dto.displayName, 120) }
           : {}),
       },
     });
@@ -107,14 +75,6 @@ export class BlogCategoriesService {
     await this.prisma.blogCategory.delete({ where: { id } });
   }
 
-  private resolveCategorySlug(raw: string): string {
-    const slug = normalizeBlogSlug(raw);
-    if (!isValidBlogSlug(slug)) {
-      throw new BadRequestException(I18nKey.Errors.Common.BadRequest);
-    }
-    return slug;
-  }
-
   private requireTrimmedString(value: unknown, maxLen: number): string {
     if (typeof value !== 'string') {
       throw new BadRequestException(I18nKey.Errors.Common.BadRequest);
@@ -128,17 +88,13 @@ export class BlogCategoriesService {
 
   private toDto(row: {
     id: string;
-    slug: string;
-    nameKey: string;
-    sortOrder: number;
+    displayName: string;
     createdAt: Date;
     updatedAt: Date;
   }): BlogCategoryDto {
     return {
       id: row.id,
-      slug: row.slug,
-      nameKey: row.nameKey,
-      sortOrder: row.sortOrder,
+      displayName: row.displayName,
       createdAt: row.createdAt.toISOString(),
       updatedAt: row.updatedAt.toISOString(),
     };

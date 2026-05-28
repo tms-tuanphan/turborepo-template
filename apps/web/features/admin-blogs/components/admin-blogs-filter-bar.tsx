@@ -14,7 +14,7 @@ import {
 import type { Messages } from '@/shared/i18n';
 
 import { useAdminBlogFilters } from '../hooks/use-admin-blog-filters';
-import { resolveCategoryNameKey } from '../lib/resolve-category-label';
+import { resolveCategoryLabel } from '../lib/resolve-category-label';
 import type { AdminBlogCategoryOption } from '../types/admin-blog';
 import { ADMIN_FILTER_STATUSES } from '../types/admin-blog';
 
@@ -73,8 +73,8 @@ export function AdminBlogsFilterBar({
         <SelectContent>
           <SelectItem value="ALL">{tc.ALL}</SelectItem>
           {categories.map((cat) => (
-            <SelectItem key={cat.id} value={cat.slug}>
-              {resolveCategoryNameKey(messages, cat.nameKey)}
+            <SelectItem key={cat.id} value={cat.id}>
+              {resolveCategoryLabel(cat.displayName)}
             </SelectItem>
           ))}
         </SelectContent>

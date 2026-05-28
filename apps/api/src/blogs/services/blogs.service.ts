@@ -41,7 +41,7 @@ import { isValidBlogSlug, normalizeBlogSlug } from '../utils/blogs-slug.util';
 
 export type ParsedAdminBlogListQuery = {
   search: string;
-  categorySlug: typeof BLOG_FILTER_CATEGORY_ALL | string;
+  categoryId: typeof BLOG_FILTER_CATEGORY_ALL | string;
   status: typeof BLOG_FILTER_STATUS_ALL | BlogStatus;
   page: number;
   pageSize: number;
@@ -68,7 +68,7 @@ export class BlogsService {
     const search =
       typeof raw.search === 'string' ? raw.search.trim().slice(0, 120) : '';
 
-    const categorySlug =
+    const categoryId =
       typeof raw.category === 'string' && raw.category.trim().length > 0
         ? raw.category.trim()
         : BLOG_FILTER_CATEGORY_ALL;
@@ -90,7 +90,7 @@ export class BlogsService {
 
     return {
       search,
-      categorySlug,
+      categoryId,
       status: statusRaw,
       page,
       pageSize,
@@ -244,15 +244,12 @@ export class BlogsService {
   ): Promise<Prisma.BlogWhereInput> {
     const and: Prisma.BlogWhereInput[] = [{ deletedAt: null }];
 
-    if (query.categorySlug !== BLOG_FILTER_CATEGORY_ALL) {
-      const category = await this.prisma.blogCategory.findUnique({
-        where: { slug: query.categorySlug },
-        select: { id: true },
-      });
-      if (!category) {
+    if (query.categoryId !== BLOG_FILTER_CATEGORY_ALL) {
+      const categoryId = query.categoryId.trim();
+      if (categoryId.length === 0) {
         throw new BadRequestException(I18nKey.Errors.Common.BadRequest);
       }
-      and.push({ categoryId: category.id });
+      and.push({ categoryId });
     }
 
     if (query.status !== BLOG_FILTER_STATUS_ALL) {

@@ -418,18 +418,12 @@
       "empty": "カテゴリがありません。",
       "confirmDelete": "このカテゴリを削除しますか？元に戻せません。",
       "columns": {
-        "slug": "スラッグ",
-        "nameKey": "名前キー",
-        "label": "表示名",
-        "sortOrder": "順序",
+        "displayName": "表示名",
         "updated": "更新日",
         "actions": "操作"
       },
       "fields": {
-        "slug": "スラッグ",
-        "slugHint": "小文字・数字・ハイフンのみ。",
-        "nameKey": "i18n 名前キー",
-        "sortOrder": "並び順"
+        "displayName": "表示名"
       },
       "dialog": {
         "createTitle": "カテゴリを作成",
@@ -451,7 +445,7 @@
       "errors": {
         "unauthorized": "サインインが必要です。",
         "forbidden": "カテゴリの変更は管理者のみ可能です。",
-        "conflict": "このスラッグは既に使用されています。",
+        "conflict": "このカテゴリは既に存在します。",
         "inUse": "削除できません：このカテゴリを使用している記事があります。",
         "notFound": "カテゴリが見つかりません。",
         "invalid": "無効なリクエストです。"

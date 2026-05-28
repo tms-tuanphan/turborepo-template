@@ -38,8 +38,7 @@ export type BlogApiStatus = 'PUBLISHED' | 'UNPUBLISHED';
 
 export type BlogCategorySummary = {
   id: string;
-  slug: string;
-  nameKey: string;
+  displayName: string;
 };
 
 export type BlogSeoSummary = {
@@ -77,23 +76,17 @@ export type AdminBlogListResponse = {
 
 export type BlogCategory = {
   id: string;
-  slug: string;
-  nameKey: string;
-  sortOrder: number;
+  displayName: string;
   createdAt: string;
   updatedAt: string;
 };
 
 export type CreateBlogCategoryBody = {
-  slug: string;
-  nameKey: string;
-  sortOrder?: number;
+  displayName: string;
 };
 
 export type UpdateBlogCategoryBody = {
-  slug?: string;
-  nameKey?: string;
-  sortOrder?: number;
+  displayName?: string;
 };
 
 export type CreateAdminBlogBody = {

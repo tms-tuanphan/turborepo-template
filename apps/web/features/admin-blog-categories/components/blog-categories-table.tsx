@@ -4,7 +4,6 @@ import { PencilIcon, Trash2Icon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import type { Locale, Messages } from '@/shared/i18n';
-import { resolveNameKey } from '@/shared/utils/resolve-name-key';
 import type { BlogCategory } from '@repo/api/client';
 
 type BlogCategoriesTableProps = {
@@ -29,13 +28,10 @@ export function BlogCategoriesTable({
   return (
     <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[720px] text-left text-sm">
+        <table className="w-full min-w-[560px] text-left text-sm">
           <thead className="border-b bg-muted/50">
             <tr>
-              <th className="px-4 py-3 font-medium">{t.columns.slug}</th>
-              <th className="px-4 py-3 font-medium">{t.columns.nameKey}</th>
-              <th className="px-4 py-3 font-medium">{t.columns.label}</th>
-              <th className="px-4 py-3 font-medium">{t.columns.sortOrder}</th>
+              <th className="px-4 py-3 font-medium">{t.columns.displayName}</th>
               <th className="px-4 py-3 font-medium">{t.columns.updated}</th>
               {canMutate ? (
                 <th className="px-4 py-3 text-right font-medium">
@@ -48,7 +44,7 @@ export function BlogCategoriesTable({
             {categories.length === 0 ? (
               <tr>
                 <td
-                  colSpan={canMutate ? 6 : 5}
+                  colSpan={canMutate ? 3 : 2}
                   className="px-4 py-12 text-center text-muted-foreground"
                 >
                   {t.empty}
@@ -57,14 +53,7 @@ export function BlogCategoriesTable({
             ) : (
               categories.map((cat) => (
                 <tr key={cat.id} className="hover:bg-muted/30">
-                  <td className="px-4 py-3 font-mono text-xs">{cat.slug}</td>
-                  <td className="px-4 py-3 text-muted-foreground">
-                    {cat.nameKey}
-                  </td>
-                  <td className="px-4 py-3">
-                    {resolveNameKey(messages, cat.nameKey)}
-                  </td>
-                  <td className="px-4 py-3 tabular-nums">{cat.sortOrder}</td>
+                  <td className="px-4 py-3 font-medium">{cat.displayName}</td>
                   <td className="px-4 py-3 text-muted-foreground">
                     <time dateTime={cat.updatedAt}>
                       {new Date(cat.updatedAt).toLocaleDateString(locale)}

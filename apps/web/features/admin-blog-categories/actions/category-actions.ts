@@ -45,9 +45,7 @@ export async function createCategoryAction(
   const locale: Locale = localeRaw;
 
   const parsed = blogCategoryFormSchema.safeParse({
-    slug: pickString(formData, 'slug'),
-    nameKey: pickString(formData, 'nameKey'),
-    sortOrder: pickString(formData, 'sortOrder') || '0',
+    displayName: pickString(formData, 'displayName'),
   });
 
   if (!parsed.success) {
@@ -93,9 +91,7 @@ export async function updateCategoryAction(
   }
 
   const parsed = blogCategoryFormSchema.safeParse({
-    slug: pickString(formData, 'slug'),
-    nameKey: pickString(formData, 'nameKey'),
-    sortOrder: pickString(formData, 'sortOrder') || '0',
+    displayName: pickString(formData, 'displayName'),
   });
 
   if (!parsed.success) {

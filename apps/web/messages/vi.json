@@ -419,18 +419,12 @@
       "empty": "Chưa có danh mục.",
       "confirmDelete": "Xóa danh mục này? Không thể hoàn tác.",
       "columns": {
-        "slug": "Slug",
-        "nameKey": "Khóa i18n",
-        "label": "Tên hiển thị",
-        "sortOrder": "Thứ tự",
+        "displayName": "Tên hiển thị",
         "updated": "Cập nhật",
         "actions": "Thao tác"
       },
       "fields": {
-        "slug": "Slug",
-        "slugHint": "Chữ thường, số và dấu gạch ngang.",
-        "nameKey": "Khóa tên i18n",
-        "sortOrder": "Thứ tự sắp xếp"
+        "displayName": "Tên hiển thị"
       },
       "dialog": {
         "createTitle": "Tạo danh mục",
@@ -452,7 +446,7 @@
       "errors": {
         "unauthorized": "Bạn cần đăng nhập.",
         "forbidden": "Chỉ admin mới được thay đổi danh mục.",
-        "conflict": "Slug này đã được dùng.",
+        "conflict": "Danh mục này đã tồn tại.",
         "inUse": "Không thể xóa: vẫn còn bài viết dùng danh mục này.",
         "notFound": "Không tìm thấy danh mục.",
         "invalid": "Yêu cầu không hợp lệ."

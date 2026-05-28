@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 
 import type { BlogCategory } from '@repo/api/client';
@@ -51,11 +51,6 @@ export function AdminBlogCategoriesClient({
   } = useBlogCategories({ fallbackData: initialCategories });
 
   const pendingUpsert = isCreating || isUpdating;
-
-  const initialSortOrder = useMemo(
-    () => categories.length + 1,
-    [categories.length],
-  );
 
   const openCreate = useCallback(() => {
     setServerError(null);
@@ -148,7 +143,6 @@ export function AdminBlogCategoriesClient({
         open={upsertMode !== null}
         mode={upsertMode ?? 'create'}
         messages={messages}
-        initialSortOrder={initialSortOrder}
         category={editing}
         pending={pendingUpsert}
         serverErrorText={serverErrorText}
