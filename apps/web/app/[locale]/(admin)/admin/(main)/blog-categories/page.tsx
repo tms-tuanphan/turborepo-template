@@ -41,7 +41,7 @@ export default async function AdminBlogCategoriesPage({
       <AdminBlogCategoriesClient
         locale={locale}
         messages={messages}
-        categories={categories}
+        initialCategories={categories}
         userRole={session.user.role}
       />
     </div>
