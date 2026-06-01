@@ -1,10 +1,11 @@
 'use client';
 
 import { LogOutIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useId, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { signOut } from 'next-auth/react';
+
 import { logoutAdmin } from '@/core/auth/session-client';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/shared/layout/_components/logo';
@@ -35,7 +36,6 @@ export function AdminSidebar({
   children,
 }: AdminSidebarProps) {
   const navId = useId();
-  const router = useRouter();
   const [signingOut, setSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState<string | null>(null);
 
@@ -43,14 +43,10 @@ export function AdminSidebar({
     setSignOutError(null);
     setSigningOut(true);
     try {
-      const result = await logoutAdmin();
-      if (result.ok) {
-        router.push(signOutCallbackUrl);
-        router.refresh();
-        return;
-      }
+      await logoutAdmin();
+      await signOut({ callbackUrl: signOutCallbackUrl, redirect: true });
+    } catch {
       setSignOutError(signOutErrorLabel);
-    } finally {
       setSigningOut(false);
     }
   }

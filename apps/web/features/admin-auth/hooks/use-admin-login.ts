@@ -1,13 +1,14 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useActionState, useEffect, useMemo, useTransition } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import type { Messages } from '@/shared/i18n';
 
-import { loginAdminAction } from '../actions/login-action';
-import { initialLoginActionState } from '../actions/login-action-state';
+import { getAuthErrorMessage } from '../utils/auth-error';
 import {
   createAdminLoginSchema,
   type AdminLoginField,
@@ -20,11 +21,8 @@ export type UseAdminLoginOptions = {
   callbackUrl: string;
 };
 
-export function useAdminLogin({
-  locale,
-  messages,
-  callbackUrl,
-}: UseAdminLoginOptions) {
+export function useAdminLogin({ messages, callbackUrl }: UseAdminLoginOptions) {
+  const router = useRouter();
   const t = messages.admin.login;
   const schema = useMemo(() => createAdminLoginSchema(t), [t]);
   const resolver = useMemo(
@@ -32,11 +30,8 @@ export function useAdminLogin({
     [schema],
   );
 
-  const [state, formAction] = useActionState(
-    loginAdminAction,
-    initialLoginActionState,
-  );
-  const [isPending, startTransition] = useTransition();
+  const [globalError, setGlobalError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<AdminLoginInput>({
     resolver,
@@ -46,54 +41,59 @@ export function useAdminLogin({
 
   const { setError, clearErrors } = form;
 
-  useEffect(() => {
-    if (state.ok) {
-      return;
-    }
-
-    if (state.fieldErrors) {
-      for (const field of Object.keys(state.fieldErrors) as AdminLoginField[]) {
-        const message = state.fieldErrors[field];
-        if (message) {
-          setError(field, { type: 'server', message });
-        }
-      }
-    }
-  }, [state, setError]);
-
-  const hasFieldErrors =
-    !state.ok &&
-    state.fieldErrors !== undefined &&
-    Object.keys(state.fieldErrors).length > 0;
-
-  const globalError =
-    !state.ok && state.error && !hasFieldErrors ? state.error : null;
-
   const onSubmit = form.handleSubmit(
-    (data) => {
+    async (data) => {
       clearErrors();
-      const formData = new FormData();
-      formData.set('locale', locale);
-      formData.set('callbackUrl', callbackUrl);
-      formData.set('email', data.email);
-      formData.set('password', data.password);
+      setGlobalError(null);
+      setIsSubmitting(true);
 
-      startTransition(() => {
-        formAction(formData);
-      });
+      try {
+        const result = await signIn('credentials', {
+          email: data.email,
+          password: data.password,
+          redirect: false,
+        });
+
+        if (result?.error) {
+          setGlobalError(t.errorGeneric);
+          return;
+        }
+
+        if (result?.ok) {
+          router.push(callbackUrl);
+          router.refresh();
+          return;
+        }
+
+        setGlobalError(t.errorGeneric);
+      } catch {
+        setGlobalError(getAuthErrorMessage('network', messages, 'login'));
+      } finally {
+        setIsSubmitting(false);
+      }
     },
     () => {
-      /* Client validation failed — field errors are already set by RHF */
+      /* Client validation failed */
     },
   );
 
-  const isSubmitting = isPending || form.formState.isSubmitting;
+  const applyServerFieldErrors = (
+    fieldErrors: Partial<Record<AdminLoginField, string>>,
+  ) => {
+    for (const field of Object.keys(fieldErrors) as AdminLoginField[]) {
+      const message = fieldErrors[field];
+      if (message) {
+        setError(field, { type: 'server', message });
+      }
+    }
+  };
 
   return {
     form,
     onSubmit,
-    isSubmitting,
+    isSubmitting: isSubmitting || form.formState.isSubmitting,
     globalError,
     t,
+    applyServerFieldErrors,
   };
 }

@@ -1,13 +1,40 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { getAuthCookieName } from '@/core/auth/session-cookie';
+import {
+  getAuthCookieName,
+  getRefreshCookieName,
+} from '@/core/auth/session-cookie';
 import { defaultLocale, isLocale, locales } from '@/shared/i18n';
 
 const PUBLIC_FILE = /\.(.*)$/;
 
+const AUTH_ROUTE_PREFIXES = [
+  'login',
+  'register',
+  'forgot-password',
+  'reset-password',
+] as const;
+
+function isPublicAuthRoute(authSegment: string | undefined): boolean {
+  if (!authSegment) return false;
+  return AUTH_ROUTE_PREFIXES.some(
+    (prefix) => authSegment === prefix || authSegment.startsWith(`${prefix}/`),
+  );
+}
+
+function hasAdminSession(request: NextRequest): boolean {
+  const access = getAuthCookieName();
+  const refresh = getRefreshCookieName();
+  return (
+    request.cookies.has(access) ||
+    request.cookies.has(refresh) ||
+    request.cookies.has('authjs.session-token') ||
+    request.cookies.has('__Secure-authjs.session-token')
+  );
+}
+
 /**
- * Admin route guard: cookie presence only (no JWT decode/verify).
- * Authentication authority remains in NestJS.
+ * Locale redirect + admin route guard (cookie presence; JWT authority in Nest).
  */
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -44,19 +71,17 @@ export function proxy(request: NextRequest) {
   }
 
   const authSegment = afterLocale[1];
-  const isPublicAuthRoute =
-    authSegment === 'login' ||
-    authSegment === 'forgot-password' ||
-    authSegment === 'reset-password' ||
-    authSegment === 'register';
+  const isAuthRoute = isPublicAuthRoute(authSegment);
+  const loggedIn = hasAdminSession(request);
 
-  if (isPublicAuthRoute) {
-    return NextResponse.next();
+  if (isAuthRoute && loggedIn) {
+    const adminHome = request.nextUrl.clone();
+    adminHome.pathname = `/${locale}/admin`;
+    adminHome.search = '';
+    return NextResponse.redirect(adminHome);
   }
 
-  const hasSession = request.cookies.has(getAuthCookieName());
-
-  if (!hasSession) {
+  if (!isAuthRoute && !loggedIn) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = `/${locale}/admin/login`;
     loginUrl.searchParams.set('callbackUrl', pathname);

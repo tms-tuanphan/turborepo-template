@@ -34,6 +34,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException(I18nKey.Errors.Common.Unauthorized);
     }
 
+    if (payload.tokenType === 'refresh') {
+      throw new UnauthorizedException(I18nKey.Errors.Auth.TokenExpired);
+    }
+
     return {
       id: payload.sub,
       email: payload.email,

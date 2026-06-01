@@ -22,6 +22,7 @@ import type { Response } from 'express';
 import {
   LoginDto,
   LoginResponseDto,
+  RefreshResponseDto,
   LogoutResponseDto,
   MeResponseDto,
   ApiErrorPayloadDto,
@@ -54,7 +55,7 @@ export class AuthController {
   @ApiOperation({
     summary: 'Login with email and password',
     description:
-      'Sets an httpOnly JWT cookie (`AUTH_COOKIE_NAME`) on success. Response body contains the authenticated user only.',
+      'Sets httpOnly `access_token` and `refresh_token` cookies on success. Response body contains the authenticated user only.',
   })
   @ApiOkResponse({ type: LoginResponseDto })
   @ApiUnauthorizedResponse({
@@ -65,13 +66,45 @@ export class AuthController {
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ): Promise<LoginResponseDto> {
-    const { user, accessToken } = await this.authService.login(loginDto);
+    const { user, accessToken, refreshToken } =
+      await this.authService.login(loginDto);
 
-    res.cookie(
-      this.authService.getCookieName(),
+    this.setSessionCookies(res, accessToken, refreshToken);
+
+    return { user };
+  }
+
+  @Public()
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Rotate session using refresh_token cookie',
+    description:
+      'Reads `refresh_token` cookie, issues new access and refresh cookies.',
+  })
+  @ApiOkResponse({ type: RefreshResponseDto })
+  @ApiUnauthorizedResponse({
+    description: 'Missing or invalid refresh token',
+    type: ApiErrorPayloadDto,
+  })
+  async refresh(
+    @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<RefreshResponseDto> {
+    const refreshCookieName = this.authService.getRefreshCookieName();
+    const refreshToken = req.cookies?.[refreshCookieName];
+    const token =
+      typeof refreshToken === 'string' && refreshToken.length > 0
+        ? refreshToken
+        : '';
+
+    const {
+      user,
       accessToken,
-      this.authService.getCookieOptions(),
-    );
+      refreshToken: newRefresh,
+    } = await this.authService.refresh(token);
+
+    this.setSessionCookies(res, accessToken, newRefresh);
 
     return { user };
   }
@@ -79,15 +112,31 @@ export class AuthController {
   @Public()
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Clear session cookie' })
+  @ApiOperation({ summary: 'Clear session cookies' })
   @ApiOkResponse({ type: LogoutResponseDto })
   logout(@Res({ passthrough: true }) res: Response): LogoutResponseDto {
-    res.clearCookie(
-      this.authService.getCookieName(),
-      this.authService.getClearCookieOptions(),
-    );
+    const clear = this.authService.getClearCookieOptions();
+    res.clearCookie(this.authService.getAccessCookieName(), clear);
+    res.clearCookie(this.authService.getRefreshCookieName(), clear);
 
     return { success: true };
+  }
+
+  private setSessionCookies(
+    res: Response,
+    accessToken: string,
+    refreshToken: string,
+  ): void {
+    res.cookie(
+      this.authService.getAccessCookieName(),
+      accessToken,
+      this.authService.getAccessCookieOptions(),
+    );
+    res.cookie(
+      this.authService.getRefreshCookieName(),
+      refreshToken,
+      this.authService.getRefreshCookieOptions(),
+    );
   }
 
   @Public()

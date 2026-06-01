@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 
 import type { BlogCategory } from '@repo/api/client';
-import type { AuthUserRole } from '@repo/api/client';
+import { useSession } from 'next-auth/react';
 import type { Locale, Messages } from '@/shared/i18n';
 
 import type { BlogCategoryApiError } from '../lib/blog-categories-client-api';
@@ -20,11 +20,6 @@ import { CategoryUpsertDialog } from './category-upsert-dialog';
 type AdminBlogCategoriesClientProps = {
   locale: Locale;
   messages: Messages;
-  initialItems: BlogCategory[];
-  initialTotalItems: number;
-  initialTotalPages: number;
-  initialCurrentPage: number;
-  userRole: AuthUserRole;
 };
 
 type UpsertMode = 'create' | 'edit' | null;
@@ -32,12 +27,9 @@ type UpsertMode = 'create' | 'edit' | null;
 export function AdminBlogCategoriesClient({
   locale,
   messages,
-  initialItems,
-  initialTotalItems,
-  initialTotalPages,
-  initialCurrentPage,
-  userRole,
 }: AdminBlogCategoriesClientProps) {
+  const { data: session } = useSession();
+  const userRole = session?.user?.role ?? 'sub_admin';
   const t = messages.admin.blogCategories;
   const canMutate = userRole === 'admin';
   const router = useRouter();
@@ -71,12 +63,6 @@ export function AdminBlogCategoriesClient({
     isDeleting,
   } = useBlogCategories({
     query: { page, pageSize },
-    fallbackData: {
-      items: initialItems,
-      totalItems: initialTotalItems,
-      totalPages: initialTotalPages,
-      currentPage: initialCurrentPage,
-    },
   });
 
   const pendingUpsert = isCreating || isUpdating;

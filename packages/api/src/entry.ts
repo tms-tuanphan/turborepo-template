@@ -2,6 +2,7 @@ export { LoginDto } from './auth/dto/login.dto';
 export { AuthUserDto } from './auth/dto/auth-user.dto';
 export type { AuthUserRole } from './auth/dto/auth-user.dto';
 export { LoginResponseDto } from './auth/dto/login-response.dto';
+export { RefreshResponseDto } from './auth/dto/refresh-response.dto';
 export { MeResponseDto } from './auth/dto/me-response.dto';
 export { LogoutResponseDto } from './auth/dto/logout-response.dto';
 export { RegisterDto } from './auth/dto/register.dto';

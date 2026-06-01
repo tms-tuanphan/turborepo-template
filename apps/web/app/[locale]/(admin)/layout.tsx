@@ -1,3 +1,5 @@
+import { SessionProvider } from '@/core/components/session-provider';
+
 type Params = Promise<{ locale: string }>;
 
 export default async function AdminShellLayout({
@@ -9,5 +11,5 @@ export default async function AdminShellLayout({
 }) {
   await params;
 
-  return children;
+  return <SessionProvider>{children}</SessionProvider>;
 }

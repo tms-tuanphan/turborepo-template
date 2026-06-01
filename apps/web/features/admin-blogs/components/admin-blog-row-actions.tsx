@@ -2,6 +2,7 @@
 
 import { MoreHorizontalIcon, PencilIcon, Trash2Icon } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -11,7 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { deleteBlogAction } from '../actions/blog-actions';
+import { deleteAdminBlogClient } from '../lib/admin-blogs-client-api';
 import type { Locale, Messages } from '@/shared/i18n';
 
 type AdminBlogRowActionsProps = {
@@ -26,16 +27,20 @@ export function AdminBlogRowActions({
   messages,
 }: AdminBlogRowActionsProps) {
   const t = messages.admin.blogs.actions;
+  const router = useRouter();
   const editHref = `/${locale}/admin/blogs/${blogId}/edit`;
   const [pending, startTransition] = useTransition();
 
   function onDelete() {
     if (!window.confirm(t.confirmDelete)) return;
     startTransition(() => {
-      const fd = new FormData();
-      fd.set('id', blogId);
-      fd.set('locale', locale);
-      void deleteBlogAction(fd);
+      void (async () => {
+        const ok = await deleteAdminBlogClient(blogId);
+        if (ok) {
+          router.push(`/${locale}/admin/blogs`);
+          router.refresh();
+        }
+      })();
     });
   }
 

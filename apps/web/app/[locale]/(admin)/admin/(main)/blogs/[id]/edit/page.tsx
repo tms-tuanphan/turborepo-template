@@ -1,10 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import {
-  AdminBlogForm,
-  getAdminBlogById,
-  listAdminBlogCategories,
-} from '@/features/admin-blogs';
+import { AdminBlogEditorPageClient } from '@/features/admin-blogs/components/admin-blog-editor-page-client';
 import { getMessages, isLocale, type Locale } from '@/shared/i18n';
 
 type Params = Promise<{ locale: string; id: string }>;
@@ -21,24 +17,12 @@ export default async function AdminBlogEditPage({
   const locale: Locale = rawLocale;
   const messages = getMessages(locale);
 
-  const [post, categories] = await Promise.all([
-    getAdminBlogById(id),
-    listAdminBlogCategories().catch(() => []),
-  ]);
-
-  if (!post || categories.length === 0) {
-    notFound();
-  }
-
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] flex-1 flex-col">
-      <AdminBlogForm
-        mode="edit"
-        locale={locale}
-        messages={messages}
-        categories={categories}
-        initial={post}
-      />
-    </div>
+    <AdminBlogEditorPageClient
+      mode="edit"
+      locale={locale}
+      messages={messages}
+      postId={id}
+    />
   );
 }

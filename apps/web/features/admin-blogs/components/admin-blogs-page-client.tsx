@@ -1,0 +1,89 @@
+'use client';
+
+import Link from 'next/link';
+import { Suspense } from 'react';
+
+import { Button } from '@/components/ui/button';
+import type { Locale, Messages } from '@/shared/i18n';
+
+import { useAdminBlogsPage } from '../hooks/use-admin-blogs-page';
+import { AdminBlogsFilterBar } from './admin-blogs-filter-bar';
+import { AdminBlogsPagination } from './admin-blogs-pagination';
+import { AdminBlogsTable } from './admin-blogs-table';
+import { useAdminBlogCategoriesOptions } from '../hooks/use-admin-blog-categories-options';
+
+type AdminBlogsPageClientProps = {
+  locale: Locale;
+  messages: Messages;
+};
+
+function AdminBlogsPageContent({
+  locale,
+  messages,
+}: AdminBlogsPageClientProps) {
+  const t = messages.admin.blogs;
+  const { data, isLoading, emptyWithFilters } = useAdminBlogsPage();
+  const { categories } = useAdminBlogCategoriesOptions();
+
+  const resetHref = `/${locale}/admin/blogs`;
+  const items = data?.items ?? [];
+  const totalPages = data?.totalPages ?? 1;
+  const currentPage = data?.currentPage ?? 1;
+  const totalItems = data?.totalItems ?? 0;
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-6" role="status" aria-busy="true">
+        <p className="text-sm text-muted-foreground">…</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center justify-end">
+        <Button type="button" asChild>
+          <Link href={`/${locale}/admin/blogs/new`}>{t.actions.create}</Link>
+        </Button>
+      </div>
+
+      <AdminBlogsFilterBar messages={messages} categories={categories} />
+
+      {items.length === 0 && emptyWithFilters ? (
+        <div
+          className="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed bg-card px-6 py-12 text-center"
+          role="status"
+        >
+          <p className="text-sm text-muted-foreground">{t.filteredEmpty}</p>
+          <Button type="button" variant="outline" size="sm" asChild>
+            <Link href={resetHref}>{t.resetFilters}</Link>
+          </Button>
+        </div>
+      ) : (
+        <AdminBlogsTable blogs={items} messages={messages} locale={locale} />
+      )}
+
+      {totalItems > 0 ? (
+        <AdminBlogsPagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          messages={messages}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+export function AdminBlogsPageClient(props: AdminBlogsPageClientProps) {
+  return (
+    <Suspense
+      fallback={
+        <div className="text-sm text-muted-foreground" role="status">
+          …
+        </div>
+      }
+    >
+      <AdminBlogsPageContent {...props} />
+    </Suspense>
+  );
+}

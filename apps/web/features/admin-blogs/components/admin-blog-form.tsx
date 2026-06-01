@@ -1,19 +1,16 @@
 'use client';
 
 import type { MDXEditorMethods } from '@mdxeditor/editor';
-import {
-  useActionState,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useTransition,
-} from 'react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 import type { Locale, Messages } from '@/shared/i18n';
 
-import { createBlogAction, updateBlogAction } from '../actions/blog-actions';
+import {
+  submitCreateBlogClient,
+  submitUpdateBlogClient,
+} from '../lib/admin-blogs-client-api';
 import type {
   AdminBlogCategoryOption,
   AdminBlogPost,
@@ -46,6 +43,7 @@ type AdminBlogFormProps = {
   messages: Messages;
   categories: AdminBlogCategoryOption[];
   initial?: AdminBlogPost;
+  postId?: string;
 };
 
 export function AdminBlogForm({
@@ -54,17 +52,15 @@ export function AdminBlogForm({
   messages,
   categories,
   initial,
+  postId,
 }: AdminBlogFormProps) {
+  const router = useRouter();
   const t = messages.admin.blogs.form;
   const tActions = messages.admin.blogs.actions;
   const tv = t.validation;
 
-  const actionFn = mode === 'create' ? createBlogAction : updateBlogAction;
-  const [state, formAction, pending] = useActionState(
-    actionFn,
-    initialBlogFormActionState,
-  );
-  const [, startTransition] = useTransition();
+  const [state, setState] = useState(initialBlogFormActionState);
+  const [pending, setPending] = useState(false);
 
   const blogForm = useAdminBlogForm({
     mode,
@@ -158,7 +154,7 @@ export function AdminBlogForm({
   }, [state, t.errors]);
 
   const submitWithIntent = useCallback(
-    (intent: SubmitIntent) => {
+    async (intent: SubmitIntent) => {
       setSubmitIntent(intent);
       const data = validateAndGetData(intent);
       if (!data) return;
@@ -166,18 +162,37 @@ export function AdminBlogForm({
       const fd = buildFormData(data, {
         locale,
         submitIntent: intent,
-        postId: initial?.id,
+        postId: initial?.id ?? postId,
       });
 
-      startTransition(() => {
-        formAction(fd);
-      });
+      setPending(true);
+      try {
+        if (mode === 'create') {
+          const result = await submitCreateBlogClient(fd);
+          setState(result);
+          if (result.ok && result.createdId) {
+            clearDraftStorage();
+            router.push(`/${locale}/admin/blogs/${result.createdId}/edit`);
+            router.refresh();
+          }
+        } else {
+          const id = postId ?? initial?.id;
+          if (!id) return;
+          const result = await submitUpdateBlogClient(id, fd);
+          setState(result);
+        }
+      } finally {
+        setPending(false);
+      }
     },
     [
       buildFormData,
-      formAction,
+      clearDraftStorage,
       initial?.id,
       locale,
+      mode,
+      postId,
+      router,
       setSubmitIntent,
       validateAndGetData,
     ],

@@ -29,7 +29,10 @@ import {
 
 import { PrismaService } from '../../prisma/prisma.service';
 
-import type { JwtPayload } from '../interfaces/jwt-payload.interface';
+import type {
+  JwtPayload,
+  JwtTokenType,
+} from '../interfaces/jwt-payload.interface';
 
 const userSelect = {
   id: true,
@@ -55,7 +58,7 @@ export class AuthService {
 
   async login(
     dto: LoginDto,
-  ): Promise<{ user: AuthUserDto; accessToken: string }> {
+  ): Promise<{ user: AuthUserDto; accessToken: string; refreshToken: string }> {
     const email = dto.email.trim().toLowerCase();
 
     if (!email || !dto.password) {
@@ -82,15 +85,65 @@ export class AuthService {
     }
 
     const authUser = this.toAuthUserDto(user);
-    const payload: JwtPayload = {
-      sub: authUser.id,
-      email: authUser.email,
-      role: authUser.role,
+    const tokens = await this.issueTokenPair(authUser);
+
+    return { user: authUser, ...tokens };
+  }
+
+  async refresh(refreshToken: string): Promise<{
+    user: AuthUserDto;
+    accessToken: string;
+    refreshToken: string;
+  }> {
+    if (!refreshToken?.trim()) {
+      throw new UnauthorizedException(I18nKey.Errors.Auth.TokenExpired);
+    }
+
+    let payload: JwtPayload;
+    try {
+      payload = await this.jwtService.verifyAsync<JwtPayload>(refreshToken);
+    } catch {
+      throw new UnauthorizedException(I18nKey.Errors.Auth.TokenExpired);
+    }
+
+    if (payload.tokenType !== 'refresh') {
+      throw new UnauthorizedException(I18nKey.Errors.Auth.TokenExpired);
+    }
+
+    const user = await this.getMe(payload.sub);
+    const tokens = await this.issueTokenPair(user);
+
+    return { user, ...tokens };
+  }
+
+  private async issueTokenPair(
+    user: AuthUserDto,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const base: JwtPayload = {
+      sub: user.id,
+      email: user.email,
+      role: user.role,
     };
 
-    const accessToken = await this.jwtService.signAsync(payload);
+    const accessToken = await this.jwtService.signAsync(
+      { ...base, tokenType: 'access' satisfies JwtTokenType },
+      { expiresIn: this.getAccessExpiresIn() },
+    );
 
-    return { user: authUser, accessToken };
+    const refreshToken = await this.jwtService.signAsync(
+      { ...base, tokenType: 'refresh' satisfies JwtTokenType },
+      { expiresIn: this.getRefreshExpiresIn() },
+    );
+
+    return { accessToken, refreshToken };
+  }
+
+  private getAccessExpiresIn(): string {
+    return this.configService.get<string>('JWT_ACCESS_EXPIRES_IN') ?? '15m';
+  }
+
+  private getRefreshExpiresIn(): string {
+    return this.configService.get<string>('JWT_REFRESH_EXPIRES_IN') ?? '7d';
   }
 
   async register(dto: RegisterDto): Promise<RegisterResponseDto> {
@@ -213,16 +266,67 @@ export class AuthService {
     };
   }
 
-  getCookieName(): string {
+  getAccessCookieName(): string {
     return this.configService.get<string>('AUTH_COOKIE_NAME') ?? 'access_token';
   }
 
-  getCookieOptions(): {
+  /** @deprecated Use getAccessCookieName */
+  getCookieName(): string {
+    return this.getAccessCookieName();
+  }
+
+  getRefreshCookieName(): string {
+    return (
+      this.configService.get<string>('REFRESH_COOKIE_NAME') ?? 'refresh_token'
+    );
+  }
+
+  getAccessCookieOptions(): {
     httpOnly: boolean;
     secure: boolean;
     sameSite: 'lax';
     path: string;
     maxAge: number;
+  } {
+    return {
+      ...this.getBaseCookieOptions(),
+      maxAge: this.parseExpiresToMs(this.getAccessExpiresIn()),
+    };
+  }
+
+  getRefreshCookieOptions(): {
+    httpOnly: boolean;
+    secure: boolean;
+    sameSite: 'lax';
+    path: string;
+    maxAge: number;
+  } {
+    return {
+      ...this.getBaseCookieOptions(),
+      maxAge: this.parseExpiresToMs(this.getRefreshExpiresIn()),
+    };
+  }
+
+  /** @deprecated Use getAccessCookieOptions */
+  getCookieOptions(): ReturnType<AuthService['getAccessCookieOptions']> {
+    return this.getAccessCookieOptions();
+  }
+
+  getClearCookieOptions(): {
+    httpOnly: boolean;
+    secure: boolean;
+    sameSite: 'lax';
+    path: string;
+  } {
+    const { httpOnly, secure, sameSite, path } = this.getBaseCookieOptions();
+    return { httpOnly, secure, sameSite, path };
+  }
+
+  private getBaseCookieOptions(): {
+    httpOnly: boolean;
+    secure: boolean;
+    sameSite: 'lax';
+    path: string;
   } {
     const isProduction =
       this.configService.get<string>('NODE_ENV') === 'production';
@@ -232,19 +336,23 @@ export class AuthService {
       secure: isProduction,
       sameSite: 'lax',
       path: '/',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
     };
   }
 
-  /** Must match set-cookie attributes (except maxAge) so browsers clear the session. */
-  getClearCookieOptions(): {
-    httpOnly: boolean;
-    secure: boolean;
-    sameSite: 'lax';
-    path: string;
-  } {
-    const { httpOnly, secure, sameSite, path } = this.getCookieOptions();
-    return { httpOnly, secure, sameSite, path };
+  private parseExpiresToMs(expiresIn: string): number {
+    const match = /^(\d+)([smhd])$/.exec(expiresIn.trim());
+    if (!match) {
+      return 15 * 60 * 1000;
+    }
+    const value = Number.parseInt(match[1] ?? '0', 10);
+    const unit = match[2];
+    const multipliers: Record<string, number> = {
+      s: 1000,
+      m: 60 * 1000,
+      h: 60 * 60 * 1000,
+      d: 24 * 60 * 60 * 1000,
+    };
+    return value * (multipliers[unit ?? 'm'] ?? 60 * 1000);
   }
 
   private toAuthUserDto(user: SafeUser): AuthUserDto {

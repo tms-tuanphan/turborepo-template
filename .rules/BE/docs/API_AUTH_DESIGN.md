@@ -7,15 +7,16 @@ Scope: Admin authentication, session handling, RBAC, protected API.
 
 ## Endpoints (Phase 1–2)
 
-| Method | Path                        | Auth       |
-| ------ | --------------------------- | ---------- |
-| POST   | `/api/auth/login`           | Public     |
-| POST   | `/api/auth/logout`          | Public     |
-| GET    | `/api/auth/me`              | JWT cookie |
-| POST   | `/api/auth/register`        | Public     |
-| POST   | `/api/auth/forgot-password` | Public     |
-| POST   | `/api/auth/reset-password`  | Public     |
-| POST   | `/api/auth/change-password` | JWT cookie |
+| Method | Path                        | Auth                            |
+| ------ | --------------------------- | ------------------------------- |
+| POST   | `/api/auth/login`           | Public                          |
+| POST   | `/api/auth/refresh`         | Public (`refresh_token` cookie) |
+| POST   | `/api/auth/logout`          | Public                          |
+| GET    | `/api/auth/me`              | JWT cookie (`access_token`)     |
+| POST   | `/api/auth/register`        | Public                          |
+| POST   | `/api/auth/forgot-password` | Public                          |
+| POST   | `/api/auth/reset-password`  | Public                          |
+| POST   | `/api/auth/change-password` | JWT cookie                      |
 
 ### Register
 
@@ -42,9 +43,16 @@ Scope: Admin authentication, session handling, RBAC, protected API.
 }
 ```
 
-## Cookie
+## Cookies
 
-`httpOnly`, `secure` in production, `sameSite: 'lax'`, `path: '/'`, name from `AUTH_COOKIE_NAME` (default `access_token`).
+| Cookie  | Env name              | Default         | Purpose                                                               |
+| ------- | --------------------- | --------------- | --------------------------------------------------------------------- |
+| Access  | `AUTH_COOKIE_NAME`    | `access_token`  | Short-lived JWT for API auth (`JWT_ACCESS_EXPIRES_IN`, default `15m`) |
+| Refresh | `REFRESH_COOKIE_NAME` | `refresh_token` | Long-lived JWT for rotation (`JWT_REFRESH_EXPIRES_IN`, default `7d`)  |
+
+Both: `httpOnly`, `secure` in production, `sameSite: 'lax'`, `path: '/'`.
+
+`POST /api/auth/refresh` reads `refresh_token`, verifies `tokenType: refresh`, issues new access + refresh cookies (rotation).
 
 ## Error codes (I18nKey)
 
