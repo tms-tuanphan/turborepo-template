@@ -24,7 +24,9 @@ When the task touches **API contract**, **error keys**, or **Nest + web** togeth
 | [agents/README.md](./agents/README.md) | Sub-agent registry and manifests |
 | [rules/](./rules/) | Glob-triggered rules (detail) |
 | [docs/](./docs/) | Architecture and patterns |
+| [docs/knowledge/](./docs/knowledge/README.md) | Platform Knowledge stubs (Next.js, React, TS, perf, security) |
 | [skills/](./skills/) | Deep playbooks (forms, auth, perf, design) |
+| [skills/generators/](./skills/generators/README.md) | Scaffold / codegen playbooks |
 
 ## Monorepo (always)
 
@@ -55,11 +57,25 @@ For refactors, performance, bugs, new features, forms, or i18n:
 4. Follow [_shared/output-contract.md](./agents/_shared/output-contract.md) — cite evidence; use `INSUFFICIENT_CONTEXT` instead of guessing
 5. After implementation: **quality-gates** (lint, types, **build**) → **reviewer** last (severity on issues)
 
+## Four-tier model
+
+```text
+Knowledge (docs/knowledge/) → Architecture (docs 01–11 + rules) → Coding (fe-coding-*, fe-services-*) → Agents / Generators
+```
+
+## Generators vs sub-agents
+
+| Need | Use |
+| --- | --- |
+| Ship code in repo, PR, CI | [coordinator](./agents/coordinator/AGENTS.md) + sub-agents |
+| Requirements, scaffold, test plan only | [skills/generators/](./skills/generators/README.md) |
+
 ## Always apply (summary)
 
 - **I18N:** User-facing strings in EN + JA — see [rules/fe-i18n.mdc](./rules/fe-i18n.mdc)
 - **Layers:** `APP → FEATURES → SHARED → CORE → UI` — see [rules/fe-import-boundaries.mdc](./rules/fe-import-boundaries.mdc)
-- **Principles:** KISS, YAGNI, DRY; no `any`; Zod for user input
+- **Services:** HTTP in `features/*/services/` — [rules/fe-services-layer.mdc](./rules/fe-services-layer.mdc)
+- **Principles:** KISS, YAGNI, DRY; no `any`; Zod for user input; RSC default — [fe-coding-react.mdc](./rules/fe-coding-react.mdc)
 - **Quality:** `pnpm lint`, `pnpm check-types`, Knip, tests, build — see [rules/fe-quality-gates.mdc](./rules/fe-quality-gates.mdc)
 
 ## Implementation checklist
@@ -73,13 +89,26 @@ For refactors, performance, bugs, new features, forms, or i18n:
 7. Shared UI from `@repo/ui` when cross-app
 8. Reviewer agent after non-trivial changes; quality-gates before reviewer when feasible
 9. Feature work: [rules/fe-feature-module.mdc](./rules/fe-feature-module.mdc); mutations: [rules/fe-server-actions.mdc](./rules/fe-server-actions.mdc)
+10. No `fetch` in components — [rules/fe-services-layer.mdc](./rules/fe-services-layer.mdc)
+
+## Rules index (glob)
+
+| Rule | Topic |
+| --- | --- |
+| fe-import-boundaries, fe-feature-module, fe-monorepo | Layers |
+| fe-next-app-router, fe-server-actions | App Router |
+| fe-services-layer | HTTP / services |
+| fe-coding-react, fe-coding-typescript, fe-coding-styling | Coding |
+| fe-performance, fe-security | Perf & security |
+| fe-shadcn-ui, fe-i18n, fe-quality-gates | UI, i18n, CI |
 
 ## Docs index
 
-`./docs/README.md` → `01-architecture` … `10-dependency-management`
+`./docs/README.md` → `01-architecture` … `11-services-migration`, [knowledge/](./docs/knowledge/README.md)
 
 ## Skills index
 
+- `./skills/generators/README.md`
 - `./skills/project-architecture/SKILL.md`
 - `./skills/form-patterns/SKILL.md`
 - `./skills/auth-patterns/SKILL.md`

@@ -10,7 +10,8 @@ Analyze performance **only within scoped paths** (feature manifest routes + feat
 
 ## Delegate (load selectively)
 
-Base: [../../skills/vercel-react-best-practices/SKILL.md](../../skills/vercel-react-best-practices/SKILL.md)
+Base: [../../rules/fe-performance.mdc](../../rules/fe-performance.mdc), [../../docs/knowledge/performance/README.md](../../docs/knowledge/performance/README.md)  
+Deep rules: [../../skills/vercel-react-best-practices/SKILL.md](../../skills/vercel-react-best-practices/SKILL.md)
 
 Load **individual rule files** from `../../skills/vercel-react-best-practices/rules/` by prefix:
 

@@ -42,7 +42,8 @@ import { UserForm } from '@/features/users'; // trong features/auth
 features/{name}/
 ├── index.ts              # Public API
 ├── components/
-├── actions/
+├── services/             # HTTP (*.service.ts) — see fe-services-layer.mdc
+├── actions/              # Server Actions (orchestration)
 ├── hooks/
 ├── types/
 └── validations/

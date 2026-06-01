@@ -6,6 +6,14 @@ alwaysApply: false
 
 # ShadcnUI & Tailwind
 
+## Component taxonomy
+
+| Type | Path | Rule |
+| --- | --- | --- |
+| **ui** | `components/ui/`, `@repo/ui/*` | Pure UI — no fetch, no feature imports |
+| **shared** | `shared/components/` | Cross-feature reusable |
+| **feature** | `features/*/components/` | Business UI — use services/hooks, not raw API |
+
 - `apps/web/components/ui/*` — web-only shadcn primitives
 - Cross-app primitives → `packages/ui`, import `@repo/ui/*`
 - Prefer Tailwind utilities over CSS files

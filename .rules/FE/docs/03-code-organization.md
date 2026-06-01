@@ -75,6 +75,18 @@ app/
 
 ---
 
+## Component taxonomy (ui / shared / feature)
+
+| Loại        | Path                           | Rule                                                 |
+| ----------- | ------------------------------ | ---------------------------------------------------- |
+| **ui**      | `components/ui/`, `@repo/ui/*` | Pure presentational — no business logic, no fetch    |
+| **shared**  | `shared/components/`           | Reusable across features (DataTable, layout shells)  |
+| **feature** | `features/*/components/`       | Business UI — import feature public API from outside |
+
+Rule: [fe-shadcn-ui.mdc](../rules/fe-shadcn-ui.mdc), [fe-services-layer.mdc](../rules/fe-services-layer.mdc)
+
+---
+
 ## 🔐 Nguyên tắc Import
 
 ### Quy tắc vàng
@@ -96,7 +108,10 @@ import { useDebounce } from '@/shared/hooks/use-debounce';
 
 // Features → Core
 import { cn } from '@/core/lib/utils';
-import { apiClient } from '@/core/lib/api-client';
+import { getSessionHeaders } from '@/core/services/auth-headers'; // prefer services over raw apiClient in features
+
+// Features → own services (HTTP)
+import { getUsers } from '@/features/users/services/user.service';
 
 // Any layer → UI
 import { Button } from '@/components/ui/button';

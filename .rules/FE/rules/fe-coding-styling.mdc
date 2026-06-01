@@ -1,0 +1,26 @@
+---
+description: Styling rules — Tailwind, CVA, cn(), minimal CSS files
+globs: apps/web/**/*.{ts,tsx},packages/ui/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Styling rules
+
+Detail: [docs/knowledge/ui/README.md](../docs/knowledge/ui/README.md), [fe-shadcn-ui.mdc](./fe-shadcn-ui.mdc)
+
+## Approach
+
+- ❌ Scattered one-off `.css` / `.module.css` per component (unless global tokens or third-party override)
+- ✅ Tailwind utility classes for layout and spacing
+- ✅ `cn()` from `@/core/lib/utils` (clsx + tailwind-merge) for conditional classes
+- ✅ **CVA** (`class-variance-authority`) for component variants (size, intent, state)
+
+## Components
+
+- Reuse Shadcn primitives in `components/ui/` or `@repo/ui/*` before custom markup
+- Cross-app styling primitives → `packages/ui`
+- Dark mode via `next-themes` / `attribute="class"` — see root layout providers
+
+## Accessibility
+
+- Pair with [web-design-guidelines](../skills/web-design-guidelines/SKILL.md): labels, focus, keyboard for interactive UI

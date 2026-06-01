@@ -1,0 +1,37 @@
+---
+description: TypeScript coding rules — strict types, no any, const objects over enum
+globs: apps/web/**/*.{ts,tsx},packages/ui/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# TypeScript coding rules
+
+Detail: [docs/knowledge/typescript/README.md](../docs/knowledge/typescript/README.md)
+
+## Types
+
+- ❌ `any` (including test code unless unavoidable with narrow escape hatch)
+- ✅ `unknown` + type guards / Zod `.parse()` / `.safeParse()`
+- ✅ Generics for reusable hooks, services, and API responses
+
+## Constants vs enum
+
+- ❌ TypeScript `enum` for string unions
+- ✅ `as const` object + derived union type:
+
+```typescript
+export const ROLE = {
+  ADMIN: 'admin',
+  USER: 'user',
+} as const;
+
+export type Role = (typeof ROLE)[keyof typeof ROLE];
+```
+
+- ✅ Zod `z.enum([...])` for runtime validation (not TS `enum`)
+
+## Feature types
+
+- Domain types in `features/<name>/types/`
+- Shared API shapes from `@repo/api` when contract is cross-stack
+- Export public types via `features/<name>/index.ts` only when needed outside the feature

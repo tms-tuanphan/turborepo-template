@@ -1,0 +1,35 @@
+---
+description: Services layer — HTTP/fetch in services, not components; actions orchestrate
+globs: apps/web/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Services layer
+
+Detail: [docs/11-services-migration.md](../docs/11-services-migration.md), [docs/04-feature-module.md](../docs/04-feature-module.md)
+
+## Placement
+
+| Layer | Path | Responsibility |
+| --- | --- | --- |
+| Feature API | `features/<name>/services/*.service.ts` | Feature HTTP calls, DTO mapping |
+| Shared infra | `core/services/*.ts` | Base URL, auth headers, shared clients |
+| Low-level client | `core/lib/api-client.ts` | Fetch wrapper — **used by services**, not components |
+
+## Rules
+
+- ❌ `fetch` / `apiClient` directly in `*.tsx` components (pages, feature UI)
+- ❌ Business HTTP logic duplicated inside Server Actions
+- ✅ Services export typed functions (`getUsers`, `createUser`, …)
+- ✅ Server Actions: Zod validate → call service → `revalidatePath` / `redirect`
+- ✅ Client hooks: TanStack Query `queryFn` calls service (server) or thin server-action wrapper
+
+## Naming
+
+- Files: `kebab-case.service.ts` (e.g. `user.service.ts`)
+- Functions: verb + noun (`getUsers`, `updateUserById`)
+
+## Import boundaries
+
+- Services may import from `core/`, `@repo/api`
+- Services must **not** import from `features/<other>/` or React

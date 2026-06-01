@@ -32,7 +32,7 @@ Only paths listed in `scope`:
 ## Procedure
 
 1. Read `publicApi` (`index.ts`) — list exported surface
-2. List components, hooks, actions, validations under `featureRoot`
+2. List components, services, hooks, actions, validations under `featureRoot`
 3. Map route entrypoints under `scope.routes`
 4. Note Server Actions / API routes under `scope.apiRoutes`
 5. Flag cross-feature imports (violation)
@@ -42,6 +42,7 @@ Only paths listed in `scope`:
 - Layer rules: [../../docs/04-feature-module.md](../../docs/04-feature-module.md)
 - Import boundaries: [../../rules/fe-import-boundaries.mdc](../../rules/fe-import-boundaries.mdc)
 - Feature layout: [../../rules/fe-feature-module.mdc](../../rules/fe-feature-module.mdc)
+- Services: [../../rules/fe-services-layer.mdc](../../rules/fe-services-layer.mdc)
 
 ## Suggest next agents (Coordinator)
 
@@ -49,6 +50,7 @@ Only paths listed in `scope`:
 | ----------------------------------- | --------------- |
 | `scope.routes`                      | route           |
 | `components/` under featureRoot     | component       |
+| `services/` or `**/services/**`     | api             |
 | `scope.serverActions` or `actions/` | api, validation |
 | `validations/`                      | validation      |
 | User-facing UI                      | i18n            |

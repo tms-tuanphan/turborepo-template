@@ -1,0 +1,39 @@
+---
+description: React coding rules — RSC default, TanStack Query, state, callbacks
+globs: apps/web/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# React coding rules
+
+Detail: [docs/knowledge/react/README.md](../docs/knowledge/react/README.md), [fe-next-app-router.mdc](./fe-next-app-router.mdc)
+
+## Data fetching
+
+- ❌ `useEffect` + `fetch` to load data in components
+- ✅ Server Components fetch on server (async page/layout)
+- ✅ TanStack Query in client hooks (`features/*/hooks/`) for client-side cache/refetch
+- ✅ Server Actions for mutations; hooks invalidate queries after success
+
+## Client boundary
+
+- Default **Server Components**; `'use client'` only when needed (hooks, browser APIs, event handlers)
+- Priority: **RSC** → **Server Action** → **Client Component** (`"use client"` = last choice)
+
+## State
+
+- ❌ Deep prop drilling across many layers
+- ✅ URL/searchParams for shareable UI state (filters, pagination) when appropriate
+- ✅ React Context for localized tree state (theme, form wizard)
+- ✅ Zustand for cross-feature client state (`features/*/stores/` or `shared/`)
+
+## Callbacks & memoization
+
+- ❌ Inline anonymous functions passed to `memo()` children or heavy lists without need
+- ✅ `useCallback` when passing stable callbacks to memoized children or virtualized lists
+- ❌ Derived state synced via `useEffect` when it can be computed during render
+
+## Components
+
+- Business logic stays in features (`hooks/`, `services/`, `actions/`) — not in presentational UI
+- See [fe-services-layer.mdc](./fe-services-layer.mdc) for API access

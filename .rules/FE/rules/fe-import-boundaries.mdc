@@ -23,7 +23,8 @@ Allowed direction:
 
 - Use `?.` and `??` for nested access
 - Lists: empty, loading, error states
-- Zod for user input (forms, server actions, route handlers)
+- Zod for user input (forms, server actions, route handlers) — ❌ ad-hoc `if/else` validation in components
+- HTTP/fetch in [services layer](./fe-services-layer.mdc), not in components
 
 ## Clean props
 

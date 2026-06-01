@@ -5,7 +5,9 @@
     "featureRoot": "apps/web/features/my-feature",
     "publicApi": "apps/web/features/my-feature/index.ts",
     "routes": ["apps/web/app/[locale]/(site)/my-feature/**"],
-    "apiRoutes": []
+    "apiRoutes": [],
+    "serverActions": ["apps/web/features/my-feature/actions/**"],
+    "services": ["apps/web/features/my-feature/services/**"]
   },
   "allowedImports": [
     "apps/web/shared/**",
@@ -14,5 +16,8 @@
     "@repo/ui/**"
   ],
   "forbiddenRoots": ["apps/web/features/other-feature"],
-  "relatedDocs": [".rules/FE/docs/04-feature-module.md"]
+  "relatedDocs": [
+    ".rules/FE/docs/04-feature-module.md",
+    ".rules/FE/docs/11-services-migration.md"
+  ]
 }

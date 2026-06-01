@@ -12,10 +12,13 @@ features/[feature-name]/
 ├── components/               # UI components
 │   ├── [name].tsx
 │   └── index.ts
-├── actions/                  # Server Actions
+├── services/                 # HTTP / API calls (no React)
+│   ├── [name].service.ts
+│   └── index.ts
+├── actions/                  # Server Actions (validate → service → revalidate)
 │   ├── [name].ts
 │   └── index.ts
-├── hooks/                    # React hooks
+├── hooks/                    # React hooks (TanStack Query, UI state)
 │   ├── use-[name].ts
 │   └── index.ts
 ├── stores/                   # State (optional)
@@ -49,7 +52,7 @@ export type { User, CreateUserInput, UpdateUserInput } from './types';
 export { userSchema } from './validations/user.schema';
 
 // ❌ DON'T export internals
-// hooks, stores, utils stay private
+// hooks, stores, services, utils stay private unless explicitly needed
 ```
 
 ---
@@ -58,16 +61,17 @@ export { userSchema } from './validations/user.schema';
 
 ### Files & Folders
 
-| Type           | Convention    | Examples                              |
-| -------------- | ------------- | ------------------------------------- |
-| **Routes**     | `kebab-case`  | `page.tsx`, `layout.tsx`              |
-| **Components** | `kebab-case`  | `user-form.tsx`, `data-table.tsx`     |
-| **Actions**    | `kebab-case`  | `create-user.ts`, `get-users.ts`      |
-| **Hooks**      | `use-*.ts`    | `use-auth.ts`, `use-debounce.ts`      |
-| **Stores**     | `*-store.ts`  | `auth-store.ts`, `theme-store.ts`     |
-| **Types**      | `kebab-case`  | `api.ts`, `user.ts`                   |
-| **Schemas**    | `*.schema.ts` | `user.schema.ts`, `product.schema.ts` |
-| **Utils**      | `kebab-case`  | `format.ts`, `validators.ts`          |
+| Type           | Convention     | Examples                              |
+| -------------- | -------------- | ------------------------------------- |
+| **Routes**     | `kebab-case`   | `page.tsx`, `layout.tsx`              |
+| **Components** | `kebab-case`   | `user-form.tsx`, `data-table.tsx`     |
+| **Services**   | `*.service.ts` | `user.service.ts`, `blog.service.ts`  |
+| **Actions**    | `kebab-case`   | `create-user.ts`, `get-users.ts`      |
+| **Hooks**      | `use-*.ts`     | `use-auth.ts`, `use-debounce.ts`      |
+| **Stores**     | `*-store.ts`   | `auth-store.ts`, `theme-store.ts`     |
+| **Types**      | `kebab-case`   | `api.ts`, `user.ts`                   |
+| **Schemas**    | `*.schema.ts`  | `user.schema.ts`, `product.schema.ts` |
+| **Utils**      | `kebab-case`   | `format.ts`, `validators.ts`          |
 
 ### Code Naming
 
@@ -109,7 +113,7 @@ export const MAX_FILE_SIZE = 5242880;
 
 ```bash
 # Template command
-mkdir -p apps/web/features/{feature-name}/{components,actions,hooks,types,validations}
+mkdir -p apps/web/features/{feature-name}/{components,services,actions,hooks,types,validations}
 touch apps/web/features/{feature-name}/index.ts
 ```
 

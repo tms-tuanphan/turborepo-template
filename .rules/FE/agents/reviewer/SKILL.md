@@ -20,24 +20,27 @@ If a claim cannot be verified in those files → flag `hallucination_risk`.
 
 ## Checklist
 
-| Area                 | Source                                                                                                                               |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Import boundaries    | [fe-import-boundaries.mdc](../../rules/fe-import-boundaries.mdc)                                                                     |
-| i18n                 | [fe-i18n.mdc](../../rules/fe-i18n.mdc) — or prior [i18n agent](../i18n/SKILL.md) audit                                               |
-| Validation / Zod     | [validation agent](../validation/SKILL.md) findings if forms in diff                                                                 |
-| App Router / actions | [fe-next-app-router.mdc](../../rules/fe-next-app-router.mdc)                                                                         |
-| UI / a11y            | [web-design-guidelines](../../skills/web-design-guidelines/SKILL.md)                                                                 |
-| Types / quality      | [fe-quality-gates.mdc](../../rules/fe-quality-gates.mdc) — prefer [quality-gates agent](../quality-gates/SKILL.md) run before review |
-| No `any`             | strict TS                                                                                                                            |
+| Area                 | Source                                                                                                                                                      |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Import boundaries    | [fe-import-boundaries.mdc](../../rules/fe-import-boundaries.mdc)                                                                                            |
+| i18n                 | [fe-i18n.mdc](../../rules/fe-i18n.mdc) — or prior [i18n agent](../i18n/SKILL.md) audit                                                                      |
+| Validation / Zod     | [validation agent](../validation/SKILL.md) findings if forms in diff                                                                                        |
+| App Router / actions | [fe-next-app-router.mdc](../../rules/fe-next-app-router.mdc)                                                                                                |
+| Services / fetch     | [fe-services-layer.mdc](../../rules/fe-services-layer.mdc)                                                                                                  |
+| Security             | [fe-security.mdc](../../rules/fe-security.mdc), [security-review generator](../../skills/generators/security-review/SKILL.md)                               |
+| Performance / RSC    | [fe-performance.mdc](../../rules/fe-performance.mdc) when client boundaries change                                                                          |
+| UI / a11y            | [web-design-guidelines](../../skills/web-design-guidelines/SKILL.md), [audit-accessibility generator](../../skills/generators/audit-accessibility/SKILL.md) |
+| Types / quality      | [fe-quality-gates.mdc](../../rules/fe-quality-gates.mdc) — prefer [quality-gates agent](../quality-gates/SKILL.md) run before review                        |
+| No `any`             | strict TS                                                                                                                                                   |
 
 ## Review procedure
 
 1. List changed files from diff
 2. Per file: verify layer placement and imports
 3. Check new user strings use message keys (EN + JA) — keys namespaced per [i18n agent](../i18n/SKILL.md)
-4. Check Server Actions have Zod + auth where needed
+4. Check Server Actions have Zod + auth where needed; HTTP in services not components
 5. Detect drive-by refactors unrelated to task → `scope_creep`
-6. Detect unsafe patterns: secrets in client, cross-feature imports
+6. Detect unsafe patterns: secrets in client, cross-feature imports, raw `apiClient` in `.tsx`
 7. If UI in diff — UX/a11y spot-check (see below)
 8. Use task **Risk** from plan when provided; flag regressions against listed risks
 

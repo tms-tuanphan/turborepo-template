@@ -31,6 +31,8 @@
 | [08-examples.md](./08-examples.md)                           | Ví dụ thực tế + Rules cho AI/Cursor                     |
 | [09-monorepo-packages.md](./09-monorepo-packages.md)         | Khi nào đưa code vào `packages/*` (focus `packages/ui`) |
 | [10-dependency-management.md](./10-dependency-management.md) | Quy tắc cài dependency (pnpm + Turborepo) + chống trùng |
+| [11-services-migration.md](./11-services-migration.md)       | Services layer — tách HTTP khỏi actions/components      |
+| [knowledge/README.md](./knowledge/README.md)                 | Platform Knowledge (Next.js, React, TS, perf, security) |
 
 ---
 

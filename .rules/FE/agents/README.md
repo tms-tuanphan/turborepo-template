@@ -91,7 +91,19 @@ Validate: `pnpm fe:manifest-check` (repo root).
 | [fe-quality-gates.mdc](../rules/fe-quality-gates.mdc)         | CI / lint / Knip             |
 | [fe-feature-module.mdc](../rules/fe-feature-module.mdc)       | Feature folders & public API |
 | [fe-server-actions.mdc](../rules/fe-server-actions.mdc)       | Actions & `app/api`          |
+| [fe-services-layer.mdc](../rules/fe-services-layer.mdc)       | HTTP in services             |
+| [fe-coding-react.mdc](../rules/fe-coding-react.mdc)           | React / RSC / Query          |
+| [fe-coding-typescript.mdc](../rules/fe-coding-typescript.mdc) | TS strict / const            |
+| [fe-coding-styling.mdc](../rules/fe-coding-styling.mdc)       | Tailwind / CVA               |
+| [fe-performance.mdc](../rules/fe-performance.mdc)             | Perf priority                |
+| [fe-security.mdc](../rules/fe-security.mdc)                   | Secrets, auth on mutations   |
+
+## Platform knowledge
+
+Stubs: [../docs/knowledge/README.md](../docs/knowledge/README.md)
 
 ## Skills
 
 Deep playbooks: [../skills/](../skills/). Sub-agents **delegate**; they do not duplicate skill content.
+
+**Generators (scaffold):** [../skills/generators/README.md](../skills/generators/README.md) — use for plans/boilerplate; **coordinator** for repo implementation.

@@ -1,0 +1,37 @@
+---
+description: Security — secrets, env, Server Actions auth, XSS/CSRF awareness
+globs: apps/web/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Security rules
+
+Index: [docs/knowledge/security/README.md](../docs/knowledge/security/README.md)  
+Auth detail: [auth-patterns](../skills/auth-patterns/SKILL.md)
+
+## Secrets & environment
+
+- ❌ Secrets, API keys, or private tokens in Client Components or client bundles
+- ❌ `process.env.SECRET_*` referenced from `'use client'` modules
+- ✅ Server-only env vars in Server Components, Server Actions, `app/api/**`, `core/config/env.ts`
+- ✅ `NEXT_PUBLIC_*` only for values safe to expose to the browser
+
+## Server Actions & route handlers
+
+- Treat Server Actions like **public API endpoints** — authZ check inside the action/handler
+- Validate all input with **Zod** before calling services
+- Return safe error messages (i18n keys where applicable); no stack traces to clients
+
+## Session & cookies
+
+- Follow [auth-patterns](../skills/auth-patterns/SKILL.md) and [middleware-auth](../skills/auth-patterns/references/middleware-auth.md)
+- Do not rely on middleware alone for authorization on mutations
+
+## Client surface
+
+- Avoid `dangerouslySetInnerHTML` unless sanitized; prefer framework-safe rendering
+- CSRF: use framework defaults for Server Actions; for custom APIs verify origin/session
+
+## Review
+
+- Security-focused PR → [security-review](../skills/generators/security-review/SKILL.md) skill + **reviewer** agent last

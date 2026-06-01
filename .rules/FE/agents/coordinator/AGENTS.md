@@ -88,6 +88,10 @@ User task
 │
 ├─ Single-file / trivial → rules only (no coordinator pipeline)
 │
+├─ Scaffold / plan only (no repo commit)
+│   └─ Read skills/generators/ (analyze-requirements → design-feature → generate-*)
+│   └─ Do NOT run full discovery pipeline unless user asks to implement
+│
 ├─ "Where is X?" / unfamiliar repo
 │   └─ repo-scanner → (optional) architecture
 │
@@ -384,3 +388,4 @@ Wait for user acknowledgment before parallel Tasks on **Large** changes.
 - [../../rules/](../../rules/)
 - [../../docs/](../../docs/)
 - [../../frontend-rules-index.mdc](../../frontend-rules-index.mdc)
+- [../../skills/generators/README.md](../../skills/generators/README.md)

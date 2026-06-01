@@ -166,7 +166,25 @@ export default function Error({
 
 ---
 
-## 7. Server Action
+## 7. Feature service (HTTP)
+
+```typescript
+// features/users/services/user.service.ts
+import { apiClient } from '@/core/lib/api-client';
+import type { User, CreateUserInput } from '../types';
+
+export async function getUsers(): Promise<User[]> {
+  return apiClient.get<User[]>('/users');
+}
+
+export async function createUser(input: CreateUserInput): Promise<User> {
+  return apiClient.post<User>('/users', input);
+}
+```
+
+---
+
+## 8. Server Action (orchestration only)
 
 ```typescript
 // features/users/actions/create-user.ts
@@ -175,10 +193,9 @@ export default function Error({
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { userSchema } from '../validations/user.schema';
-import { apiClient } from '@/core/lib/api-client';
+import { createUser } from '../services/user.service';
 
 export async function createUserAction(prevState: unknown, formData: FormData) {
-  // 1. Validate
   const validated = userSchema.safeParse({
     name: formData.get('name'),
     email: formData.get('email'),
@@ -186,19 +203,12 @@ export async function createUserAction(prevState: unknown, formData: FormData) {
   });
 
   if (!validated.success) {
-    return {
-      errors: validated.error.flatten().fieldErrors,
-    };
+    return { errors: validated.error.flatten().fieldErrors };
   }
 
-  // 2. Execute
   try {
-    const user = await apiClient.post('/users', validated.data);
-
-    // 3. Revalidate
+    const user = await createUser(validated.data);
     revalidatePath('/users');
-
-    // 4. Optional redirect
     redirect(`/users/${user.id}`);
   } catch (error) {
     return {
@@ -210,7 +220,7 @@ export async function createUserAction(prevState: unknown, formData: FormData) {
 
 ---
 
-## 8. Client Component với React Hook Form
+## 9. Client Component với React Hook Form
 
 ```typescript
 // features/users/components/user-form.tsx
@@ -291,7 +301,7 @@ export function UserForm({ onSubmit, defaultValues }: UserFormProps) {
 
 ---
 
-## 9. TanStack Query Hook
+## 10. TanStack Query Hook
 
 ```typescript
 // features/users/hooks/use-users.ts
@@ -331,7 +341,7 @@ export function useDeleteUser() {
 
 ---
 
-## 10. Middleware (Auth Protection)
+## 11. Middleware (Auth Protection)
 
 ```typescript
 // apps/web/middleware.ts

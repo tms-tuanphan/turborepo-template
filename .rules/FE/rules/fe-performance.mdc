@@ -1,0 +1,35 @@
+---
+description: Performance — RSC first, streaming, bundle; link to Vercel rules
+globs: apps/web/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Performance rules
+
+Index: [docs/knowledge/performance/README.md](../docs/knowledge/performance/README.md)  
+Deep rules: [vercel-react-best-practices](../skills/vercel-react-best-practices/SKILL.md)
+
+## Rendering priority
+
+1. **Server Component** — default for pages and data-heavy UI
+2. **Server Action** — mutations without client bundle cost
+3. **Client Component** — only for interactivity, subscriptions, browser APIs
+
+`"use client"` is the **last** choice, as low in the tree as possible.
+
+## Data loading
+
+- Parallelize independent server fetches (composition / `Promise.all`)
+- Use `loading.tsx`, Suspense boundaries, and streaming where UX benefits
+- Avoid waterfall: parent await blocking child data unnecessarily
+
+## Client bundle
+
+- Dynamic `import()` for heavy client-only modules
+- Avoid barrel imports that pull unused code (see `bundle-barrel-imports` rule)
+- Defer third-party scripts when possible
+
+## Review
+
+- Slow page / rerender → [performance agent](../agents/performance/SKILL.md)
+- Load only matching files under `skills/vercel-react-best-practices/rules/` for the symptom

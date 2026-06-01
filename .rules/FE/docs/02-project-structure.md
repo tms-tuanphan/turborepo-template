@@ -84,9 +84,12 @@ apps/web/
 │   │
 │   ├── lib/
 │   │   ├── utils.ts                      # cn() helper
-│   │   ├── api-client.ts                 # Fetch wrapper
+│   │   ├── api-client.ts                 # Fetch wrapper (used by services only)
 │   │   ├── auth.ts                       # NextAuth config
 │   │   └── query-client.ts               # TanStack Query config
+│   │
+│   ├── services/                         # Shared HTTP/infra (wraps api-client)
+│   │   └── index.ts
 │   │
 │   ├── hooks/
 │   │   ├── use-mounted.ts
@@ -179,6 +182,9 @@ apps/web/
 │   │   │   ├── users-table-columns.tsx
 │   │   │   ├── user-form.tsx
 │   │   │   ├── user-card.tsx
+│   │   │   └── index.ts
+│   │   ├── services/
+│   │   │   ├── user.service.ts           # HTTP via api-client
 │   │   │   └── index.ts
 │   │   ├── actions/
 │   │   │   ├── get-users.ts
