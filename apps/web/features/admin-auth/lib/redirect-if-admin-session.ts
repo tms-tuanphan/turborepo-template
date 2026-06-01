@@ -9,6 +9,6 @@ export function redirectIfAdminSession(
   locale: Locale,
 ): void {
   if (hasAdminSessionCookie(cookieStore)) {
-    redirect(`/${locale}/admin`);
+    redirect(`/${locale}/admin/blogs`);
   }
 }

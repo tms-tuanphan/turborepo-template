@@ -181,12 +181,8 @@
       "navLabel": "Main navigation",
       "logoAria": "Admin home",
       "nav": {
-        "intro": "Introduction",
-        "resources": "Resources",
         "blog": "Blog",
-        "blogCategories": "Categories",
-        "products": "Products",
-        "aiDriven": "AI Driven Development"
+        "blogCategories": "Categories"
       },
       "collapseSidebar": "Collapse sidebar",
       "expandSidebar": "Expand sidebar",
@@ -201,18 +197,6 @@
       "userFallback": "Admin user",
       "switchToLightMode": "Switch to light mode",
       "switchToDarkMode": "Switch to dark mode"
-    },
-    "intro": {
-      "pageTitle": "Introduction",
-      "pageDescription": "Overview of the admin area and quick links to content modules."
-    },
-    "productsPlaceholder": {
-      "pageTitle": "Products",
-      "pageDescription": "Product management will be available here."
-    },
-    "aiDrivenPlaceholder": {
-      "pageTitle": "AI Driven Development",
-      "pageDescription": "Tools and documentation for AI-assisted development will appear here."
     },
     "blogs": {
       "pageTitle": "Blog posts",

@@ -77,7 +77,7 @@ export async function proxy(request: NextRequest) {
 
   if (isAuthRoute && loggedIn) {
     const adminHome = request.nextUrl.clone();
-    adminHome.pathname = `/${locale}/admin`;
+    adminHome.pathname = `/${locale}/admin/blogs`;
     adminHome.search = '';
     return NextResponse.redirect(adminHome);
   }

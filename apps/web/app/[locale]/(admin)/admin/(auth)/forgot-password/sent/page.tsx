@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 
 import { AdminForgotPasswordSent } from '@/features/admin-auth';
 import { AuthFormFallback } from '@/features/admin-auth/components/auth-form-fallback';
-import { redirectIfAdminSession } from '@/features/admin-auth/lib/redirect-if-admin-session';
+import { redirectIfAdminSession } from '@/features/admin-auth';
 import {
   defaultLocale,
   getMessages,

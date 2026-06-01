@@ -181,12 +181,8 @@
       "navLabel": "Điều hướng chính",
       "logoAria": "Trang chủ quản trị",
       "nav": {
-        "intro": "Giới thiệu",
-        "resources": "Tài nguyên",
         "blog": "Blog",
-        "blogCategories": "Danh mục",
-        "products": "Sản phẩm",
-        "aiDriven": "AI Driven Development"
+        "blogCategories": "Danh mục"
       },
       "collapseSidebar": "Thu gọn thanh bên",
       "expandSidebar": "Mở rộng thanh bên",
@@ -201,18 +197,6 @@
       "userFallback": "Quản trị viên",
       "switchToLightMode": "Chuyển sang chế độ sáng",
       "switchToDarkMode": "Chuyển sang chế độ tối"
-    },
-    "intro": {
-      "pageTitle": "Giới thiệu",
-      "pageDescription": "Tổng quan khu vực quản trị và liên kết nhanh tới các mô-đun nội dung."
-    },
-    "productsPlaceholder": {
-      "pageTitle": "Sản phẩm",
-      "pageDescription": "Quản lý sản phẩm sẽ có tại đây."
-    },
-    "aiDrivenPlaceholder": {
-      "pageTitle": "AI Driven Development",
-      "pageDescription": "Công cụ và tài liệu phát triển hỗ trợ bởi AI sẽ hiển thị tại đây."
     },
     "blogs": {
       "pageTitle": "Danh sách bài blog",

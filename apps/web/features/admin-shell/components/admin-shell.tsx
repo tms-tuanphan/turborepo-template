@@ -19,7 +19,7 @@ export function AdminShell({
   children,
 }: AdminShellProps) {
   const t = messages.admin.shell;
-  const homeHref = `/${locale}/admin`;
+  const homeHref = `/${locale}/admin/blogs`;
   const nav = <AdminNavLinks locale={locale} messages={messages} />;
 
   return (

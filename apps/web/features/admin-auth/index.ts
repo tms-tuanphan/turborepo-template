@@ -1,3 +1,4 @@
+export { redirectIfAdminSession } from './lib/redirect-if-admin-session';
 export { AdminForgotPasswordForm } from './components/admin-forgot-password-form';
 export { AdminForgotPasswordSent } from './components/admin-forgot-password-sent';
 export { AdminLoginForm } from './components/admin-login-form';

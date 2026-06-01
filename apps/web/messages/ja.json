@@ -181,12 +181,8 @@
       "navLabel": "メインナビゲーション",
       "logoAria": "管理ホーム",
       "nav": {
-        "intro": "紹介",
-        "resources": "リソース",
         "blog": "ブログ",
-        "blogCategories": "カテゴリ",
-        "products": "製品",
-        "aiDriven": "AI Driven Development"
+        "blogCategories": "カテゴリ"
       },
       "collapseSidebar": "サイドバーを折りたたむ",
       "expandSidebar": "サイドバーを展開する",
@@ -201,18 +197,6 @@
       "userFallback": "管理者",
       "switchToLightMode": "ライトモードに切り替え",
       "switchToDarkMode": "ダークモードに切り替え"
-    },
-    "intro": {
-      "pageTitle": "紹介",
-      "pageDescription": "管理画面の概要とコンテンツモジュールへのクイックリンクです。"
-    },
-    "productsPlaceholder": {
-      "pageTitle": "製品",
-      "pageDescription": "製品管理はここで利用できるようになります。"
-    },
-    "aiDrivenPlaceholder": {
-      "pageTitle": "AI Driven Development",
-      "pageDescription": "AI支援開発のツールとドキュメントはここに表示されます。"
     },
     "blogs": {
       "pageTitle": "ブログ記事",

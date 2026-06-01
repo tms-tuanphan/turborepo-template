@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import { AdminBlogEditorPageClient } from '@/features/admin-blogs/components/admin-blog-editor-page-client';
+import { AdminBlogEditorPageClient } from '@/features/admin-blogs';
 import { getMessages, isLocale, type Locale } from '@/shared/i18n';
 
 type Params = Promise<{ locale: string; id: string }>;

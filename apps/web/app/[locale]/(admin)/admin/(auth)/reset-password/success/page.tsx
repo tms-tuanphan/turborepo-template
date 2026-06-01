@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import { AdminResetPasswordSuccess } from '@/features/admin-auth';
-import { redirectIfAdminSession } from '@/features/admin-auth/lib/redirect-if-admin-session';
+import { redirectIfAdminSession } from '@/features/admin-auth';
 import {
   defaultLocale,
   getMessages,

@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  BookOpenIcon,
-  LayoutDashboardIcon,
-  PackageIcon,
-  SparklesIcon,
-  TagsIcon,
-} from 'lucide-react';
+import { BookOpenIcon, TagsIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -61,85 +55,35 @@ export function AdminNavLinks({ locale, messages }: AdminNavLinksProps) {
   const collapsed = useAdminSidebarCollapsed();
   const t = messages.admin.shell.nav;
 
-  const introHref = `/${locale}/admin`;
   const blogsHref = `/${locale}/admin/blogs`;
   const blogCategoriesHref = `/${locale}/admin/blog-categories`;
-  const productsHref = `/${locale}/admin/products`;
-  const aiHref = `/${locale}/admin/ai-driven-development`;
-
-  const introActive = pathname === introHref || pathname === `${introHref}/`;
 
   const blogActive =
     pathname === blogsHref || pathname.startsWith(`${blogsHref}/`);
   const blogCategoriesActive =
     pathname === blogCategoriesHref ||
     pathname.startsWith(`${blogCategoriesHref}/`);
-  const productsActive =
-    pathname === productsHref || pathname.startsWith(`${productsHref}/`);
-  const aiActive = pathname === aiHref || pathname.startsWith(`${aiHref}/`);
 
   return (
-    <div className="flex flex-col gap-2">
-      <ul className="flex flex-col gap-0.5">
-        <li>
-          <NavLinkRow
-            href={introHref}
-            label={t.intro}
-            icon={LayoutDashboardIcon}
-            active={introActive}
-            collapsed={collapsed}
-          />
-        </li>
-      </ul>
-
-      <section aria-label={t.resources} className="flex flex-col gap-1 pt-4">
-        {!collapsed ? (
-          <p className="px-3 text-base font-semibold uppercase tracking-wide text-muted-foreground/80 mb-1">
-            {t.resources}
-          </p>
-        ) : null}
-        <ul className="flex flex-col gap-0.5">
-          <li>
-            <NavLinkRow
-              href={blogsHref}
-              label={t.blog}
-              icon={BookOpenIcon}
-              active={blogActive}
-              collapsed={collapsed}
-            />
-          </li>
-          <li>
-            <NavLinkRow
-              href={blogCategoriesHref}
-              label={t.blogCategories}
-              icon={TagsIcon}
-              active={blogCategoriesActive}
-              collapsed={collapsed}
-            />
-          </li>
-          <li>
-            <NavLinkRow
-              href={productsHref}
-              label={t.products}
-              icon={PackageIcon}
-              active={productsActive}
-              collapsed={collapsed}
-            />
-          </li>
-        </ul>
-      </section>
-
-      <ul className="flex flex-col gap-0.5 pt-4">
-        <li>
-          <NavLinkRow
-            href={aiHref}
-            label={t.aiDriven}
-            icon={SparklesIcon}
-            active={aiActive}
-            collapsed={collapsed}
-          />
-        </li>
-      </ul>
-    </div>
+    <ul className="flex flex-col gap-0.5">
+      <li>
+        <NavLinkRow
+          href={blogsHref}
+          label={t.blog}
+          icon={BookOpenIcon}
+          active={blogActive}
+          collapsed={collapsed}
+        />
+      </li>
+      <li>
+        <NavLinkRow
+          href={blogCategoriesHref}
+          label={t.blogCategories}
+          icon={TagsIcon}
+          active={blogCategoriesActive}
+          collapsed={collapsed}
+        />
+      </li>
+    </ul>
   );
 }

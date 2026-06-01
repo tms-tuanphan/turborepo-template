@@ -6,7 +6,7 @@ export function sanitizeAdminCallbackUrl(
   raw: string | null | undefined,
   locale: string,
 ): string {
-  const fallback = `/${locale}/admin`;
+  const fallback = `/${locale}/admin/blogs`;
 
   if (!raw || typeof raw !== 'string') {
     return fallback;

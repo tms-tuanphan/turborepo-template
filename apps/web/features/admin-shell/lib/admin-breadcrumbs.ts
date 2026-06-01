@@ -25,12 +25,6 @@ const SECTION_RESOLVERS: Record<string, SectionResolver> = {
   'blog-categories': (messages) => [
     { label: messages.admin.blogCategories.pageTitle },
   ],
-  products: (messages) => [
-    { label: messages.admin.productsPlaceholder.pageTitle },
-  ],
-  'ai-driven-development': (messages) => [
-    { label: messages.admin.aiDrivenPlaceholder.pageTitle },
-  ],
 };
 
 export function getAdminBreadcrumbItems(
@@ -46,11 +40,6 @@ export function getAdminBreadcrumbItems(
 
   const afterAdmin = segments.slice(adminIndex + 1);
   const items: AdminBreadcrumbItem[] = [{ label: tShell.brand }];
-
-  if (afterAdmin.length === 0) {
-    items.push({ label: messages.admin.intro.pageTitle });
-    return items;
-  }
 
   const [section, ...rest] = afterAdmin;
   if (!section) {
