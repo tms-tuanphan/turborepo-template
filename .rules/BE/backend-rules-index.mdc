@@ -65,13 +65,24 @@ Manifests: [agents/module/manifests/](./agents/module/manifests/) — `pnpm be:m
 | [be-monorepo.mdc](./rules/be-monorepo.mdc) | Workspace boundaries |
 | [be-nestjs-structure.mdc](./rules/be-nestjs-structure.mdc) | Modules & layers |
 | [be-prisma.mdc](./rules/be-prisma.mdc) | Prisma / DB |
+| [be-api-design.mdc](./rules/be-api-design.mdc) | REST, versioning, idempotency, error payload |
+| [be-validation.mdc](./rules/be-validation.mdc) | ValidationPipe, DTO boundaries |
+| [be-auth.mdc](./rules/be-auth.mdc) | Authn/Authz (JWT, guards, ownership) |
+| [be-security.mdc](./rules/be-security.mdc) | Security hardening |
+| [be-caching.mdc](./rules/be-caching.mdc) | Caching (Redis) |
+| [be-queue.mdc](./rules/be-queue.mdc) | Queue (BullMQ) |
+| [be-events.mdc](./rules/be-events.mdc) | Event-driven / outbox |
+| [be-file-upload.mdc](./rules/be-file-upload.mdc) | File upload (S3/R2) |
+| [be-observability.mdc](./rules/be-observability.mdc) | Logging/metrics/tracing/health |
+| [be-devops.mdc](./rules/be-devops.mdc) | Docker/CI/CD/env validation |
+| [be-performance.mdc](./rules/be-performance.mdc) | Performance guardrails |
 | [be-swagger-openapi.mdc](./rules/be-swagger-openapi.mdc) | DTO / OpenAPI |
 | [be-testing.mdc](./rules/be-testing.mdc) | Tests |
 | [be-i18n.mdc](./rules/be-i18n.mdc) | i18n |
 | [be-production.mdc](./rules/be-production.mdc) | Production |
 | [be-quality-gates.mdc](./rules/be-quality-gates.mdc) | lint / test / build |
 
-**Conflict order:** monorepo → structure → Prisma → contract → test → i18n → production.
+**Conflict order:** monorepo → structure → Prisma → contract → api design → validation → auth/security → caching/queue/events/upload → test → i18n → observability → production.
 
 ## Docs index
 

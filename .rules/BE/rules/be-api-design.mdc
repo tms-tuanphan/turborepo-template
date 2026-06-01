@@ -1,0 +1,17 @@
+---
+description: API design — REST semantics, versioning, idempotency, error payload
+globs: apps/api/**/*.ts,packages/api/**/*.ts
+alwaysApply: false
+---
+
+# API design
+
+- Use correct HTTP verbs: `GET` read, `POST` create, `PUT` replace, `PATCH` partial update, `DELETE` delete
+- No `PUT` for partial update — use `PATCH`
+- Business failures use proper 4xx (`400/401/403/404/409/422`), not HTTP 200
+- Important write endpoints should support `Idempotency-Key` (payment/order-like operations)
+- API versioning via URL prefix (`/v1/...`) or `Accept` header — not `?version=1`
+- Errors must be structured and consistent (include `requestId`)
+
+Detail: [docs/10-api-design.md](../docs/10-api-design.md)
+

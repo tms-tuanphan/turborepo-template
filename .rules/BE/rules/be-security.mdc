@@ -1,0 +1,17 @@
+---
+description: Security — secrets, bcrypt, headers, CORS, rate limiting, audit logs
+globs: apps/api/**/*.ts,packages/api/**/*.ts
+alwaysApply: false
+---
+
+# Security
+
+- Password hashing: bcrypt rounds >= 10 (prefer 12+)
+- Secrets must not be in code or committed `.env`; use CI/CD secrets or secret manager
+- Enable security headers (`helmet`) and explicit CORS allowlist for public APIs
+- Rate limit public endpoints (`@nestjs/throttler` or equivalent)
+- Do not leak internal errors, stack traces, or DB messages to clients
+- Add audit logging for sensitive actions (login, privilege changes, deletes)
+
+Detail: [docs/13-security.md](../docs/13-security.md)
+

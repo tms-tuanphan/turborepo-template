@@ -1,0 +1,16 @@
+---
+description: DevOps — docker multi-stage, compose dev stack, CI/CD, env validation, stateless scaling
+globs: apps/api/**/*,packages/api/**/*,packages/database/**/*
+alwaysApply: false
+---
+
+# DevOps
+
+- Dockerfile should be multi-stage (build → minimal runtime image)
+- Dev stack uses docker-compose (postgres, redis, bull board/mailhog as needed)
+- CI/CD pipeline: lint → test → build (and e2e for critical flows)
+- Validate env vars at startup (schema) — fail fast
+- Keep services stateless; use Redis for session/queue when scaling horizontally
+
+Detail: [docs/19-devops.md](../docs/19-devops.md)
+

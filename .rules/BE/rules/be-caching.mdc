@@ -1,0 +1,15 @@
+---
+description: Caching — Redis/distributed cache, invalidation, cache-aside discipline
+globs: apps/api/**/*.ts,packages/api/**/*.ts
+alwaysApply: false
+---
+
+# Caching
+
+- Cache read-heavy `GET` endpoints only with a TTL and a clear invalidation plan
+- Never cache write endpoints without invalidation/update strategy
+- Multi-instance: avoid in-memory cache for shared state; use Redis distributed cache
+- Prefer cache-aside unless the use case demands write-through/write-behind
+
+Detail: [docs/14-caching.md](../docs/14-caching.md)
+

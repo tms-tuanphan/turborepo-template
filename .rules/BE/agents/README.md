@@ -48,6 +48,16 @@ Coordinator spawns **Core** by default. **Extended** only when decision tree, es
 | [common](./common/SKILL.md)                     | `apps/api/src/common/**`                       |
 | [domain](./domain/SKILL.md)                     | Transactions, state machine, pagination policy |
 | [i18n](./i18n/SKILL.md)                         | Message keys / errors                          |
+| [api-design](./api-design/SKILL.md)             | REST semantics, status codes, idempotency      |
+| [validation](./validation/SKILL.md)             | ValidationPipe, DTO boundaries, leaks          |
+| [auth](./auth/SKILL.md)                         | JWT rotation, guards, ownership/policy         |
+| [security](./security/SKILL.md)                 | Helmet/CORS/rate limit/secrets/audit log       |
+| [caching](./caching/SKILL.md)                   | Redis caching + invalidation                   |
+| [queue](./queue/SKILL.md)                       | BullMQ jobs/retries/DLQ                        |
+| [events](./events/SKILL.md)                     | Domain events / outbox                         |
+| [file-upload](./file-upload/SKILL.md)           | Upload safety + signed URL                     |
+| [observability](./observability/SKILL.md)       | Logging/requestId/health/metrics               |
+| [devops](./devops/SKILL.md)                     | Docker/compose/CI/env validation               |
 | [performance](./performance/SKILL.md)           | Slow API — **diagnose only**                   |
 | [bug-reproduction](./bug-reproduction/SKILL.md) | Bug reports — structured repro                 |
 | [test](./test/SKILL.md)                         | Test plan / factories                          |

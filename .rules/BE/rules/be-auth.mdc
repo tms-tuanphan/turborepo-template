@@ -1,0 +1,17 @@
+---
+description: Auth — JWT access/refresh, cookie vs bearer, rotation, multi-tenant, authz ownership/policy
+globs: apps/api/**/*.ts,packages/api/**/*.ts
+alwaysApply: false
+---
+
+# Authentication & authorization
+
+- Access token short-lived; refresh token long-lived with **rotation** (revoke old RT on refresh)
+- Verify JWT fully (signature + expiry + critical claims like `iss`, `aud` when configured)
+- Prefer HttpOnly cookies for web sessions; do not store tokens in `localStorage`
+- Multi-tenant (if applicable): resolve tenant from subdomain / JWT claim / `X-Tenant-Id` and set tenant context in middleware
+- Authorization is not just role: enforce **resource ownership**; use guards/policy-based checks (CASL or equivalent)
+
+Detail: [docs/12-authentication-and-authorization.md](../docs/12-authentication-and-authorization.md)  
+Design note: [docs/API_AUTH_DESIGN.md](../docs/API_AUTH_DESIGN.md)
+

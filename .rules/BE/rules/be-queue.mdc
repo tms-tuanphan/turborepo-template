@@ -1,0 +1,15 @@
+---
+description: Queue — BullMQ usage, retries/backoff, DLQ, monitoring
+globs: apps/api/**/*.ts
+alwaysApply: false
+---
+
+# Queue (BullMQ)
+
+- Heavy/long-running work (emails, exports, webhooks, thumbnails) must be offloaded to queue
+- Do not run long jobs in HTTP request lifecycle; return `202 Accepted` or a job id
+- Configure retries (3–5) with exponential backoff; define a dead-letter strategy
+- Add monitoring (Bull Board / metrics) when queues are business-critical
+
+Detail: [docs/15-queue-bullmq.md](../docs/15-queue-bullmq.md)
+

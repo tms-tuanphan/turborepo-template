@@ -6,10 +6,12 @@ alwaysApply: false
 
 # Backend i18n
 
-- Client-facing errors use **stable keys** (`errors.domain.code`)
-- Keys in `packages/api` when part of contract
-- Locale from `Accept-Language` (or team header) — not body
-- No raw Prisma/DB messages to clients
+- Client-facing text (errors, notifications, emails) uses **stable keys** (`errors.domain.code`) — **no hardcoded strings**
+- Keys live in `packages/api` when part of contract shared with FE
+- Locale detection order: `Accept-Language` (preferred) → `?lang=` → user preference (if logged in)
+- Fallback to default locale (`en`) and **log warning** when translation key missing
+- Validation messages use i18n keys (class-validator message key), not EN/VI literals
+- Do **not** return raw Prisma/DB/internal messages to clients
 
 Detail: [docs/07-i18n.md](../docs/07-i18n.md)  
 Skill: [skills/i18n-patterns/SKILL.md](../skills/i18n-patterns/SKILL.md)

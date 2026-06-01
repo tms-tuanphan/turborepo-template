@@ -1,0 +1,15 @@
+---
+description: File upload — cloud storage, validation, signed URLs, virus scan
+globs: apps/api/**/*.ts,packages/api/**/*.ts
+alwaysApply: false
+---
+
+# File upload
+
+- Do not store uploads on API server filesystem in production; use S3/R2 (store URL in DB)
+- Validate file size/type/name (multer validators / options)
+- For large uploads, prefer signed URL direct-to-storage uploads
+- Consider virus scanning for untrusted uploads before processing
+
+Detail: [docs/17-file-upload.md](../docs/17-file-upload.md)
+

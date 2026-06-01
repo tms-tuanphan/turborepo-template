@@ -25,8 +25,23 @@ throw new NotFoundException(I18nKey.Errors.Links.NotFound);
 
 ## Locale
 
-- Read `Accept-Language` in middleware or guard
+- Detect locale in middleware/guard, not ad-hoc in services/controllers:
+  - `Accept-Language` (preferred) → `?lang=` → user preference
 - Fallback `en`
+- Missing key: fallback to `en` + log warning (no PII)
+
+## Validation (class-validator)
+
+- DTO messages must be **keys**, not literals.
+- Prefer namespaced keys: `validation.user.email.isEmail`, `validation.auth.password.weak`.
+- DTO validates shape only; business rules live in service and throw errors by key.
+
+## Where to apply i18n
+
+- Validation errors
+- Business errors
+- Email templates (confirm/reset)
+- Push notifications (if used)
 
 ## Rule & agent
 

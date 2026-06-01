@@ -1,0 +1,15 @@
+---
+description: Validation — ValidationPipe, DTO boundaries, class-transformer hygiene
+globs: apps/api/**/*.ts,packages/api/**/*.ts
+alwaysApply: false
+---
+
+# Validation
+
+- Use `ValidationPipe` (`class-validator`) globally or per-controller — no manual try/catch validation
+- DTO validates **shape** only (format/type/required). Business rules belong in service
+- Do not reuse the same DTO for unrelated use cases; split create/update/query DTOs
+- Do not expose internal/sensitive fields; use `class-transformer` (`@Exclude`, `@Transform`) or explicit mappers
+
+Detail: [docs/11-validation-and-dto.md](../docs/11-validation-and-dto.md)
+

@@ -47,7 +47,7 @@ Rules:
 ## Core vs Extended
 
 **Core (default):** module, service, dto, prisma, quality-gates, reviewer  
-**Extended (on demand):** repo-scanner, architecture, dependency, controller, swagger, common, domain, i18n, performance, bug-reproduction, test, production
+**Extended (on demand):** repo-scanner, architecture, dependency, controller, swagger, common, domain, i18n, api-design, validation, auth, security, caching, queue, events, file-upload, observability, devops, performance, bug-reproduction, test, production
 
 Registry: [../README.md](../README.md)
 
@@ -308,6 +308,127 @@ description: BE i18n audit
 prompt: |
   Follow .rules/BE/agents/i18n/SKILL.md.
   Scope: manifest services/controllers + packages/api i18n paths.
+  Output per output-contract.md.
+```
+
+### API design — extended
+
+```text
+subagent_type: explore
+readonly: true
+description: BE api design audit
+prompt: |
+  Follow .rules/BE/agents/api-design/SKILL.md.
+  Manifest (inline): <paste JSON>  # or omit when auditing a known controller list
+  Target endpoints: <paths or controller files>
+  Output per output-contract.md.
+```
+
+### Validation — extended
+
+```text
+subagent_type: explore
+readonly: true
+description: BE validation audit
+prompt: |
+  Follow .rules/BE/agents/validation/SKILL.md.
+  Manifest (inline): <paste JSON>
+  Output per output-contract.md.
+```
+
+### Auth — extended
+
+```text
+subagent_type: explore
+readonly: true
+description: BE auth audit
+prompt: |
+  Follow .rules/BE/agents/auth/SKILL.md.
+  Manifest (inline): <paste JSON>  # or auth.json when applicable
+  Output per output-contract.md.
+```
+
+### Security — extended
+
+```text
+subagent_type: generalPurpose
+readonly: true
+description: BE security audit
+prompt: |
+  Follow .rules/BE/agents/security/SKILL.md.
+  Scope: main.ts + public endpoints + common filters/logging in diff.
+  Output per output-contract.md.
+```
+
+### Caching — extended
+
+```text
+subagent_type: explore
+readonly: true
+description: BE caching audit
+prompt: |
+  Follow .rules/BE/agents/caching/SKILL.md.
+  Manifest (inline): <paste JSON>
+  Output per output-contract.md.
+```
+
+### Queue — extended
+
+```text
+subagent_type: explore
+readonly: true
+description: BE queue audit
+prompt: |
+  Follow .rules/BE/agents/queue/SKILL.md.
+  Manifest (inline): <paste JSON>
+  Output per output-contract.md.
+```
+
+### Events — extended
+
+```text
+subagent_type: explore
+readonly: true
+description: BE events audit
+prompt: |
+  Follow .rules/BE/agents/events/SKILL.md.
+  Manifest (inline): <paste JSON>
+  Output per output-contract.md.
+```
+
+### File upload — extended
+
+```text
+subagent_type: explore
+readonly: true
+description: BE file upload audit
+prompt: |
+  Follow .rules/BE/agents/file-upload/SKILL.md.
+  Manifest (inline): <paste JSON>
+  Output per output-contract.md.
+```
+
+### Observability — extended
+
+```text
+subagent_type: generalPurpose
+readonly: true
+description: BE observability audit
+prompt: |
+  Follow .rules/BE/agents/observability/SKILL.md.
+  Scope: main.ts + apps/api/src/common + logging/health patterns in diff.
+  Output per output-contract.md.
+```
+
+### DevOps — extended
+
+```text
+subagent_type: generalPurpose
+readonly: true
+description: BE devops audit
+prompt: |
+  Follow .rules/BE/agents/devops/SKILL.md.
+  Scope: Docker/CI files + env validation patterns (names only).
   Output per output-contract.md.
 ```
 

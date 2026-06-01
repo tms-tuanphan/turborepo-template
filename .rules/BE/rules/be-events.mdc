@@ -1,0 +1,15 @@
+---
+description: Event-driven — domain events, outbox pattern, sagas
+globs: apps/api/**/*.ts,packages/api/**/*.ts
+alwaysApply: false
+---
+
+# Event-driven
+
+- Use domain events (`@nestjs/event-emitter` or `@nestjs/cqrs`) for cross-module side effects
+- Do not emit “must-deliver” events inside a DB transaction without delivery guarantee
+- For critical events, use **Outbox pattern** (persist event with business transaction + relay)
+- Consider saga patterns for distributed workflows (only when needed)
+
+Detail: [docs/16-event-driven.md](../docs/16-event-driven.md)
+

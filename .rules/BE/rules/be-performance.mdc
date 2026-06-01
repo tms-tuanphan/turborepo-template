@@ -1,0 +1,16 @@
+---
+description: Performance — pagination, batching, avoid query-in-loop, streaming, pool sizing
+globs: apps/api/**/*.ts,packages/api/**/*.ts,packages/database/**/*.ts
+alwaysApply: false
+---
+
+# Performance
+
+- List endpoints must paginate; enforce max page size
+- Avoid query-in-loop; batch with `IN` / joins / include/select
+- Avoid N+1; shape Prisma queries with `select`/`include`
+- For large exports, stream responses (`StreamableFile`) instead of loading into memory
+- Plan DB connection pool sizing for multi-instance deployments
+
+Detail: [docs/20-performance.md](../docs/20-performance.md)
+

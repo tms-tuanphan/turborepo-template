@@ -1,0 +1,16 @@
+---
+description: Observability — structured logs, requestId, health/readiness, metrics/tracing, error tracking
+globs: apps/api/**/*.ts
+alwaysApply: false
+---
+
+# Observability
+
+- Logs must be structured JSON and include `requestId` / correlation id
+- Never log secrets/PII (mask/omit tokens, passwords, credit cards)
+- Provide health endpoints (`/health` liveness; `/ready` readiness when DB/Redis required)
+- Consider metrics (Prometheus) and tracing (OpenTelemetry) when scaling
+- Use error tracking + alerts (Sentry or similar) for production
+
+Detail: [docs/18-observability.md](../docs/18-observability.md)
+
