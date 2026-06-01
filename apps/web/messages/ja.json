@@ -222,6 +222,8 @@
       "editPageTitle": "記事を編集",
       "editPageDescription": "本文・SEO・公開設定を更新します。",
       "filteredEmpty": "条件に一致する記事がありません。",
+      "listLoading": "記事を読み込み中…",
+      "listError": "記事を読み込めませんでした。もう一度お試しください。",
       "resetFilters": "条件をリセット",
       "actions": {
         "create": "記事を作成",

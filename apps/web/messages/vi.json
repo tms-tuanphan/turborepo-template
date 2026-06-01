@@ -222,6 +222,8 @@
       "editPageTitle": "Sửa bài viết",
       "editPageDescription": "Cập nhật nội dung, SEO và cài đặt xuất bản.",
       "filteredEmpty": "Không có bài viết khớp bộ lọc.",
+      "listLoading": "Đang tải danh sách…",
+      "listError": "Không tải được danh sách. Vui lòng thử lại.",
       "resetFilters": "Xóa bộ lọc",
       "actions": {
         "create": "Tạo bài viết",

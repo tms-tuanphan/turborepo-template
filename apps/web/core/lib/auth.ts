@@ -2,6 +2,7 @@ import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import type { AuthUser, AuthUserRole } from '@repo/api/client';
 
+import { getAccessTtlMs } from '@/core/auth/access-ttl';
 import { applyUpstreamSetCookies } from '@/core/auth/upstream-set-cookie';
 import {
   DEFAULT_AUTH_COOKIE_NAME,
@@ -10,8 +11,6 @@ import {
 } from '@/core/auth/session-cookie';
 
 const API_BASE_URL = process.env.API_BASE_URL ?? 'http://localhost:3000';
-
-const ACCESS_TTL_MS = 14 * 60 * 1000;
 
 type NestLoginResponse = { user?: AuthUser };
 
@@ -109,7 +108,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.sub = user.id;
         token.email = user.email;
         token.role = (user as { role?: AuthUserRole }).role;
-        token.accessExpiresAt = Date.now() + ACCESS_TTL_MS;
+        token.accessExpiresAt = Date.now() + getAccessTtlMs();
+        return token;
+      }
+
+      if (token.error === 'RefreshAccessTokenError') {
         return token;
       }
 
@@ -122,13 +125,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
       const refreshed = await nestRefresh();
       if (refreshed) {
-        token.accessExpiresAt = Date.now() + ACCESS_TTL_MS;
+        token.accessExpiresAt = Date.now() + getAccessTtlMs();
         return token;
       }
 
-      return token;
+      return { ...token, error: 'RefreshAccessTokenError' as const };
     },
     session({ session, token }) {
+      if (token.error === 'RefreshAccessTokenError') {
+        return { ...session, expires: '1970-01-01T00:00:00.000Z' };
+      }
+
       if (session.user) {
         session.user.id = token.sub ?? '';
         session.user.email = token.email ?? '';

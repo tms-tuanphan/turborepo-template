@@ -22,7 +22,7 @@ function AdminBlogsPageContent({
   messages,
 }: AdminBlogsPageClientProps) {
   const t = messages.admin.blogs;
-  const { data, isLoading, emptyWithFilters } = useAdminBlogsPage();
+  const { data, error, isLoading, emptyWithFilters } = useAdminBlogsPage();
   const { categories } = useAdminBlogCategoriesOptions();
 
   const resetHref = `/${locale}/admin/blogs`;
@@ -34,7 +34,15 @@ function AdminBlogsPageContent({
   if (isLoading) {
     return (
       <div className="flex flex-col gap-6" role="status" aria-busy="true">
-        <p className="text-sm text-muted-foreground">…</p>
+        <p className="text-sm text-muted-foreground">{t.listLoading}</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col gap-6" role="alert">
+        <p className="text-sm text-destructive">{t.listError}</p>
       </div>
     );
   }
@@ -79,7 +87,7 @@ export function AdminBlogsPageClient(props: AdminBlogsPageClientProps) {
     <Suspense
       fallback={
         <div className="text-sm text-muted-foreground" role="status">
-          …
+          {props.messages.admin.blogs.listLoading}
         </div>
       }
     >

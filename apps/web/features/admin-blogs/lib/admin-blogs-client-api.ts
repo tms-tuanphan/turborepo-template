@@ -6,7 +6,7 @@ import type {
 } from '@repo/api/client';
 
 import type { BlogFormActionState } from '../actions/blog-form-action-state';
-import type { AdminBlogsPageData } from './admin-blogs-list';
+import type { AdminBlogsPageData } from '../types/admin-blog';
 
 const BLOGS_API = '/api/admin/blogs';
 const CATEGORIES_OPTIONS_API = '/api/admin/blog-categories/options';

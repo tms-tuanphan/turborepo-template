@@ -11,7 +11,6 @@ import type { Messages } from '@/shared/i18n';
 import { getAuthErrorMessage } from '../utils/auth-error';
 import {
   createAdminLoginSchema,
-  type AdminLoginField,
   type AdminLoginInput,
 } from '../validations/login.schema';
 
@@ -39,7 +38,7 @@ export function useAdminLogin({ messages, callbackUrl }: UseAdminLoginOptions) {
     mode: 'onBlur',
   });
 
-  const { setError, clearErrors } = form;
+  const { clearErrors } = form;
 
   const onSubmit = form.handleSubmit(
     async (data) => {
@@ -55,7 +54,11 @@ export function useAdminLogin({ messages, callbackUrl }: UseAdminLoginOptions) {
         });
 
         if (result?.error) {
-          setGlobalError(t.errorGeneric);
+          setGlobalError(
+            result.error === 'CredentialsSignin'
+              ? t.errorCredentials
+              : t.errorGeneric,
+          );
           return;
         }
 
@@ -77,23 +80,11 @@ export function useAdminLogin({ messages, callbackUrl }: UseAdminLoginOptions) {
     },
   );
 
-  const applyServerFieldErrors = (
-    fieldErrors: Partial<Record<AdminLoginField, string>>,
-  ) => {
-    for (const field of Object.keys(fieldErrors) as AdminLoginField[]) {
-      const message = fieldErrors[field];
-      if (message) {
-        setError(field, { type: 'server', message });
-      }
-    }
-  };
-
   return {
     form,
     onSubmit,
     isSubmitting: isSubmitting || form.formState.isSubmitting,
     globalError,
     t,
-    applyServerFieldErrors,
   };
 }

@@ -28,7 +28,9 @@ export function AdminBlogEditorPageClient({
         role="status"
         aria-busy="true"
       >
-        <p className="text-sm text-muted-foreground">…</p>
+        <p className="text-sm text-muted-foreground">
+          {messages.admin.blogs.form.editorLoading}
+        </p>
       </div>
     );
   }

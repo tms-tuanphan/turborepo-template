@@ -31,6 +31,14 @@ export type AdminBlogPost = BlogDetail;
 
 export type AdminBlogListItem = BlogListItem;
 
+export type AdminBlogsPageData = {
+  items: AdminBlogListItem[];
+  totalPages: number;
+  currentPage: number;
+  totalItems: number;
+  hasActiveFilters: boolean;
+};
+
 export type AdminBlogFilters = {
   search: string;
   category: string;

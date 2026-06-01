@@ -7,7 +7,7 @@ export const META_DESCRIPTION_MAX = 160;
 /**
  * Derive a plain-text excerpt from markdown so list/detail pages keep a
  * meaningful description. Picks the first non-heading paragraph and strips
- * markdown syntax. Must stay in sync with server payload in blog-actions.
+ * markdown syntax. Must stay in sync with server payload in blog-form-mutation.
  */
 export function deriveDescription(markdown: string): string {
   const paragraph = markdown

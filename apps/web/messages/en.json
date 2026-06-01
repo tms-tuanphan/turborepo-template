@@ -222,6 +222,8 @@
       "editPageTitle": "Edit article",
       "editPageDescription": "Update content, SEO, and publish settings.",
       "filteredEmpty": "No posts match your filters.",
+      "listLoading": "Loading posts…",
+      "listError": "Could not load posts. Please try again.",
       "resetFilters": "Reset filters",
       "actions": {
         "create": "Create article",

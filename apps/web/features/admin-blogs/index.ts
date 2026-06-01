@@ -4,7 +4,7 @@ export { AdminBlogEditorPageClient } from './components/admin-blog-editor-page-c
 export { AdminBlogsFilterBar } from './components/admin-blogs-filter-bar';
 export { AdminBlogsPagination } from './components/admin-blogs-pagination';
 export { AdminBlogsTable } from './components/admin-blogs-table';
-export type { AdminBlogsPageData } from './lib/admin-blogs-list';
+export type { AdminBlogsPageData } from './types/admin-blog';
 export type {
   AdminBlogCategoryOption,
   AdminBlogFilters,
