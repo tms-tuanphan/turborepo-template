@@ -3,6 +3,7 @@ import Credentials from 'next-auth/providers/credentials';
 import type { AuthUser, AuthUserRole } from '@repo/api/client';
 
 import { getAccessTtlMs } from '@/core/auth/access-ttl';
+import { getAccessJwtExpMs } from '@/core/auth/upstream-session-refresh';
 import { applyUpstreamSetCookies } from '@/core/auth/upstream-set-cookie';
 import {
   DEFAULT_AUTH_COOKIE_NAME,
@@ -36,32 +37,6 @@ async function nestLogin(
   } catch {
     return null;
   }
-}
-
-async function nestRefresh(): Promise<boolean> {
-  const { cookies } = await import('next/headers');
-  const cookieStore = await cookies();
-  const refreshName = getRefreshCookieName();
-  const refresh = cookieStore.get(refreshName)?.value;
-
-  if (!refresh) {
-    return false;
-  }
-
-  const response = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
-    method: 'POST',
-    headers: {
-      Cookie: `${refreshName}=${refresh}`,
-    },
-    cache: 'no-store',
-  });
-
-  if (!response.ok) {
-    return false;
-  }
-
-  await applyUpstreamSetCookies(response);
-  return true;
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -123,10 +98,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         return token;
       }
 
-      const refreshed = await nestRefresh();
-      if (refreshed) {
-        token.accessExpiresAt = Date.now() + getAccessTtlMs();
-        return token;
+      const { cookies } = await import('next/headers');
+      const cookieStore = await cookies();
+      const access = cookieStore.get(getAuthCookieName())?.value;
+
+      if (access) {
+        const accessExp = getAccessJwtExpMs(access);
+        if (accessExp !== null && Date.now() < accessExp) {
+          token.accessExpiresAt = Date.now() + getAccessTtlMs();
+          return token;
+        }
       }
 
       return { ...token, error: 'RefreshAccessTokenError' as const };

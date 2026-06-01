@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
+import { refreshUpstreamAccessIfNeeded } from '@/core/auth/upstream-session-refresh';
 import {
   getAuthCookieName,
   getRefreshCookieName,
@@ -36,7 +37,7 @@ function hasAdminSession(request: NextRequest): boolean {
 /**
  * Locale redirect + admin route guard (cookie presence; JWT authority in Nest).
  */
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (
@@ -86,6 +87,12 @@ export function proxy(request: NextRequest) {
     loginUrl.pathname = `/${locale}/admin/login`;
     loginUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(loginUrl);
+  }
+
+  if (!isAuthRoute && loggedIn) {
+    const response = NextResponse.next();
+    await refreshUpstreamAccessIfNeeded(request, response);
+    return response;
   }
 
   return NextResponse.next();
