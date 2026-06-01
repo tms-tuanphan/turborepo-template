@@ -42,6 +42,8 @@ export {
   BLOG_LIST_DEFAULT_PAGE_SIZE,
 } from './blogs/dto/admin-blog-list-query.dto';
 export { AdminBlogListResponseDto } from './blogs/dto/admin-blog-list-response.dto';
+export { AdminBlogCategoryListQueryDto } from './blogs/dto/admin-blog-category-list-query.dto';
+export { AdminBlogCategoryListResponseDto } from './blogs/dto/admin-blog-category-list-response.dto';
 export { BlogDetailDto } from './blogs/dto/blog-detail.dto';
 export { CreateAdminBlogDto } from './blogs/dto/create-admin-blog.dto';
 export { UpdateAdminBlogDto } from './blogs/dto/update-admin-blog.dto';

@@ -1,4 +1,5 @@
 import type {
+  AdminBlogCategoryListResponse,
   BlogCategory,
   CreateBlogCategoryBody,
   UpdateBlogCategoryBody,
@@ -6,8 +7,26 @@ import type {
 
 import { AdminApiError, fetchAdminApi } from '@/core/api/fetch-admin-api';
 
-export async function listBlogCategories(): Promise<BlogCategory[]> {
-  return fetchAdminApi<BlogCategory[]>('/admin/blog-categories');
+export type AdminBlogCategoryListQuery = {
+  page?: number;
+  pageSize?: number;
+};
+
+function buildListQuery(query?: AdminBlogCategoryListQuery): string {
+  const params = new URLSearchParams();
+  if (query?.page !== undefined) params.set('page', String(query.page));
+  if (query?.pageSize !== undefined)
+    params.set('pageSize', String(query.pageSize));
+  return params.toString();
+}
+
+export async function listBlogCategories(
+  query?: AdminBlogCategoryListQuery,
+): Promise<AdminBlogCategoryListResponse> {
+  const qs = buildListQuery(query);
+  return fetchAdminApi<AdminBlogCategoryListResponse>(
+    `/admin/blog-categories${qs ? `?${qs}` : ''}`,
+  );
 }
 
 export async function createBlogCategory(

@@ -74,6 +74,13 @@ export type AdminBlogListResponse = {
   currentPage: number;
 };
 
+export type AdminBlogCategoryListResponse = {
+  items: BlogCategory[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+};
+
 export type BlogCategory = {
   id: string;
   displayName: string;

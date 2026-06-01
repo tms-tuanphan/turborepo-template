@@ -1,4 +1,5 @@
 import type {
+  AdminBlogCategoryListResponse,
   BlogCategory,
   CreateBlogCategoryBody,
   UpdateBlogCategoryBody,
@@ -19,7 +20,7 @@ export type BlogCategoryApiError = {
 };
 
 export type ListBlogCategoriesResponse =
-  | { ok: true; categories: BlogCategory[] }
+  | { ok: true; result: AdminBlogCategoryListResponse }
   | BlogCategoryApiError;
 
 export type UpsertBlogCategoryResponse =
@@ -27,6 +28,11 @@ export type UpsertBlogCategoryResponse =
   | BlogCategoryApiError;
 
 export type DeleteBlogCategoryResponse = { ok: true } | BlogCategoryApiError;
+
+export type ListBlogCategoriesQuery = {
+  page?: number;
+  pageSize?: number;
+};
 
 async function parseJson<T>(response: Response): Promise<T> {
   const text = await response.text();
@@ -47,8 +53,17 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   return json;
 }
 
-export async function listBlogCategoriesClient(): Promise<ListBlogCategoriesResponse> {
-  return apiFetch<ListBlogCategoriesResponse>('/api/admin/blog-categories');
+export async function listBlogCategoriesClient(
+  query?: ListBlogCategoriesQuery,
+): Promise<ListBlogCategoriesResponse> {
+  const params = new URLSearchParams();
+  if (query?.page !== undefined) params.set('page', String(query.page));
+  if (query?.pageSize !== undefined)
+    params.set('pageSize', String(query.pageSize));
+  const qs = params.toString();
+  return apiFetch<ListBlogCategoriesResponse>(
+    `/api/admin/blog-categories${qs ? `?${qs}` : ''}`,
+  );
 }
 
 export async function createBlogCategoryClient(

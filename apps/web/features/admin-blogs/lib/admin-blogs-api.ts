@@ -1,6 +1,7 @@
 import type {
   AdminBlogCheckSlugResponse,
   AdminBlogListResponse,
+  AdminBlogCategoryListResponse,
   BlogCategory,
   BlogDetail,
   CreateAdminBlogBody,
@@ -87,6 +88,28 @@ export async function deleteAdminBlog(id: string): Promise<void> {
   await fetchAdminApi<void>(`/admin/blogs/${id}`, { method: 'DELETE' });
 }
 
-export async function listAdminBlogCategories(): Promise<BlogCategory[]> {
-  return fetchAdminApi<BlogCategory[]>('/admin/blog-categories');
+function normalizeBlogCategories(
+  payload: unknown,
+): Pick<BlogCategory, 'id' | 'displayName'>[] {
+  if (Array.isArray(payload)) {
+    return payload as Pick<BlogCategory, 'id' | 'displayName'>[];
+  }
+
+  if (
+    payload &&
+    typeof payload === 'object' &&
+    'items' in payload &&
+    Array.isArray((payload as { items: unknown }).items)
+  ) {
+    return (payload as AdminBlogCategoryListResponse).items;
+  }
+
+  return [];
+}
+
+export async function listAdminBlogCategories(): Promise<
+  Pick<BlogCategory, 'id' | 'displayName'>[]
+> {
+  const payload = await fetchAdminApi<unknown>('/admin/blog-categories');
+  return normalizeBlogCategories(payload);
 }

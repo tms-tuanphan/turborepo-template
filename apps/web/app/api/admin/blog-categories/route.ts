@@ -21,15 +21,22 @@ function jsonError(code: ErrorCode, status: number) {
   return NextResponse.json({ ok: false, code }, { status });
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   const session = await getAdminSession();
   if (!session) {
     return jsonError('unauthorized', 401);
   }
 
   try {
-    const categories = await listBlogCategories();
-    return NextResponse.json({ ok: true, categories });
+    const url = new URL(request.url);
+    const page = url.searchParams.get('page');
+    const pageSize = url.searchParams.get('pageSize');
+
+    const result = await listBlogCategories({
+      page: page ? Number(page) : undefined,
+      pageSize: pageSize ? Number(pageSize) : undefined,
+    });
+    return NextResponse.json({ ok: true, result });
   } catch {
     return jsonError('invalid', 400);
   }

@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 
 import type {
-  BlogCategory,
+  AdminBlogCategoryListResponse,
   CreateBlogCategoryBody,
   UpdateBlogCategoryBody,
 } from '@repo/api/client';
@@ -15,13 +15,15 @@ import {
   type BlogCategoryApiError,
   type DeleteBlogCategoryResponse,
   type ListBlogCategoriesResponse,
+  type ListBlogCategoriesQuery,
   type UpsertBlogCategoryResponse,
 } from '../lib/blog-categories-client-api';
 
 const BLOG_CATEGORIES_KEY = '/api/admin/blog-categories';
 
 type UseBlogCategoriesOptions = {
-  fallbackData?: BlogCategory[];
+  query?: ListBlogCategoriesQuery;
+  fallbackData?: AdminBlogCategoryListResponse;
 };
 
 type MutationResult =
@@ -32,12 +34,23 @@ type MutationResult =
     };
 
 export function useBlogCategories(options?: UseBlogCategoriesOptions) {
-  const list = useSWR<BlogCategory[], BlogCategoryApiError>(
-    BLOG_CATEGORIES_KEY,
-    async (): Promise<BlogCategory[]> => {
-      const res: ListBlogCategoriesResponse = await listBlogCategoriesClient();
+  const query = options?.query;
+  const key =
+    query && (query.page !== undefined || query.pageSize !== undefined)
+      ? [
+          BLOG_CATEGORIES_KEY,
+          String(query.page ?? ''),
+          String(query.pageSize ?? ''),
+        ]
+      : BLOG_CATEGORIES_KEY;
+
+  const list = useSWR<AdminBlogCategoryListResponse, BlogCategoryApiError>(
+    key,
+    async (): Promise<AdminBlogCategoryListResponse> => {
+      const res: ListBlogCategoriesResponse =
+        await listBlogCategoriesClient(query);
       if (!res.ok) throw res;
-      return res.categories;
+      return res.result;
     },
     { fallbackData: options?.fallbackData },
   );
@@ -96,7 +109,10 @@ export function useBlogCategories(options?: UseBlogCategoriesOptions) {
   };
 
   return {
-    categories: list.data ?? [],
+    items: list.data?.items ?? [],
+    totalItems: list.data?.totalItems ?? 0,
+    totalPages: list.data?.totalPages ?? 1,
+    currentPage: list.data?.currentPage ?? query?.page ?? 1,
     isLoading: list.isLoading,
     error: list.error,
     mutate: list.mutate,

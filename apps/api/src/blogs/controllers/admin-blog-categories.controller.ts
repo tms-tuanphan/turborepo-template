@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiConflictResponse,
@@ -24,6 +25,8 @@ import {
 
 import {
   ApiErrorPayloadDto,
+  AdminBlogCategoryListQueryDto,
+  AdminBlogCategoryListResponseDto,
   BlogCategoryDto,
   CreateBlogCategoryDto,
   UpdateBlogCategoryDto,
@@ -41,11 +44,13 @@ export class AdminBlogCategoriesController {
   @Get()
   @ApiCookieAuth('session')
   @ApiOperation({ summary: 'List blog categories' })
-  @ApiOkResponse({ type: BlogCategoryDto, isArray: true })
+  @ApiOkResponse({ type: AdminBlogCategoryListResponseDto })
   @ApiUnauthorizedResponse({ type: ApiErrorPayloadDto })
   @ApiForbiddenResponse({ type: ApiErrorPayloadDto })
-  async list(): Promise<BlogCategoryDto[]> {
-    return this.blogCategoriesService.findAll();
+  async list(
+    @Query() query: AdminBlogCategoryListQueryDto,
+  ): Promise<AdminBlogCategoryListResponseDto> {
+    return this.blogCategoriesService.findAdminList(query);
   }
 
   @Post()

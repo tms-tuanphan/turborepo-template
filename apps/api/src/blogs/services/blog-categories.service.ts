@@ -7,16 +7,44 @@ import {
 
 import {
   I18nKey,
+  type AdminBlogCategoryListQueryDto,
+  type AdminBlogCategoryListResponseDto,
   type BlogCategoryDto,
   type CreateBlogCategoryDto,
   type UpdateBlogCategoryDto,
 } from '@repo/api';
 
+import {
+  buildPaginatedListResult,
+  parsePaginationQuery,
+  resolvePaginationSlice,
+} from '../../common/pagination/parse-pagination';
 import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class BlogCategoriesService {
   constructor(private readonly prisma: PrismaService) {}
+
+  async findAdminList(
+    rawQuery: AdminBlogCategoryListQueryDto,
+  ): Promise<AdminBlogCategoryListResponseDto> {
+    const pagination = parsePaginationQuery(rawQuery);
+
+    const totalItems = await this.prisma.blogCategory.count();
+    const slice = resolvePaginationSlice(pagination, totalItems);
+
+    const rows = await this.prisma.blogCategory.findMany({
+      orderBy: [{ displayName: 'asc' }],
+      skip: slice.skip,
+      take: slice.take,
+    });
+
+    return buildPaginatedListResult(
+      rows.map((row) => this.toDto(row)),
+      slice,
+      totalItems,
+    );
+  }
 
   async findAll(): Promise<BlogCategoryDto[]> {
     const rows = await this.prisma.blogCategory.findMany({

@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 
 import type { BlogCategory } from '@repo/api/client';
@@ -11,6 +12,7 @@ import type { BlogCategoryApiError } from '../lib/blog-categories-client-api';
 import { useBlogCategories } from '../hooks/use-blog-categories';
 import type { BlogCategoryFormInput } from '../validations/category.schema';
 import { BlogCategoriesToolbar } from './blog-categories-toolbar';
+import { BlogCategoriesPagination } from './blog-categories-pagination';
 import { BlogCategoriesTable } from './blog-categories-table';
 import { CategoryDeleteDialog } from './category-delete-dialog';
 import { CategoryUpsertDialog } from './category-upsert-dialog';
@@ -18,7 +20,10 @@ import { CategoryUpsertDialog } from './category-upsert-dialog';
 type AdminBlogCategoriesClientProps = {
   locale: Locale;
   messages: Messages;
-  initialCategories: BlogCategory[];
+  initialItems: BlogCategory[];
+  initialTotalItems: number;
+  initialTotalPages: number;
+  initialCurrentPage: number;
   userRole: AuthUserRole;
 };
 
@@ -27,11 +32,25 @@ type UpsertMode = 'create' | 'edit' | null;
 export function AdminBlogCategoriesClient({
   locale,
   messages,
-  initialCategories,
+  initialItems,
+  initialTotalItems,
+  initialTotalPages,
+  initialCurrentPage,
   userRole,
 }: AdminBlogCategoriesClientProps) {
   const t = messages.admin.blogCategories;
   const canMutate = userRole === 'admin';
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const page = useMemo(() => {
+    const raw = searchParams.get('page');
+    const parsed = raw ? Number(raw) : Number.NaN;
+    return Number.isFinite(parsed) && parsed >= 1 ? Math.floor(parsed) : 1;
+  }, [searchParams]);
+
+  const pageSize = 20;
 
   const [upsertMode, setUpsertMode] = useState<UpsertMode>(null);
   const [editing, setEditing] = useState<BlogCategory | null>(null);
@@ -41,14 +60,24 @@ export function AdminBlogCategoriesClient({
   );
 
   const {
-    categories,
+    items,
+    totalPages,
+    currentPage,
     createCategory,
     updateCategory,
     deleteCategory,
     isCreating,
     isUpdating,
     isDeleting,
-  } = useBlogCategories({ fallbackData: initialCategories });
+  } = useBlogCategories({
+    query: { page, pageSize },
+    fallbackData: {
+      items: initialItems,
+      totalItems: initialTotalItems,
+      totalPages: initialTotalPages,
+      currentPage: initialCurrentPage,
+    },
+  });
 
   const pendingUpsert = isCreating || isUpdating;
 
@@ -122,6 +151,17 @@ export function AdminBlogCategoriesClient({
     closeDelete();
   };
 
+  const setPage = useCallback(
+    (nextPage: number) => {
+      const next = new URLSearchParams(searchParams.toString());
+      if (nextPage <= 1) next.delete('page');
+      else next.set('page', String(nextPage));
+      const qs = next.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    },
+    [pathname, router, searchParams],
+  );
+
   return (
     <div className="flex flex-col gap-6">
       <BlogCategoriesToolbar
@@ -133,10 +173,17 @@ export function AdminBlogCategoriesClient({
       <BlogCategoriesTable
         locale={locale}
         messages={messages}
-        categories={categories}
+        categories={items}
         canMutate={canMutate}
         onEdit={openEdit}
         onDelete={openDelete}
+      />
+
+      <BlogCategoriesPagination
+        messages={messages}
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={setPage}
       />
 
       <CategoryUpsertDialog

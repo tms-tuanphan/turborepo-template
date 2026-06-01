@@ -32,6 +32,7 @@ export function AdminBlogsFilterBar({
   const { search, category, status, setSearch, setCategory, setStatus } =
     useAdminBlogFilters();
   const [draft, setDraft] = useState(search);
+  const safeCategories = Array.isArray(categories) ? categories : [];
 
   useEffect(() => {
     setDraft(search);
@@ -72,7 +73,7 @@ export function AdminBlogsFilterBar({
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="ALL">{tc.ALL}</SelectItem>
-          {categories.map((cat) => (
+          {safeCategories.map((cat) => (
             <SelectItem key={cat.id} value={cat.id}>
               {resolveCategoryLabel(cat.displayName)}
             </SelectItem>
