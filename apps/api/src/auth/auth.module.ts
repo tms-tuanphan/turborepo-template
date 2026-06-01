@@ -12,6 +12,10 @@ import { PasswordResetService } from './services/password-reset.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import {
+  DEFAULT_ACCESS_EXPIRES_IN,
+  getJwtExpiresIn,
+} from './utils/jwt-expires-in.util';
 
 @Module({
   imports: [
@@ -22,8 +26,11 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       useFactory: (configService: ConfigService) => ({
         secret: configService.getOrThrow<string>('JWT_SECRET'),
         signOptions: {
-          expiresIn:
-            configService.get<string>('JWT_ACCESS_EXPIRES_IN') ?? '15m',
+          expiresIn: getJwtExpiresIn(
+            configService,
+            'JWT_ACCESS_EXPIRES_IN',
+            DEFAULT_ACCESS_EXPIRES_IN,
+          ),
         },
       }),
     }),

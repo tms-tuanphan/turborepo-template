@@ -33,6 +33,12 @@ import type {
   JwtPayload,
   JwtTokenType,
 } from '../interfaces/jwt-payload.interface';
+import {
+  DEFAULT_ACCESS_EXPIRES_IN,
+  DEFAULT_REFRESH_EXPIRES_IN,
+  getJwtExpiresIn,
+  type JwtExpiresIn,
+} from '../utils/jwt-expires-in.util';
 
 const userSelect = {
   id: true,
@@ -138,12 +144,20 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  private getAccessExpiresIn(): string {
-    return this.configService.get<string>('JWT_ACCESS_EXPIRES_IN') ?? '15m';
+  private getAccessExpiresIn(): JwtExpiresIn {
+    return getJwtExpiresIn(
+      this.configService,
+      'JWT_ACCESS_EXPIRES_IN',
+      DEFAULT_ACCESS_EXPIRES_IN,
+    );
   }
 
-  private getRefreshExpiresIn(): string {
-    return this.configService.get<string>('JWT_REFRESH_EXPIRES_IN') ?? '7d';
+  private getRefreshExpiresIn(): JwtExpiresIn {
+    return getJwtExpiresIn(
+      this.configService,
+      'JWT_REFRESH_EXPIRES_IN',
+      DEFAULT_REFRESH_EXPIRES_IN,
+    );
   }
 
   async register(dto: RegisterDto): Promise<RegisterResponseDto> {
@@ -339,7 +353,11 @@ export class AuthService {
     };
   }
 
-  private parseExpiresToMs(expiresIn: string): number {
+  private parseExpiresToMs(expiresIn: JwtExpiresIn): number {
+    if (typeof expiresIn === 'number') {
+      return expiresIn * 1000;
+    }
+
     const match = /^(\d+)([smhd])$/.exec(expiresIn.trim());
     if (!match) {
       return 15 * 60 * 1000;
