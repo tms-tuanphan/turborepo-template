@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import {
   ApiCookieAuth,
-  ApiConflictResponse,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiOperation,
@@ -26,8 +25,6 @@ import {
   LogoutResponseDto,
   MeResponseDto,
   ApiErrorPayloadDto,
-  RegisterDto,
-  RegisterResponseDto,
   ForgotPasswordDto,
   ForgotPasswordResponseDto,
   ResetPasswordDto,
@@ -137,23 +134,6 @@ export class AuthController {
       refreshToken,
       this.authService.getRefreshCookieOptions(),
     );
-  }
-
-  @Public()
-  @Post('register')
-  @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({
-    summary: 'Register a new sub-admin account',
-    description:
-      'Always creates a user with role `sub_admin`. Public endpoint.',
-  })
-  @ApiOkResponse({ type: RegisterResponseDto })
-  @ApiConflictResponse({
-    description: 'Email already registered',
-    type: ApiErrorPayloadDto,
-  })
-  async register(@Body() dto: RegisterDto): Promise<RegisterResponseDto> {
-    return this.authService.register(dto);
   }
 
   @Public()

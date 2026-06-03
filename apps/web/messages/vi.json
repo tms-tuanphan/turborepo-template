@@ -182,7 +182,8 @@
       "logoAria": "Trang chủ quản trị",
       "nav": {
         "blog": "Blog",
-        "blogCategories": "Danh mục"
+        "blogCategories": "Danh mục",
+        "users": "Người dùng"
       },
       "collapseSidebar": "Thu gọn thanh bên",
       "expandSidebar": "Mở rộng thanh bên",
@@ -397,6 +398,74 @@
       },
       "emptyTitle": "Chưa có bài viết",
       "emptyDescription": "Hiện không có bài viết nào để hiển thị."
+    },
+    "users": {
+      "pageTitle": "Người dùng",
+      "pageDescription": "Quản lý tài khoản sub-admin.",
+      "newPageTitle": "Tạo người dùng",
+      "newPageDescription": "Tạo tài khoản sub-admin mới.",
+      "editPageTitle": "Sửa người dùng",
+      "editPageDescription": "Cập nhật email, trạng thái hoặc mật khẩu.",
+      "deletedPageTitle": "Người dùng đã xóa",
+      "deletedPageDescription": "Khôi phục hoặc xem tài khoản sub-admin đã xóa mềm.",
+      "empty": "Chưa có người dùng.",
+      "emptyDeleted": "Không có người dùng đã xóa.",
+      "confirmDelete": "Xóa người dùng này? Họ sẽ được chuyển vào danh sách đã xóa.",
+      "listLoading": "Đang tải…",
+      "listError": "Không thể tải danh sách người dùng.",
+      "tabs": {
+        "active": "Đang hoạt động",
+        "deleted": "Đã xóa"
+      },
+      "columns": {
+        "email": "Email",
+        "status": "Trạng thái",
+        "updated": "Cập nhật",
+        "actions": "Thao tác"
+      },
+      "fields": {
+        "email": "Email",
+        "password": "Mật khẩu",
+        "confirmPassword": "Xác nhận mật khẩu",
+        "status": "Trạng thái",
+        "newPasswordOptional": "Mật khẩu mới (tùy chọn)"
+      },
+      "status": {
+        "active": "Hoạt động",
+        "disabled": "Vô hiệu"
+      },
+      "dialog": {
+        "deleteTitle": "Xóa người dùng"
+      },
+      "actions": {
+        "create": "Tạo người dùng",
+        "edit": "Sửa",
+        "delete": "Xóa",
+        "restore": "Khôi phục",
+        "save": "Lưu",
+        "saving": "Đang lưu…",
+        "cancel": "Hủy"
+      },
+      "toast": {
+        "created": "Đã tạo người dùng.",
+        "updated": "Đã cập nhật người dùng.",
+        "deleted": "Đã xóa người dùng.",
+        "restored": "Đã khôi phục người dùng."
+      },
+      "errors": {
+        "unauthorized": "Bạn cần đăng nhập.",
+        "forbidden": "Chỉ admin mới quản lý được người dùng.",
+        "conflict": "Email này đã được sử dụng.",
+        "notFound": "Không tìm thấy người dùng.",
+        "invalid": "Yêu cầu không hợp lệ."
+      },
+      "validationEmailRequired": "Email là bắt buộc.",
+      "validationEmailInvalid": "Nhập email hợp lệ.",
+      "validationPasswordRequired": "Mật khẩu là bắt buộc.",
+      "validationPasswordMin": "Mật khẩu tối thiểu 8 ký tự.",
+      "validationPasswordFormat": "Mật khẩu cần chữ hoa, chữ thường và số hoặc ký tự đặc biệt.",
+      "validationConfirmRequired": "Vui lòng xác nhận mật khẩu.",
+      "validationConfirmMismatch": "Mật khẩu không khớp."
     },
     "blogCategories": {
       "pageTitle": "Danh mục blog",

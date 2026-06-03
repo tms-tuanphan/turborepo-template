@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "admin-users",
+  "displayName": "Admin Users API",
+  "scope": {
+    "moduleRoot": "apps/api/src/admin-users",
+    "contractRoot": "packages/api/src/admin-users",
+    "databaseModels": ["packages/database/prisma/schema.prisma"],
+    "controllers": ["apps/api/src/admin-users/controllers/admin-users.controller.ts"],
+    "services": ["apps/api/src/admin-users/services/admin-users.service.ts"],
+    "tests": ["apps/api/src/admin-users/**/*.spec.ts"],
+    "swagger": [
+      "apps/api/src/swagger/setup-swagger.ts",
+      "apps/api/src/main.ts"
+    ]
+  },
+  "allowedImports": [
+    "apps/api/src/prisma/**",
+    "apps/api/src/auth/**",
+    "apps/api/src/common/**",
+    "packages/api/src/admin-users/**",
+    "packages/api/src/auth/**",
+    "packages/api/src/common/**",
+    "@repo/api/**",
+    "@repo/database/**",
+    "@repo/shared-validation"
+  ],
+  "forbiddenRoots": ["apps/web/**"],
+  "relatedRules": [
+    ".rules/BE/rules/be-nestjs-structure.mdc",
+    ".rules/BE/rules/be-prisma.mdc",
+    ".rules/BE/rules/be-swagger-openapi.mdc"
+  ],
+  "relatedDocs": [
+    ".rules/BE/docs/API_AUTH_DESIGN.md",
+    ".rules/shared/skills/admin-auth-register-sync/SKILL.md"
+  ]
+}

@@ -1,6 +1,7 @@
 'use client';
 
-import { BookOpenIcon, TagsIcon } from 'lucide-react';
+import { BookOpenIcon, TagsIcon, UsersIcon } from 'lucide-react';
+import type { AuthUserRole } from '@repo/api/client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -12,6 +13,7 @@ import { useAdminSidebarCollapsed } from './admin-sidebar-collapse-context';
 type AdminNavLinksProps = {
   locale: Locale;
   messages: Messages;
+  userRole: AuthUserRole;
 };
 
 type IconType = React.ComponentType<{
@@ -50,19 +52,26 @@ function NavLinkRow({
   );
 }
 
-export function AdminNavLinks({ locale, messages }: AdminNavLinksProps) {
+export function AdminNavLinks({
+  locale,
+  messages,
+  userRole,
+}: AdminNavLinksProps) {
   const pathname = usePathname();
   const collapsed = useAdminSidebarCollapsed();
   const t = messages.admin.shell.nav;
 
   const blogsHref = `/${locale}/admin/blogs`;
   const blogCategoriesHref = `/${locale}/admin/blog-categories`;
+  const usersHref = `/${locale}/admin/users`;
 
   const blogActive =
     pathname === blogsHref || pathname.startsWith(`${blogsHref}/`);
   const blogCategoriesActive =
     pathname === blogCategoriesHref ||
     pathname.startsWith(`${blogCategoriesHref}/`);
+  const usersActive =
+    pathname === usersHref || pathname.startsWith(`${usersHref}/`);
 
   return (
     <ul className="flex flex-col gap-0.5">
@@ -84,6 +93,17 @@ export function AdminNavLinks({ locale, messages }: AdminNavLinksProps) {
           collapsed={collapsed}
         />
       </li>
+      {userRole === 'admin' ? (
+        <li>
+          <NavLinkRow
+            href={usersHref}
+            label={t.users}
+            icon={UsersIcon}
+            active={usersActive}
+            collapsed={collapsed}
+          />
+        </li>
+      ) : null}
     </ul>
   );
 }

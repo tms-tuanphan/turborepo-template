@@ -7,21 +7,23 @@ Scope: Admin authentication, session handling, RBAC, protected API.
 
 ## Endpoints (Phase 1–2)
 
-| Method | Path                        | Auth                            |
-| ------ | --------------------------- | ------------------------------- |
-| POST   | `/api/auth/login`           | Public                          |
-| POST   | `/api/auth/refresh`         | Public (`refresh_token` cookie) |
-| POST   | `/api/auth/logout`          | Public                          |
-| GET    | `/api/auth/me`              | JWT cookie (`access_token`)     |
-| POST   | `/api/auth/register`        | Public                          |
-| POST   | `/api/auth/forgot-password` | Public                          |
-| POST   | `/api/auth/reset-password`  | Public                          |
-| POST   | `/api/auth/change-password` | JWT cookie                      |
+| Method | Path                        | Auth                              |
+| ------ | --------------------------- | --------------------------------- |
+| POST   | `/api/auth/login`           | Public                            |
+| POST   | `/api/auth/refresh`         | Public (`refresh_token` cookie)   |
+| POST   | `/api/auth/logout`          | Public                            |
+| GET    | `/api/auth/me`              | JWT cookie (`access_token`)       |
+| POST   | `/api/auth/register`        | **Removed** (use admin users API) |
+| POST   | `/api/auth/forgot-password` | Public                            |
+| POST   | `/api/auth/reset-password`  | Public                            |
+| POST   | `/api/auth/change-password` | JWT cookie                        |
 
-### Register
+### Admin user creation (replaces public register)
 
+- `POST /api/admin/users` — JWT cookie + role `admin` only.
 - Always creates `role: sub_admin` (server-side; client cannot choose role).
-- Returns `{ user }` (no session cookie).
+- Returns `AdminUserDto` (no session cookie).
+- Soft delete: `DELETE /api/admin/users/:id` sets `deletedAt`; `POST .../restore` clears it.
 
 ### Forgot / reset password
 

@@ -75,6 +75,7 @@ Per-feature scope: [feature/manifests/](./feature/manifests/)
 | [admin-blogs.json](./feature/manifests/admin-blogs.json) | Admin blog CMS        |
 | [admin-auth.json](./feature/manifests/admin-auth.json)   | Admin login           |
 | [admin-shell.json](./feature/manifests/admin-shell.json) | Admin layout/nav      |
+| [admin-users.json](./feature/manifests/admin-users.json) | Admin user management |
 | [\_template.json](./feature/manifests/_template.json)    | Copy for new features |
 
 Validate: `pnpm fe:manifest-check` (repo root).

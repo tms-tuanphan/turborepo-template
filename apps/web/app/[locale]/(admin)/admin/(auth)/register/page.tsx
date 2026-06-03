@@ -1,16 +1,6 @@
-import { cookies } from 'next/headers';
-import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
+import { redirect } from 'next/navigation';
 
-import { AdminRegisterForm } from '@/features/admin-auth';
-import { AuthFormFallback } from '@/features/admin-auth/components/auth-form-fallback';
-import { redirectIfAdminSession } from '@/features/admin-auth';
-import {
-  defaultLocale,
-  getMessages,
-  isLocale,
-  type Locale,
-} from '@/shared/i18n';
+import { isLocale } from '@/shared/i18n';
 
 type Params = Promise<{ locale: string }>;
 
@@ -20,18 +10,6 @@ export default async function AdminRegisterPage({
   params: Params;
 }) {
   const { locale: rawLocale } = await params;
-  if (!isLocale(rawLocale)) {
-    notFound();
-  }
-  const locale: Locale = isLocale(rawLocale) ? rawLocale : defaultLocale;
-  const cookieStore = await cookies();
-  redirectIfAdminSession(cookieStore, locale);
-
-  const messages = getMessages(locale);
-
-  return (
-    <Suspense fallback={<AuthFormFallback />}>
-      <AdminRegisterForm locale={locale} messages={messages} />
-    </Suspense>
-  );
+  const locale = isLocale(rawLocale) ? rawLocale : 'en';
+  redirect(`/${locale}/admin/login`);
 }

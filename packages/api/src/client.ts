@@ -114,3 +114,33 @@ export type UpdateAdminBlogBody = Partial<CreateAdminBlogBody> & {
 export type AdminBlogCheckSlugResponse = {
   available: boolean;
 };
+
+export type AdminUserStatus = 'active' | 'disabled';
+
+export type AdminUser = {
+  id: string;
+  email: string;
+  role: AuthUserRole;
+  status: AdminUserStatus;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string | null;
+};
+
+export type AdminUserListResponse = {
+  items: AdminUser[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+};
+
+export type CreateAdminUserBody = {
+  email: string;
+  password: string;
+};
+
+export type UpdateAdminUserBody = {
+  email?: string;
+  status?: AdminUserStatus;
+  password?: string;
+};

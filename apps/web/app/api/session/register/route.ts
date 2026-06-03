@@ -1,12 +1,12 @@
-import { proxyAuthPost } from '../_lib/proxy-auth-response';
+import { NextResponse } from 'next/server';
 
-export async function POST(request: Request) {
-  const body = await request.text();
-
-  return proxyAuthPost('register', {
-    headers: {
-      'Content-Type': request.headers.get('content-type') ?? 'application/json',
+export async function POST() {
+  return NextResponse.json(
+    {
+      ok: false,
+      code: 'forbidden',
+      message: 'Public registration is disabled.',
     },
-    body,
-  });
+    { status: 403 },
+  );
 }

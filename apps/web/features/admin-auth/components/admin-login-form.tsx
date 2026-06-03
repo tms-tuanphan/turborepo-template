@@ -11,10 +11,7 @@ import { Form } from '@/components/ui/form';
 import type { Messages } from '@/shared/i18n';
 
 import { useAdminLogin } from '../hooks/use-admin-login';
-import {
-  adminForgotPasswordPath,
-  adminRegisterPath,
-} from '../lib/admin-auth-paths';
+import { adminForgotPasswordPath } from '../lib/admin-auth-paths';
 import { sanitizeAdminCallbackUrl } from '../lib/sanitize-callback-url';
 import { AuthCard } from './auth-card';
 import { AuthInput } from './auth-input';
@@ -39,21 +36,7 @@ export function AdminLoginForm({ locale, messages }: AdminLoginFormProps) {
   });
 
   return (
-    <AuthCard
-      title={t.title}
-      description={t.description}
-      footer={
-        <p className="text-center text-sm text-muted-foreground">
-          {t.noAccount}{' '}
-          <Link
-            href={adminRegisterPath(locale)}
-            className="text-primary hover:underline"
-          >
-            {t.createAccount}
-          </Link>
-        </p>
-      }
-    >
+    <AuthCard title={t.title} description={t.description}>
       <Form {...form}>
         <form className="space-y-4" onSubmit={onSubmit} noValidate>
           <Controller
@@ -116,7 +99,7 @@ export function AdminLoginForm({ locale, messages }: AdminLoginFormProps) {
           ) : null}
           <Button
             type="submit"
-            className="w-full"
+            className="w-full cursor-pointer"
             size="lg"
             disabled={isSubmitting}
           >
@@ -129,16 +112,6 @@ export function AdminLoginForm({ locale, messages }: AdminLoginFormProps) {
               t.submit
             )}
           </Button>
-          <div className="relative py-2">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">
-                {t.orDivider}
-              </span>
-            </div>
-          </div>
         </form>
       </Form>
     </AuthCard>

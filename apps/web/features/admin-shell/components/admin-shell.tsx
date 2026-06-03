@@ -1,3 +1,5 @@
+import type { AuthUserRole } from '@repo/api/client';
+
 import type { Locale, Messages } from '@/shared/i18n';
 
 import { AdminNavLinks } from './admin-nav-links';
@@ -8,6 +10,7 @@ type AdminShellProps = {
   messages: Messages;
   userEmail: string | null;
   userName: string | null;
+  userRole: AuthUserRole;
   children: React.ReactNode;
 };
 
@@ -16,11 +19,14 @@ export function AdminShell({
   messages,
   userEmail,
   userName,
+  userRole,
   children,
 }: AdminShellProps) {
   const t = messages.admin.shell;
   const homeHref = `/${locale}/admin/blogs`;
-  const nav = <AdminNavLinks locale={locale} messages={messages} />;
+  const nav = (
+    <AdminNavLinks locale={locale} messages={messages} userRole={userRole} />
+  );
 
   return (
     <AdminShellClient

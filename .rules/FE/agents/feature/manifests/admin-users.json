@@ -1,0 +1,30 @@
+{
+  "id": "admin-users",
+  "displayName": "Admin Users Management",
+  "scope": {
+    "featureRoot": "apps/web/features/admin-users",
+    "publicApi": "apps/web/features/admin-users/index.ts",
+    "routes": [
+      "apps/web/app/[locale]/(admin)/admin/(main)/users/**"
+    ],
+    "apiRoutes": ["apps/web/app/api/admin/users/**"],
+    "serverActions": ["apps/web/features/admin-users/actions/**"]
+  },
+  "allowedImports": [
+    "apps/web/shared/**",
+    "apps/web/core/**",
+    "apps/web/components/ui/**",
+    "@repo/ui/**",
+    "@repo/api/client",
+    "@repo/shared-validation"
+  ],
+  "forbiddenRoots": [
+    "apps/web/features/blogs",
+    "apps/web/features/admin-blogs"
+  ],
+  "relatedDocs": [
+    ".rules/FE/docs/04-feature-module.md",
+    ".rules/BE/docs/API_AUTH_DESIGN.md",
+    ".rules/shared/skills/admin-auth-register-sync/SKILL.md"
+  ]
+}

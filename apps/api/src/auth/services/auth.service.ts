@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ConflictException,
   ForbiddenException,
   Injectable,
   Logger,
@@ -18,14 +17,9 @@ import {
   type ChangePasswordDto,
   type ChangePasswordResponseDto,
   type LoginDto,
-  type RegisterDto,
-  type RegisterResponseDto,
 } from '@repo/api';
 
-import {
-  isValidPassword,
-  registerRequestSchema,
-} from '@repo/shared-validation';
+import { isValidPassword } from '@repo/shared-validation';
 
 import { PrismaService } from '../../prisma/prisma.service';
 
@@ -46,6 +40,7 @@ const userSelect = {
   password: true,
   role: true,
   status: true,
+  deletedAt: true,
 } as const;
 
 type SafeUser = Pick<User, keyof typeof userSelect>;
@@ -77,6 +72,10 @@ export class AuthService {
     });
 
     if (!user) {
+      throw new UnauthorizedException(I18nKey.Errors.Auth.InvalidCredentials);
+    }
+
+    if (user.deletedAt) {
       throw new UnauthorizedException(I18nKey.Errors.Auth.InvalidCredentials);
     }
 
@@ -160,58 +159,6 @@ export class AuthService {
     );
   }
 
-  async register(dto: RegisterDto): Promise<RegisterResponseDto> {
-    const parsed = registerRequestSchema.safeParse({
-      email: dto.email,
-      password: dto.password,
-    });
-
-    if (!parsed.success) {
-      throw new BadRequestException(I18nKey.Errors.Auth.WeakPassword);
-    }
-
-    const email = parsed.data.email.trim().toLowerCase();
-
-    const existing = await this.prisma.user.findUnique({
-      where: { email },
-      select: { id: true },
-    });
-
-    if (existing) {
-      throw new ConflictException(I18nKey.Errors.Auth.EmailAlreadyExists);
-    }
-
-    const hashedPassword = await bcrypt.hash(
-      parsed.data.password as string,
-      BCRYPT_ROUNDS,
-    );
-
-    const user = await this.prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        role: UserRole.sub_admin,
-        status: UserStatus.active,
-      },
-      select: {
-        id: true,
-        email: true,
-        role: true,
-        status: true,
-      },
-    });
-
-    this.logger.log(`User registered: ${user.id} (sub_admin)`);
-
-    return {
-      user: {
-        id: user.id,
-        email: user.email,
-        role: this.mapRole(user.role),
-      },
-    };
-  }
-
   async changePassword(
     userId: string,
     dto: ChangePasswordDto,
@@ -262,10 +209,15 @@ export class AuthService {
         email: true,
         role: true,
         status: true,
+        deletedAt: true,
       },
     });
 
     if (!user) {
+      throw new UnauthorizedException(I18nKey.Errors.Common.Unauthorized);
+    }
+
+    if (user.deletedAt) {
       throw new UnauthorizedException(I18nKey.Errors.Common.Unauthorized);
     }
 

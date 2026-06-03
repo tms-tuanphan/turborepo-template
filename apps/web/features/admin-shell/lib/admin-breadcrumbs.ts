@@ -25,6 +25,19 @@ const SECTION_RESOLVERS: Record<string, SectionResolver> = {
   'blog-categories': (messages) => [
     { label: messages.admin.blogCategories.pageTitle },
   ],
+  users: (messages, segments) => {
+    const t = messages.admin.users;
+    const items: AdminBreadcrumbItem[] = [{ label: t.pageTitle }];
+    const [, maybeSub, maybeAction, maybeId] = segments;
+    if (maybeSub === 'new') {
+      items.push({ label: t.newPageTitle });
+    } else if (maybeSub === 'deleted') {
+      items.push({ label: t.deletedPageTitle });
+    } else if (maybeAction === 'edit' && maybeId) {
+      items.push({ label: t.editPageTitle });
+    }
+    return items;
+  },
 };
 
 export function getAdminBreadcrumbItems(

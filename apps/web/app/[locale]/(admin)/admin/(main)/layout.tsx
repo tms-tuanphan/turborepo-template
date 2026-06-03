@@ -28,6 +28,7 @@ export default async function AdminMainLayout({
       messages={messages}
       userEmail={session?.user?.email ?? null}
       userName={session?.user?.name ?? null}
+      userRole={session?.user?.role ?? 'sub_admin'}
     >
       {children}
       <Toaster richColors position="top-right" />

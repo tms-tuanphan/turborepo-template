@@ -23,9 +23,12 @@ model User {
   password             String
   role                 UserRole
   status               UserStatus           @default(active)
+  deletedAt            DateTime?
   createdAt            DateTime             @default(now())
   updatedAt            DateTime             @updatedAt
   passwordResetTokens  PasswordResetToken[]
+
+  @@index([deletedAt])
 }
 
 model PasswordResetToken {

@@ -11,7 +11,6 @@ const PUBLIC_FILE = /\.(.*)$/;
 
 const AUTH_ROUTE_PREFIXES = [
   'login',
-  'register',
   'forgot-password',
   'reset-password',
 ] as const;

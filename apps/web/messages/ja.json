@@ -182,7 +182,8 @@
       "logoAria": "管理ホーム",
       "nav": {
         "blog": "ブログ",
-        "blogCategories": "カテゴリ"
+        "blogCategories": "カテゴリ",
+        "users": "ユーザー"
       },
       "collapseSidebar": "サイドバーを折りたたむ",
       "expandSidebar": "サイドバーを展開する",
@@ -396,6 +397,74 @@
       },
       "emptyTitle": "ブログ記事がありません",
       "emptyDescription": "表示する記事はまだありません。"
+    },
+    "users": {
+      "pageTitle": "ユーザー",
+      "pageDescription": "サブ管理者アカウントを管理します。",
+      "newPageTitle": "ユーザー作成",
+      "newPageDescription": "新しいサブ管理者を作成します。",
+      "editPageTitle": "ユーザー編集",
+      "editPageDescription": "メール、ステータス、パスワードを更新します。",
+      "deletedPageTitle": "削除済みユーザー",
+      "deletedPageDescription": "ソフト削除されたサブ管理者を復元または確認します。",
+      "empty": "ユーザーがいません。",
+      "emptyDeleted": "削除済みユーザーはいません。",
+      "confirmDelete": "このユーザーを削除しますか？削除済み一覧に移動します。",
+      "listLoading": "読み込み中…",
+      "listError": "ユーザーを読み込めませんでした。",
+      "tabs": {
+        "active": "有効",
+        "deleted": "削除済み"
+      },
+      "columns": {
+        "email": "メール",
+        "status": "ステータス",
+        "updated": "更新日",
+        "actions": "操作"
+      },
+      "fields": {
+        "email": "メール",
+        "password": "パスワード",
+        "confirmPassword": "パスワード確認",
+        "status": "ステータス",
+        "newPasswordOptional": "新しいパスワード（任意）"
+      },
+      "status": {
+        "active": "有効",
+        "disabled": "無効"
+      },
+      "dialog": {
+        "deleteTitle": "ユーザーを削除"
+      },
+      "actions": {
+        "create": "ユーザーを作成",
+        "edit": "編集",
+        "delete": "削除",
+        "restore": "復元",
+        "save": "保存",
+        "saving": "保存中…",
+        "cancel": "キャンセル"
+      },
+      "toast": {
+        "created": "ユーザーを作成しました。",
+        "updated": "ユーザーを更新しました。",
+        "deleted": "ユーザーを削除しました。",
+        "restored": "ユーザーを復元しました。"
+      },
+      "errors": {
+        "unauthorized": "サインインが必要です。",
+        "forbidden": "管理者のみユーザー管理ができます。",
+        "conflict": "このメールは既に使用されています。",
+        "notFound": "ユーザーが見つかりません。",
+        "invalid": "無効なリクエストです。"
+      },
+      "validationEmailRequired": "メールは必須です。",
+      "validationEmailInvalid": "有効なメールを入力してください。",
+      "validationPasswordRequired": "パスワードは必須です。",
+      "validationPasswordMin": "パスワードは8文字以上必要です。",
+      "validationPasswordFormat": "大文字・小文字・数字または記号を含めてください。",
+      "validationConfirmRequired": "パスワード確認を入力してください。",
+      "validationConfirmMismatch": "パスワードが一致しません。"
     },
     "blogCategories": {
       "pageTitle": "ブログカテゴリ",
