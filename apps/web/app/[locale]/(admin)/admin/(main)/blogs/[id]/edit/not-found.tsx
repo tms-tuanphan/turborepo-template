@@ -1,23 +1,12 @@
+'use client';
+
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
-import {
-  defaultLocale,
-  getMessages,
-  isLocale,
-  type Locale,
-} from '@/shared/i18n';
+import { useAdminBlogRouteContext } from '@/features/admin-blogs/hooks/use-admin-blog-route-context';
 
-type Params = Promise<{ locale: string; id: string }>;
-
-export default async function AdminBlogEditNotFound({
-  params,
-}: {
-  params: Params;
-}) {
-  const { locale: rawLocale } = await params;
-  const locale: Locale = isLocale(rawLocale) ? rawLocale : defaultLocale;
-  const messages = getMessages(locale);
+export default function AdminBlogEditNotFound() {
+  const { locale, messages } = useAdminBlogRouteContext();
 
   return (
     <div className="mx-auto flex max-w-lg flex-col gap-4 py-12 text-center">

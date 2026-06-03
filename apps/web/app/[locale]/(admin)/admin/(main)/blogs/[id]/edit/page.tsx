@@ -1,28 +1,19 @@
-import { notFound } from 'next/navigation';
+'use client';
 
 import { AdminBlogEditorPageClient } from '@/features/admin-blogs';
-import { getMessages, isLocale, type Locale } from '@/shared/i18n';
+import { useAdminBlogRouteContext } from '@/features/admin-blogs/hooks/use-admin-blog-route-context';
 
-type Params = Promise<{ locale: string; id: string }>;
-
-export default async function AdminBlogEditPage({
-  params,
-}: {
-  params: Params;
-}) {
-  const { locale: rawLocale, id } = await params;
-  if (!isLocale(rawLocale)) {
-    notFound();
-  }
-  const locale: Locale = rawLocale;
-  const messages = getMessages(locale);
+export default function AdminBlogEditPage() {
+  const { locale, messages, postId } = useAdminBlogRouteContext({
+    requirePostId: true,
+  });
 
   return (
     <AdminBlogEditorPageClient
       mode="edit"
       locale={locale}
       messages={messages}
-      postId={id}
+      postId={postId}
     />
   );
 }
