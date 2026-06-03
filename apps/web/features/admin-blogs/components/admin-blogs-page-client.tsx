@@ -71,13 +71,12 @@ function AdminBlogsPageContent({
         <AdminBlogsTable blogs={items} messages={messages} locale={locale} />
       )}
 
-      {totalItems > 0 ? (
-        <AdminBlogsPagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          messages={messages}
-        />
-      ) : null}
+      <AdminBlogsPagination
+        totalItems={totalItems}
+        totalPages={totalPages}
+        currentPage={currentPage}
+        messages={messages}
+      />
     </div>
   );
 }

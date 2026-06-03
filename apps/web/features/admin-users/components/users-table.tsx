@@ -1,7 +1,6 @@
 'use client';
 
-import { PencilIcon, RotateCcwIcon, Trash2Icon } from 'lucide-react';
-import Link from 'next/link';
+import { PencilIcon, Trash2Icon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import type { AdminUser } from '@repo/api/client';
@@ -11,18 +10,18 @@ type UsersTableProps = {
   locale: Locale;
   messages: Messages;
   users: AdminUser[];
-  mode: 'active' | 'deleted';
-  onDelete?: (user: AdminUser) => void;
-  onRestore?: (user: AdminUser) => void;
+  canMutate: boolean;
+  onEdit: (user: AdminUser) => void;
+  onDelete: (user: AdminUser) => void;
 };
 
 export function UsersTable({
   locale,
   messages,
   users,
-  mode,
+  canMutate,
+  onEdit,
   onDelete,
-  onRestore,
 }: UsersTableProps) {
   const t = messages.admin.users;
 
@@ -35,19 +34,21 @@ export function UsersTable({
               <th className="px-4 py-3 font-medium">{t.columns.email}</th>
               <th className="px-4 py-3 font-medium">{t.columns.status}</th>
               <th className="px-4 py-3 font-medium">{t.columns.updated}</th>
-              <th className="px-4 py-3 text-right font-medium">
-                {t.columns.actions}
-              </th>
+              {canMutate ? (
+                <th className="px-4 py-3 text-right font-medium">
+                  {t.columns.actions}
+                </th>
+              ) : null}
             </tr>
           </thead>
           <tbody className="divide-y">
             {users.length === 0 ? (
               <tr>
                 <td
-                  colSpan={4}
+                  colSpan={canMutate ? 4 : 3}
                   className="px-4 py-12 text-center text-muted-foreground"
                 >
-                  {mode === 'deleted' ? t.emptyDeleted : t.empty}
+                  {t.empty}
                 </td>
               </tr>
             ) : (
@@ -64,46 +65,30 @@ export function UsersTable({
                       {new Date(user.updatedAt).toLocaleDateString(locale)}
                     </time>
                   </td>
-                  <td className="px-4 py-3 text-right">
-                    <div className="flex justify-end gap-1">
-                      {mode === 'active' ? (
-                        <>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            aria-label={t.actions.edit}
-                            asChild
-                          >
-                            <Link
-                              href={`/${locale}/admin/users/${user.id}/edit`}
-                            >
-                              <PencilIcon className="size-4" />
-                            </Link>
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            aria-label={t.actions.delete}
-                            onClick={() => onDelete?.(user)}
-                          >
-                            <Trash2Icon className="size-4" />
-                          </Button>
-                        </>
-                      ) : (
+                  {canMutate ? (
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex justify-end gap-1">
                         <Button
                           type="button"
                           variant="ghost"
                           size="icon"
-                          aria-label={t.actions.restore}
-                          onClick={() => onRestore?.(user)}
+                          aria-label={t.actions.edit}
+                          onClick={() => onEdit(user)}
                         >
-                          <RotateCcwIcon className="size-4" />
+                          <PencilIcon className="size-4" />
                         </Button>
-                      )}
-                    </div>
-                  </td>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          aria-label={t.actions.delete}
+                          onClick={() => onDelete(user)}
+                        >
+                          <Trash2Icon className="size-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  ) : null}
                 </tr>
               ))
             )}

@@ -7,7 +7,7 @@ import {
   listAdminUsers,
 } from '@/features/admin-users/lib/admin-users-api';
 import {
-  createAdminUserCreateSchema,
+  createAdminUserCreateApiSchema,
   toCreateAdminUserBody,
 } from '@/features/admin-users/validations/user.schema';
 import { getMessages, defaultLocale } from '@/shared/i18n';
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
   }
 
   const t = getMessages(defaultLocale).admin.users;
-  const parsed = createAdminUserCreateSchema(t).safeParse(body);
+  const parsed = createAdminUserCreateApiSchema(t).safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
       {

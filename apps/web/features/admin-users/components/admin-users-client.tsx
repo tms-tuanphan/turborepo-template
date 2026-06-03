@@ -1,16 +1,21 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 
 import type { AdminUser } from '@repo/api/client';
 import type { Locale, Messages } from '@/shared/i18n';
+
+import type { AdminUsersApiError } from '../hooks/use-admin-users';
 import { useAdminUsers } from '../hooks/use-admin-users';
-import { removeAdminUser } from '../lib/admin-users-client-api';
+import type { AdminUserCreateInput } from '../validations/user.schema';
+import type { AdminUserUpdateInput } from '../validations/user.schema';
 import { UserDeleteDialog } from './user-delete-dialog';
-import { UsersTable } from './users-table';
+import { UserUpsertDialog } from './user-upsert-dialog';
 import { UsersPagination } from './users-pagination';
+import { UsersTable } from './users-table';
 import { UsersToolbar } from './users-toolbar';
 
 type AdminUsersClientProps = {
@@ -18,8 +23,13 @@ type AdminUsersClientProps = {
   messages: Messages;
 };
 
+type UpsertMode = 'create' | 'edit' | null;
+
 export function AdminUsersClient({ locale, messages }: AdminUsersClientProps) {
+  const { data: session } = useSession();
+  const userRole = session?.user?.role ?? 'sub_admin';
   const t = messages.admin.users;
+  const canMutate = userRole === 'admin';
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -31,69 +41,155 @@ export function AdminUsersClient({ locale, messages }: AdminUsersClientProps) {
   }, [searchParams]);
 
   const pageSize = 20;
-  const { data, loading, error, reload } = useAdminUsers({ page, pageSize });
-  const [deleting, setDeleting] = useState<AdminUser | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
 
-  const setPage = (nextPage: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (nextPage <= 1) {
-      params.delete('page');
-    } else {
-      params.set('page', String(nextPage));
+  const [upsertMode, setUpsertMode] = useState<UpsertMode>(null);
+  const [editing, setEditing] = useState<AdminUser | null>(null);
+  const [deleting, setDeleting] = useState<AdminUser | null>(null);
+  const [serverError, setServerError] = useState<AdminUsersApiError | null>(
+    null,
+  );
+
+  const {
+    items,
+    totalItems,
+    totalPages,
+    currentPage,
+    isLoading,
+    error,
+    createUser,
+    updateUser,
+    deleteUser,
+    isCreating,
+    isUpdating,
+    isDeleting,
+  } = useAdminUsers({ page, pageSize });
+
+  const pendingUpsert = isCreating || isUpdating;
+
+  const openCreate = useCallback(() => {
+    setServerError(null);
+    setEditing(null);
+    setUpsertMode('create');
+  }, []);
+
+  const openEdit = useCallback((user: AdminUser) => {
+    setServerError(null);
+    setEditing(user);
+    setUpsertMode('edit');
+  }, []);
+
+  const closeUpsert = useCallback(() => {
+    setUpsertMode(null);
+    setEditing(null);
+    setServerError(null);
+  }, []);
+
+  const openDelete = useCallback((user: AdminUser) => {
+    setServerError(null);
+    setDeleting(user);
+  }, []);
+
+  const closeDelete = useCallback(() => {
+    setDeleting(null);
+    setServerError(null);
+  }, []);
+
+  const serverErrorText = serverError ? t.errors[serverError.code] : undefined;
+
+  const onSubmitCreate = async (values: AdminUserCreateInput) => {
+    if (!canMutate) return;
+    const result = await createUser(values);
+    if (!result.ok) {
+      setServerError(result.error);
+      toast.error(t.errors[result.error.code] ?? t.errors.invalid);
+      return;
     }
-    const qs = params.toString();
-    router.push(qs ? `${pathname}?${qs}` : pathname);
+    toast.success(t.toast.created);
+    closeUpsert();
   };
 
-  async function handleDeleteConfirm() {
-    if (!deleting) return;
-    setIsDeleting(true);
-    const result = await removeAdminUser(deleting.id);
-    setIsDeleting(false);
+  const onSubmitEdit = async (values: AdminUserUpdateInput) => {
+    if (!canMutate || !editing) return;
+    const result = await updateUser(editing.id, values);
     if (!result.ok) {
-      toast.error(t.errors[result.code] ?? t.errors.invalid);
+      setServerError(result.error);
+      toast.error(t.errors[result.error.code] ?? t.errors.invalid);
+      return;
+    }
+    toast.success(t.toast.updated);
+    closeUpsert();
+  };
+
+  const onConfirmDelete = async () => {
+    if (!canMutate || !deleting) return;
+    const result = await deleteUser(deleting.id);
+    if (!result.ok) {
+      setServerError(result.error);
+      toast.error(t.errors[result.error.code] ?? t.errors.invalid);
       return;
     }
     toast.success(t.toast.deleted);
-    setDeleting(null);
-    void reload();
-  }
+    closeDelete();
+  };
+
+  const setPage = useCallback(
+    (nextPage: number) => {
+      const next = new URLSearchParams(searchParams.toString());
+      if (nextPage <= 1) next.delete('page');
+      else next.set('page', String(nextPage));
+      const qs = next.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    },
+    [pathname, router, searchParams],
+  );
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{t.pageTitle}</h1>
-        <p className="text-sm text-muted-foreground">{t.pageDescription}</p>
-      </div>
+      <UsersToolbar
+        canMutate={canMutate}
+        messages={messages}
+        onCreate={openCreate}
+      />
 
-      <UsersToolbar locale={locale} messages={messages} />
-
-      {loading ? (
+      {isLoading ? (
         <p className="text-sm text-muted-foreground">{t.listLoading}</p>
       ) : error ? (
         <p className="text-sm text-destructive" role="alert">
           {t.errors[error] ?? t.listError}
         </p>
       ) : (
-        <>
-          <UsersTable
-            locale={locale}
-            messages={messages}
-            users={data?.items ?? []}
-            mode="active"
-            onDelete={setDeleting}
-          />
-          {data ? (
-            <UsersPagination
-              totalPages={data.totalPages}
-              currentPage={data.currentPage}
-              messages={messages}
-              onPageChange={setPage}
-            />
-          ) : null}
-        </>
+        <UsersTable
+          locale={locale}
+          messages={messages}
+          users={items}
+          canMutate={canMutate}
+          onEdit={openEdit}
+          onDelete={openDelete}
+        />
       )}
+
+      <UsersPagination
+        totalItems={totalItems}
+        totalPages={totalPages}
+        currentPage={currentPage}
+        messages={messages}
+        onPageChange={setPage}
+      />
+
+      <UserUpsertDialog
+        open={upsertMode !== null}
+        mode={upsertMode ?? 'create'}
+        messages={messages}
+        user={editing}
+        pending={pendingUpsert}
+        serverErrorText={serverErrorText}
+        serverFieldErrors={serverError?.fieldErrors}
+        onOpenChange={(open) => {
+          if (!open) closeUpsert();
+        }}
+        onSubmitCreate={onSubmitCreate}
+        onSubmitEdit={onSubmitEdit}
+      />
 
       <UserDeleteDialog
         open={deleting !== null}
@@ -101,10 +197,10 @@ export function AdminUsersClient({ locale, messages }: AdminUsersClientProps) {
         messages={messages}
         pending={isDeleting}
         onOpenChange={(open) => {
-          if (!open) setDeleting(null);
+          if (!open) closeDelete();
         }}
         onConfirm={() => {
-          void handleDeleteConfirm();
+          void onConfirmDelete();
         }}
       />
     </div>

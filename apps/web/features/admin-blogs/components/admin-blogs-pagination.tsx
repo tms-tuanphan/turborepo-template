@@ -10,17 +10,22 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import type { Messages } from '@/shared/i18n';
-import { buildPageRange } from '@/shared/utils/pagination-range';
+import {
+  buildPageRange,
+  shouldShowPagination,
+} from '@/shared/utils/pagination-range';
 
 import { useAdminBlogFilters } from '../hooks/use-admin-blog-filters';
 
 type AdminBlogsPaginationProps = {
+  totalItems: number;
   totalPages: number;
   currentPage: number;
   messages: Messages;
 };
 
 export function AdminBlogsPagination({
+  totalItems,
   totalPages,
   currentPage,
   messages,
@@ -28,7 +33,7 @@ export function AdminBlogsPagination({
   const { setPage } = useAdminBlogFilters();
   const m = messages.blogs.pagination;
 
-  if (totalPages <= 1) return null;
+  if (!shouldShowPagination(totalItems, totalPages, currentPage)) return null;
 
   const items = buildPageRange(currentPage, totalPages);
   const handleClick = (page: number) => (event: React.MouseEvent) => {

@@ -402,21 +402,12 @@
     "users": {
       "pageTitle": "Người dùng",
       "pageDescription": "Quản lý tài khoản sub-admin.",
-      "newPageTitle": "Tạo người dùng",
       "newPageDescription": "Tạo tài khoản sub-admin mới.",
-      "editPageTitle": "Sửa người dùng",
       "editPageDescription": "Cập nhật email, trạng thái hoặc mật khẩu.",
-      "deletedPageTitle": "Người dùng đã xóa",
-      "deletedPageDescription": "Khôi phục hoặc xem tài khoản sub-admin đã xóa mềm.",
       "empty": "Chưa có người dùng.",
-      "emptyDeleted": "Không có người dùng đã xóa.",
-      "confirmDelete": "Xóa người dùng này? Họ sẽ được chuyển vào danh sách đã xóa.",
+      "confirmDelete": "Xóa người dùng này? Đây là xóa mềm và có thể khôi phục từ cơ sở dữ liệu.",
       "listLoading": "Đang tải…",
       "listError": "Không thể tải danh sách người dùng.",
-      "tabs": {
-        "active": "Đang hoạt động",
-        "deleted": "Đã xóa"
-      },
       "columns": {
         "email": "Email",
         "status": "Trạng thái",
@@ -435,13 +426,14 @@
         "disabled": "Vô hiệu"
       },
       "dialog": {
+        "createTitle": "Tạo người dùng",
+        "editTitle": "Sửa người dùng",
         "deleteTitle": "Xóa người dùng"
       },
       "actions": {
         "create": "Tạo người dùng",
         "edit": "Sửa",
         "delete": "Xóa",
-        "restore": "Khôi phục",
         "save": "Lưu",
         "saving": "Đang lưu…",
         "cancel": "Hủy"
@@ -449,8 +441,7 @@
       "toast": {
         "created": "Đã tạo người dùng.",
         "updated": "Đã cập nhật người dùng.",
-        "deleted": "Đã xóa người dùng.",
-        "restored": "Đã khôi phục người dùng."
+        "deleted": "Đã xóa người dùng."
       },
       "errors": {
         "unauthorized": "Bạn cần đăng nhập.",

@@ -401,21 +401,12 @@
     "users": {
       "pageTitle": "Users",
       "pageDescription": "Manage sub-admin accounts.",
-      "newPageTitle": "Create user",
       "newPageDescription": "Create a new sub-admin account.",
-      "editPageTitle": "Edit user",
       "editPageDescription": "Update email, status, or password.",
-      "deletedPageTitle": "Deleted users",
-      "deletedPageDescription": "Restore or review soft-deleted sub-admin accounts.",
       "empty": "No users yet.",
-      "emptyDeleted": "No deleted users.",
-      "confirmDelete": "Delete this user? They will be moved to the deleted list.",
+      "confirmDelete": "Delete this user? This is a soft delete and can be restored from the database.",
       "listLoading": "Loading users…",
       "listError": "Could not load users. Please try again.",
-      "tabs": {
-        "active": "Active",
-        "deleted": "Deleted"
-      },
       "columns": {
         "email": "Email",
         "status": "Status",
@@ -434,13 +425,14 @@
         "disabled": "Disabled"
       },
       "dialog": {
+        "createTitle": "Create user",
+        "editTitle": "Edit user",
         "deleteTitle": "Delete user"
       },
       "actions": {
         "create": "Create user",
         "edit": "Edit",
         "delete": "Delete",
-        "restore": "Restore",
         "save": "Save",
         "saving": "Saving…",
         "cancel": "Cancel"
@@ -448,8 +440,7 @@
       "toast": {
         "created": "User created.",
         "updated": "User updated.",
-        "deleted": "User deleted.",
-        "restored": "User restored."
+        "deleted": "User deleted."
       },
       "errors": {
         "unauthorized": "You must be signed in.",

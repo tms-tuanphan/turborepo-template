@@ -53,6 +53,7 @@ export function AdminBlogCategoriesClient({
 
   const {
     items,
+    totalItems,
     totalPages,
     currentPage,
     createCategory,
@@ -167,6 +168,7 @@ export function AdminBlogCategoriesClient({
 
       <BlogCategoriesPagination
         messages={messages}
+        totalItems={totalItems}
         totalPages={totalPages}
         currentPage={currentPage}
         onPageChange={setPage}
