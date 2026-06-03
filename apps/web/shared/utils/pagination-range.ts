@@ -2,13 +2,9 @@ export type PageItem =
   | { type: 'page'; value: number }
   | { type: 'ellipsis'; key: string };
 
-/** Whether admin list pagination controls should render. */
-export function shouldShowPagination(
-  totalItems: number,
-  totalPages: number,
-  currentPage: number,
-): boolean {
-  return totalItems > 0 && (totalPages > 1 || currentPage > 1);
+/** Whether admin list pagination controls should render (when the table has rows). */
+export function shouldShowPagination(totalItems: number): boolean {
+  return totalItems > 0;
 }
 
 /**

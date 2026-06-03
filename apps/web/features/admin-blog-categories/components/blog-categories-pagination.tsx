@@ -32,7 +32,7 @@ export function BlogCategoriesPagination({
 }: BlogCategoriesPaginationProps) {
   const m = messages.blogs.pagination;
 
-  if (!shouldShowPagination(totalItems, totalPages, currentPage)) return null;
+  if (!shouldShowPagination(totalItems)) return null;
 
   const items = buildPageRange(currentPage, totalPages);
   const handleClick = (page: number) => (event: React.MouseEvent) => {
