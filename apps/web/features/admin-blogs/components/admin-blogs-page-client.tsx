@@ -49,13 +49,12 @@ function AdminBlogsPageContent({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-end">
-        <Button type="button" asChild>
-          <Link href={`/${locale}/admin/blogs/new`}>{t.actions.create}</Link>
-        </Button>
-      </div>
-
-      <AdminBlogsFilterBar messages={messages} categories={categories} />
+      <AdminBlogsFilterBar
+        messages={messages}
+        categories={categories}
+        createHref={`/${locale}/admin/blogs/new`}
+        createLabel={t.actions.create}
+      />
 
       {items.length === 0 && emptyWithFilters ? (
         <div

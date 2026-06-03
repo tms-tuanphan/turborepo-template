@@ -48,7 +48,7 @@ export function AdminBlogsTable({
   return (
     <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[960px] text-left text-sm">
+        <table className="w-full min-w-[880px] text-left text-sm">
           <thead className="border-b bg-muted/50">
             <tr>
               <th className="px-4 py-3 font-medium" scope="col">
@@ -71,9 +71,6 @@ export function AdminBlogsTable({
               </th>
               <th className="px-4 py-3 font-medium" scope="col">
                 {t.columns.published}
-              </th>
-              <th className="px-4 py-3 font-medium text-right" scope="col">
-                {t.columns.views}
               </th>
               <th className="px-4 py-3 font-medium text-right" scope="col">
                 {t.columns.actions}
@@ -118,15 +115,6 @@ export function AdminBlogsTable({
                     </time>
                   ) : (
                     '—'
-                  )}
-                </td>
-                <td className="whitespace-nowrap px-4 py-3 text-right tabular-nums text-muted-foreground">
-                  {post.views.toLocaleString(
-                    locale === 'ja'
-                      ? 'ja-JP'
-                      : locale === 'vi'
-                        ? 'vi-VN'
-                        : 'en-US',
                   )}
                 </td>
                 <td className="px-4 py-3 text-right">
